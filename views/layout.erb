@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Budget US</title>  
+    
+    <%= @pinion.css_url("/css/main.css") %>
+    <%= @pinion.css_url("/css/common.css") %>
+    <%= @pinion.css_url("/css/jquery-ui-1.10.1.custom.min.css") %>
+    
+    <%#= @pinion.css_url("/css/ui-lightness") %>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/js/jquery-ui-1.10.1.custom.min.js"></script>
+    <!--<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages: ["corechart"]});
+     </script>
+    <%= yield_content :head %>
+    <%#= erb :google_analytics if production? %>
+   
+  </head>
+  <body>
+    <div id="header">
+
+      <div class="titleDiv"><h2><a href="/">Budget US<a></h2></div>
+      <div class="about"><a href="/about">About</a></div>
+    </div>
+    <div id="fullPage">
+      <div id="sidebar">
+        <div id="navigationHeader">
+          <h3> Navigation History </h3>
+        </div>
+        <div id="navTable">
+        <div id="navSorting">
+          <div id="arrow">&uarr;</div>
+          <div id="new"><p>Most Recent</p></div>
+        </div>
+        <div id="navigationWrapper"></div>
+        </div>
+      </div>
+      <div id="content">
+        <%= yield %>
+      </div>
+    </div>
+    <div id="footer">
+      <div class="container">
+        <span class="copyright">&copy; <%= Time.now.strftime("%Y") %> Budget US</span>
+        <!--<a href="#">Terms of Use</a> |
+        <a href="#">Privacy Policy</a> |-->
+        <a href="#">About</a> 
+        <!--<a href="mailto:contact@socialteeth.org" target="_blank">contact@socialteeth.org</a>-->
+      </div>
+    </div>
+  </body>
+</html>

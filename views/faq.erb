@@ -1,0 +1,40 @@
+<% content_for :head do %>
+
+  <%= @pinion.css_url("/assets/css/about.css") %>
+
+<% end %>
+
+
+
+<div class="aboutWrap">
+  <h1>FAQ:</h1>
+  <h3>Where did you get this data?</h3>
+  
+  <p>
+    All data was obtained from the White House Office of Management and Budget. 
+    If you would like to consult the raw numbers for yourself, databases are 
+    available in .xls or .csv format at 
+    <a href="http://www.whitehouse.gov/omb/budget/Supplemental/">http://www.whitehouse.gov/omb/budget/Supplemental/</a>
+  </p>
+  
+  <h3>What do you mean by “nesting”?</h3>
+  <p>Every budget outlay is classified on four levels:</p>
+    <ul>
+      <li>1.	<h5>(Sub)function</h5> - A general description of the purpose of the spending</li>
+      <li>2.	<h5>Agency</h5> – The most general official level of spending. Example, Department of Agriculture. An agency can be associated with more than 1 subfuncion.</li>
+      <li>3.	<h5>Bureau</h5> – A subdivision of the agency. For example, the “House of Representatives” is considered a Bureau of the Agency “Legislative Branch”. Sometimes, the Bureau name and Agency name are the same.</li>
+      <li>4.	<h5>Account/Program</h5> – The lowest level category describing the actual payment (i.e. salaries, expenses, or fees)</li>
+    </ul>
+    
+    <p>Our data is by default displayed to its full level of nesting, so it is specific to the full number of categories specified in your search. Your result can be more generalized by changing your nesting level.
+    If the budget for a department, bureau, or program seems much smaller than you thought, try moving the slider to the right.
+    
+  </p>
+  <h3>Why are some numbers negative?</h3>
+    
+  <p>
+    This gets back to the issue of nesting. 
+    Yes, its true, some specific programs will make money – often in cases where the program is classified 
+    as interest and dividends on account funds. So these are the result of narrow search and nesting parameters.
+  </p>
+</div>

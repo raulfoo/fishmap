@@ -1,0 +1,117 @@
+<% content_for :head do %>
+
+    <%= @pinion.js_url("/assets/js/main.js") %>
+    <%= @pinion.js_url("/assets/js/search_mechanics.js") %>
+    <%= @pinion.js_url("/assets/js/graphing.js") %>
+    <%= @pinion.js_url("/assets/js/helpers.js") %>
+    <%= @pinion.js_url("/assets/js/cookies.js") %>
+    <%= @pinion.css_url("/assets/css/forms.css") %>
+   
+    <%= @pinion.css_url("/assets/css/jquery-ui-1.10.1.custom.min.css") %>
+    
+<% end %>
+
+<div class="margin" >
+  <h4 id="stepOne"> Step 1: Enter your Income. We will estimate your taxes and use that<br>
+  to calculate what you paid for each specific government program</h3>
+  <form class="standard" id="incomeForm" action="/submitIncome" method="get">
+    <table>
+      <tr>
+        <td><label class="label">What was your income this year?</label></td>
+        <td><input type="text" name="income" value="$<%=flash[:value] %>"/></td>
+     </tr>
+     <tr>
+      <td></td><td><input type="submit" name="Start"/></td>
+     </td>
+    </table>
+  </form>
+  <% if defined? federal_tax %>
+  <%= @pinion.js_url("/assets/js/presets.js") %>
+  <input type="hidden" id="federalTaxes" value="<%=federal_tax%>"/>
+  <input type="hidden" id="medicare_tax" value="<%=medicare_tax%>"/>
+   <input type="hidden" id="ss_tax" value="<%=ss_tax%>"/>
+  <input type="hidden" id="totalRevenues" value=1628000000000/>
+   <!-- these revenues are just from income, should differentiate with medicare and whatnot -->
+  <table class="taxSummary">
+    <tr>
+      <td>Federal Income Tax (excluding Social Security and Medicare):</td>
+      <td>$<%=federal_tax.comma%></td>
+    </tr>
+    <tr>
+      <td> Medicare Contribution: </td>
+      <td>$<%=medicare_tax.comma%></td>
+    </tr>
+    <tr>
+      <td>Social Security Contribution:</td>
+      <td>$<%=ss_tax.comma%></td>
+    </tr>
+  </table>
+  <h4 id="stepTwo"> Search for a program that interests you. We've provided some of the big ones</h5>
+  <div id="mainSearch">
+   
+    <div id="browseWrap">
+    <h5> Browse: </h5>
+      <div class="browseAlignment">
+        <div class="browseLabel"> Function:</div>
+          <div class="browsing">
+            <select class="programSort" id="subfunction">
+              <option value="none">--Select a function below (Optional)--</option>
+               <% @sortingFunction.each_slice(1) do |slice| %>
+                <% slice.uniq.each do |program| %>
+                 <option value="<%=program.unique_id%>"><%=program.browse_name%></option>
+                <%end %>
+               <%end%>
+            </select>
+          </div>
+        </div>
+
+      <div class="browseAlignment">
+        <div class="browseLabel"> Agency:</div>
+          <div class="browsing">
+            <select class="programSort" id="agency">
+              <option value="none">--Select a sub-category below--</option>
+              
+                <%@sortingAgency.each_slice(1) do |slice| %>
+            
+                <% slice.uniq.each do |agency| %>
+                  <option value="<%=agency.unique_id%>"><%=agency.browse_name%></option>
+                <% end %>
+              <% end %>
+            </select>
+          </div>
+        </div>
+      </div>
+
+    <div id="textSearchWrap">
+      <h5> Search: </h5>
+      
+      <div class="tableDisplay">
+        <div id="tableLeft">
+          <table id="searchTable">
+            <tr><td>
+          Enter in program: <input type="text" id="searchProgram"/>
+            
+            
+            </td></tr>
+          </table>
+         
+        </div>
+         <a class="button" id="searchProgramEnter">Search</a>
+      <!--<a class="button" id="searchProgramEnter">Search</a>-->
+      </div>
+       
+    </div>
+  </div>
+  
+  <div class="govtProgramsWrapper">
+    <a id="clearAll" onclick=clearAll(false)>Clear All</a>
+    <div class="programsList">
+    
+    </div>
+  </div>
+
+  
+  <% end %>
+
+</div>
+
