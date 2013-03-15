@@ -28,7 +28,7 @@ end
 destination :staging do
   set :app, "BudgetUs_staging"
   set_application_paths(app)
-  set :domain, "50.116.26.92"
+  set :domain, "173.255.223.11"
   set_common_environment
   env :rack_env, "staging"
   env :db_name, "BudgetUs_staging"
@@ -39,7 +39,7 @@ destination :staging do
 end
 
 destination :prod do
-  set :domain, "50.116.26.92"
+  set :domain, "173.255.223.11"
   set_common_environment
   env :rack_env, "production"
   env :db_name, "BudgetUs"
