@@ -31,7 +31,7 @@
   <input type="hidden" id="medicare_tax" value="<%=medicare_tax%>"/>
    <input type="hidden" id="ss_tax" value="<%=ss_tax%>"/>
   <input type="hidden" id="totalRevenues" value=1628000000000/>
-   <!-- these revenues are just from income, should differentiate with medicare and whatnot -->
+
   <table class="taxSummary">
     <tr>
       <td>Federal Income Tax (excluding Social Security and Medicare):</td>
@@ -43,9 +43,10 @@
     </tr>
     <tr>
       <td>Social Security Contribution:</td>
-      <td>$<%=ss_tax.comma%></td>
+      <td>$<%=ss_tax.comma%></td>    
     </tr>
   </table>
+ 
   <h4 id="stepTwo"> Search for a program that interests you. We've provided some of the big ones</h5>
   <div id="mainSearch">
    
@@ -104,7 +105,10 @@
   </div>
   
   <div class="govtProgramsWrapper">
+  <div>
+    <a id="searching"> Searching...</a>
     <a id="clearAll" onclick=clearAll(false)>Clear All</a>
+  </div>
     <div class="programsList">
     
     </div>

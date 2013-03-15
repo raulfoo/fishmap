@@ -1,6 +1,7 @@
 require "fileutils"
 require "terraform"
 
+
 namespace :fezzik do
   desc "stages the project for deployment in /tmp"
   task :stage do
@@ -83,7 +84,7 @@ namespace :fezzik do
     Rake::Task["fezzik:restart"].invoke
     puts "#{app} deployed!"
   end
-
+  
   def run_commands(*commands) run commands.join(" && ") end
 
   def has_user?(username)

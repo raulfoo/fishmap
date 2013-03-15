@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta property="og:title" content="BudgetUs"/>
+    <meta property="og:url" content="http://budgetus.org"/>
+    <meta property="og:description" content="'CNN's King, John Got Nothin' On Me.'<br> - Samuel L. Jackson, <i>Training Day</i>"/>
+    
     <title>Budget US</title>  
     
     <%= @pinion.css_url("/css/main.css") %>
@@ -17,14 +21,18 @@
       google.load("visualization", "1", {packages: ["corechart"]});
      </script>
     <%= yield_content :head %>
-    <%#= erb :google_analytics if production? %>
+    <%= erb :google_analytics if production? %>
    
   </head>
   <body>
     <div id="header">
 
       <div class="titleDiv"><h2><a href="/">Budget US<a></h2></div>
-      <div class="about"><a href="/about">About</a></div>
+      <div class="about">
+        <a href="/about">About</a>
+        <%= erb :add_this, :layout=> false %>
+      </div>
+     
     </div>
     <div id="fullPage">
       <div id="sidebar">

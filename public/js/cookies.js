@@ -1,8 +1,8 @@
 function loadCookies(){
   
   if(getCookie("navigation") != null) {
-     
-     $('#navigationWrapper').fadeIn();
+     $('#sidebar').fadeIn();
+     //$('#navigationWrapper').fadeIn();
      $('#navigationWrapper').html(getCookie("navigation"));
      
   }

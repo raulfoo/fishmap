@@ -6,4 +6,3 @@ include Fezzik::DSL
 Fezzik.init(:tasks => "config/tasks")
 require "config/deploy"
 
-

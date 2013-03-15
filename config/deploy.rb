@@ -49,15 +49,6 @@ destination :prod do
   env :s3_bucket, "budgetus.org"
 end
 
-#after "deploy:symlink", "deploy:update_crontab"
-
-#namespace :deploy do
-#  desc "Update the crontab file"
-#  task :update_crontab, :roles => :db do
-#    run "cd #{release_path} && whenever --update-crontab #{app}"
-#  end
-#end
-
 # Load secure credentials
 if ENV.has_key?("BudgetUs_CREDENTIALS") && File.exist?(ENV["BudgetUs_CREDENTIALS"])
   load ENV["BudgetUs_CREDENTIALS"]

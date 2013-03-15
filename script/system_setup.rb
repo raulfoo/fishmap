@@ -35,7 +35,7 @@ dep "remove default nginx configuration" do
   meet { shell("sudo rm -f /etc/nginx/sites-enabled/default") }
 end
 
-ensure_file("config/system_config_files/nginx.socialteeth.conf", "/etc/nginx/sites-enabled/socialteeth.conf") do
+ensure_file("config/system_config_files/nginx.budgetus.conf", "/etc/nginx/sites-enabled/budgetus.conf") do
   shell("sudo /etc/init.d/nginx restart")
 end
 
@@ -56,7 +56,7 @@ dep "create database" do
   meet { shell("sudo su postgres -c 'createdb #{DB_NAME} -l en_US.utf8 -E utf8 -T template0'") }
 end
 
-dep "create socialteeth database user" do
+dep "create budgetus database user" do
   users_sql = "select usename from pg_user"
   met? { `sudo su postgres -c "psql #{DB_NAME} -tc '#{users_sql}'"`.split("\n").map(&:strip).include?(DB_USER) }
   meet do

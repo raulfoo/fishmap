@@ -1,4 +1,4 @@
-# Developing on Social Teeth
+# Developing on Budget US
 
 These instructions are for developing Social Teeth on OS X Lion. It will run on Linux just fine, though some
 steps may need tweaking.
@@ -18,7 +18,6 @@ $ cd socialteeth
 $ bundle install
 $ createdb socialteeth
 $ ./script/run_migrations.rb
-$ ./script/seed_db_content.rb
 $ bundle exec foreman start
 ```
 

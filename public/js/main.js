@@ -154,8 +154,10 @@ function continueBrowse(level,data,title){
 
 function findData(data,nesting,makeNew,child,budgetType,graphType){
   //remove all weird google chart divs they make every time you change anything, maybe this frees up memory
+
   $("#footer").nextAll().remove()
   $("#stepTwo").fadeOut();
+  $("#searching").css("display","block");
   navigationId = data;
   if(barGraph != null){
     barGraph.clearChart();
@@ -167,22 +169,11 @@ function findData(data,nesting,makeNew,child,budgetType,graphType){
   var proportion = parseFloat($("#federalTaxes").val());
   var allTax = parseFloat($("#totalRevenues").val());
   
+
    if(makeNew != true){
-     
      setCookie('lastSelection',data,1)
-     tempIdArray =getCookie('navigationID');
-     if(tempIdArray == null){
-      tempIdArray = new Array(data);
-      }else{
-        tempIdArray = tempIdArray.split(",");
-        tempIdArray.push(String(data));
-      }
-     
    }
-  
- 
- 
-  
+
   $.ajax({
     type: 'GET',
     url: '/show_program',
@@ -192,22 +183,39 @@ function findData(data,nesting,makeNew,child,budgetType,graphType){
       output = outputBig['mainOut']
       
       linkName = outputBig['links']
+      
       title = output[0]['current']['title'];
-     
-      linkTitleHeader = title.match(/[A-Z]{2,} [A-Z ]*/)
+     // alert(title);
+      linkTitleHeader = output[0]['grandparent']
+    
       if(makeNew != true && makeNew != "search"){
        
         clearAll(true);
       }
+      
+       if(makeNew != true){
+     
+    
+         tempIdArray =getCookie('navigationID');
+         if(tempIdArray == null){
+       
+          tempIdArray = new Array(linkTitleHeader);
+          }else{
+            tempIdArray = tempIdArray.split("|");
+            tempIdArray.push(String(linkTitleHeader));
+          }
+       }
+      
+      
       $("#clearAll").fadeIn('fast');
       createOutput(output,makeNew,child,budgetType,nesting,proportion,allTax,graphType)
-      
+      $("#searching").fadeOut();
       $('.govtProgramsWrapper').fadeIn('fast')
       if(makeNew != true){
       
-        links = '<ul>'+linkTitleHeader+':<li><a class="navigate" onclick="fastNavigate('+data+')">'+linkName+'</a></li></ul>'
+        links = '<ul><a class="navigate" onclick="fastNavigate('+data+')">'+linkTitleHeader+'</a></ul>'
       }
-        updateNavigation(links,navigationId,tempIdArray)
+        updateNavigation(links,linkTitleHeader,tempIdArray)
 
     }  
   });
@@ -217,11 +225,10 @@ function updateNavigation(links,navigationId,idArray){
 
   maxAmount = 8
   currentAmount = $("#navigationWrapper").children().length
- //#remove and update any copies of this search
   
   checkRecent = idArray.indexOf(String(navigationId))
- 
-  if(checkRecent != -1 && checkRecent != (idArray.length-1)){
+
+  if(checkRecent != -1 && checkRecent != (idArray.length-1)){//&& checkRecent != (idArray.length-1)
   
     if(checkRecent == 0){
       idArray.shift()
@@ -233,15 +240,19 @@ function updateNavigation(links,navigationId,idArray){
     $("#navigationWrapper").children().eq(wrapRemove).remove()
     
   }
-  setCookie('navigationID',idArray,1)
+  cookieOut = idArray.join("|")
+  setCookie('navigationID',cookieOut,1)
   if(idArray.length<3){
     $("#navSorting").fadeOut();
   }else{
     $("#navSorting").fadeIn();
   }
-  //currentAmount = $("#navigationWrapper").children().length
-  if(links != "<ul>"+$("#navigationWrapper").children().eq(0).html()+"</ul>"){
 
+  //if(links != "<ul>"+$("#navigationWrapper").children().eq(0).html()+"</ul>"){
+    /*if($("#navigationWrapper").children().eq(0).html().match(/.*:/) == links.match(/.*:/)[0].substr(4)){
+      alert("yes");
+      $("#navigationWrapper").children().eq(0).html($("#navigationWrapper").children().eq(0).html().replace(/.*<li>/,"<li>"))
+    }*/
     $("#navigationHeader").fadeIn();
       if(currentAmount >=maxAmount){
     
@@ -257,13 +268,13 @@ function updateNavigation(links,navigationId,idArray){
     }
     //forCookie = forCookie.replace("&gt;","")
     setCookie('navigation',forCookie,1)
-  }
+  //}
  
 //update the cookie with the new navigationWrapper.html here  
 }
 
 
-function searchChild(id,child){
+function searchChild(id){
  
   //child = child+"_divIndex";
   child = null
