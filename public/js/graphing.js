@@ -31,7 +31,7 @@ if(type=="percent" || type=="budget_percent"){
       //'focusTarget': 'category'
       /*'legendPosition': 'newRow',
       'displayExactValues': true*/
-      vAxis : {title: '% of Federal Budget', gridlines: {count: 5},  minValue : 0},
+      vAxis : {title: 'Percent of Federal Budget', gridlines: {count: 5},  minValue : 0},
       legend :{position: 'top'},
       backgroundColor: 'transparent',
       title : 'Relative to other Spending, 2012',
@@ -142,7 +142,7 @@ function drawLineGraph(id,input,titles,taxLevel,type,restrictedArray,normalBudge
   
   if(type=="percent" || type=="budget_percent"){
     var options = {
-        vAxis : {logScale: true, title: '% of Federal Budget (Log Scale!)', gridlines: {count: 15}},
+        vAxis : {logScale: true, title: 'Percent of Federal Budget  (Log Scale!)', gridlines: {count: 12}},
         legend :{position: 'top'},
         backgroundColor: 'transparent',
         title : 'Historical Context 1980-2015',

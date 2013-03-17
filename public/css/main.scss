@@ -13,11 +13,31 @@
     color: $red;
   }
   
-  .taxSummary{
-    padding: 15px;
-    td{
-      padding-left: 10px;
-      padding-right: 10px;
+  .taxBudget{
+    display: table;
+    min-width: 1000px;
+    border-bottom-style: solid;
+    border-bottom-color: $darkGray;
+    border-bottom-width: 3px;
+    
+    .taxSummary{
+      width: 550px;
+      display: table-cell;
+      padding: 15px;
+      td{
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    }
+    .changeBudget{
+      max-width: 250px;
+      display: table-cell;
+      vertical-align: top;
+    
+      input[type=submit] {
+        left: -100px;
+        position: relative;
+      }
     }
   }
    

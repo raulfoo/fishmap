@@ -169,7 +169,6 @@ function findData(data,nesting,makeNew,child,budgetType,graphType){
   var proportion = parseFloat($("#federalTaxes").val());
   var allTax = parseFloat($("#totalRevenues").val());
   
-
    if(makeNew != true){
      setCookie('lastSelection',data,1)
    }
@@ -211,12 +210,13 @@ function findData(data,nesting,makeNew,child,budgetType,graphType){
       createOutput(output,makeNew,child,budgetType,nesting,proportion,allTax,graphType)
       $("#searching").fadeOut();
       $('.govtProgramsWrapper').fadeIn('fast')
+     
       if(makeNew != true){
-      
+        
         links = '<ul><a class="navigate" onclick="fastNavigate('+data+')">'+linkTitleHeader+'</a></ul>'
-      }
+      
         updateNavigation(links,linkTitleHeader,tempIdArray)
-
+      }
     }  
   });
 }

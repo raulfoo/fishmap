@@ -6,12 +6,12 @@
     <%= @pinion.js_url("/assets/js/helpers.js") %>
     <%= @pinion.js_url("/assets/js/cookies.js") %>
     <%= @pinion.css_url("/assets/css/forms.css") %>
-   
-    <%= @pinion.css_url("/assets/css/jquery-ui-1.10.1.custom.min.css") %>
     
 <% end %>
 
 <div class="margin" >
+  <%#= federal_tax %>
+  <% if !defined? federal_tax %>
   <h4 id="stepOne"> Step 1: Enter your Income. We will estimate your taxes and use that<br>
   to calculate what you paid for each specific government program</h3>
   <form class="standard" id="incomeForm" action="/submitIncome" method="get">
@@ -21,31 +21,47 @@
         <td><input type="text" name="income" value="$<%=flash[:value] %>"/></td>
      </tr>
      <tr>
-      <td></td><td><input type="submit" name="Start"/></td>
-     </td>
+      <td></td><td><input type="submit" name="Start" value="Start"/></td>
+     </tr>
     </table>
   </form>
+  <% end %>
   <% if defined? federal_tax %>
   <%= @pinion.js_url("/assets/js/presets.js") %>
   <input type="hidden" id="federalTaxes" value="<%=federal_tax%>"/>
   <input type="hidden" id="medicare_tax" value="<%=medicare_tax%>"/>
    <input type="hidden" id="ss_tax" value="<%=ss_tax%>"/>
   <input type="hidden" id="totalRevenues" value=1628000000000/>
-
-  <table class="taxSummary">
-    <tr>
-      <td>Federal Income Tax (excluding Social Security and Medicare):</td>
-      <td>$<%=federal_tax.comma%></td>
-    </tr>
-    <tr>
-      <td> Medicare Contribution: </td>
-      <td>$<%=medicare_tax.comma%></td>
-    </tr>
-    <tr>
-      <td>Social Security Contribution:</td>
-      <td>$<%=ss_tax.comma%></td>    
-    </tr>
-  </table>
+  <div class="taxBudget">
+    <table class="taxSummary">
+      <tr>
+        <td>Federal Income Tax: <br>(excluding Social Security and Medicare)</td>
+        <td>$<%=federal_tax.comma%></td>
+      </tr>
+      <tr>
+        <td> Medicare Contribution: </td>
+        <td>$<%=medicare_tax.comma%></td>
+      </tr>
+      <tr>
+        <td>Social Security Contribution:</td>
+        <td>$<%=ss_tax.comma%></td>    
+      </tr>
+    </table>
+    <div class="changeBudget">
+      <form class="standard" id="incomeForm" action="/submitIncome" method="get">
+        <table>
+          <tr>
+            <td>Compare to a different income.</td>
+          </tr>
+          <tr>
+            <td><input type="text" name="income" value="$<%=flash[:value] %>"/></td>
+            <td><td><input type="submit" name="Start" value="Update"/></td></td>
+         </tr>
+         
+        </table>
+      </form>
+    </div>
+  </div>
  
   <h4 id="stepTwo"> Search for a program that interests you. We've provided some of the big ones</h5>
   <div id="mainSearch">

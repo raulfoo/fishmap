@@ -7,32 +7,32 @@ end
 
 def set_common_environment
   env :db_host, "localhost"
-  env :db_name, "BudgetUs"
+  env :db_name, "budgetus"
   env :db_user, "postgres"
 end
 
-set :app, "BudgetUs"
+set :app, "budgetus"
 set_application_paths(app)
 set :user, "postgres"
 
 role :root_user, :user => "root"
-role :BudgetUs_user, :user => "postgres"
+role :budgetus_user, :user => "postgres"
 
 destination :vagrant do
-  set :domain, "BudgetUs-vagrant"
+  set :domain, "budgetus-vagrant"
   set_common_environment
   env :rack_env, "production"
   env :port, 8200
 end
 
 destination :staging do
-  set :app, "BudgetUs_staging"
+  set :app, "budgetus_staging"
   set_application_paths(app)
   set :domain, "173.255.223.11"
   set_common_environment
   env :rack_env, "staging"
-  env :db_name, "BudgetUs_staging"
-  env :db_user, "BudgetUs_staging"
+  env :db_name, "budgetus_staging"
+  env :db_user, "budgetus_staging"
   env :port, 8100
   env :unicorn_workers, 2
   env :s3_bucket, "staging.budgetus.org"
@@ -42,17 +42,17 @@ destination :prod do
   set :domain, "173.255.223.11"
   set_common_environment
   env :rack_env, "production"
-  env :db_name, "BudgetUs"
-  env :db_user, "BudgetUs"
+  env :db_name, "budgetus"
+  env :db_user, "budgetus"
   env :port, 8200
   env :unicorn_workers, 10
   env :s3_bucket, "budgetus.org"
 end
 
 # Load secure credentials
-if ENV.has_key?("BudgetUs_CREDENTIALS") && File.exist?(ENV["BudgetUs_CREDENTIALS"])
-  load ENV["BudgetUs_CREDENTIALS"]
+if ENV.has_key?("BUDGETUS_CREDENTIALS") && File.exist?(ENV["BUDGETUS_CREDENTIALS"])
+  load ENV["BUDGETUS_CREDENTIALS"]
 else
-  puts "Unable to locate the file $BudgetUs_CREDENTIALS. You need this to deploy."
+  puts "Unable to locate the file $budgetus_CREDENTIALS. You need this to deploy."
   exit 1
 end
