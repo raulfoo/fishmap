@@ -5,6 +5,8 @@ gem "sinatra"
 gem "unicorn"
 gem "pathological"
 
+gem "eventmachine", :git => "https://github.com/eventmachine/eventmachine.git"
+
 gem "pinion"
 gem "sass"
 gem "bourbon"
@@ -13,6 +15,7 @@ gem "sinatra-content-for2"
 
 gem "sequel"
 gem "pg"
+
 
 
 

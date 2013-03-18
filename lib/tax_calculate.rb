@@ -32,7 +32,6 @@ class BudgetUs < Sinatra::Base
     ss_tax = [(0.042*([raw_income,110100].min)),0].max
     medicare_tax = [(0.0145*([raw_income,110100].min)),0].max
     federal_income_tax = [federal_income_tax,0].max
-    puts "tax here: #{federal_income_tax}"
 
     erb :index, :locals=>{:federal_tax => federal_income_tax.round, :ss_tax => ss_tax.round, :medicare_tax => medicare_tax.round}
    

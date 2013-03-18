@@ -8,15 +8,15 @@ end
 def set_common_environment
   env :db_host, "localhost"
   env :db_name, "budgetus"
-  env :db_user, "postgres"
+  env :db_user, "budgetus"
 end
 
 set :app, "budgetus"
 set_application_paths(app)
-set :user, "postgres"
+set :user, "budgetus"
 
 role :root_user, :user => "root"
-role :budgetus_user, :user => "postgres"
+role :budgetus_user, :user => "budgetus"
 
 destination :vagrant do
   set :domain, "budgetus-vagrant"
@@ -53,6 +53,6 @@ end
 if ENV.has_key?("BUDGETUS_CREDENTIALS") && File.exist?(ENV["BUDGETUS_CREDENTIALS"])
   load ENV["BUDGETUS_CREDENTIALS"]
 else
-  puts "Unable to locate the file $budgetus_CREDENTIALS. You need this to deploy."
+  puts "Unable to locate the file $BUDGETUS_CREDENTIALS. You need this to deploy."
   exit 1
 end
