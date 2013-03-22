@@ -1,6 +1,6 @@
 class BudgetUs < Sinatra::Base
 
-  get "/submitIncome" do
+  post "/navigate" do
   
     income = params[:income]
     income = (income.gsub(/[^0-9.]/,'')).to_i
@@ -32,8 +32,9 @@ class BudgetUs < Sinatra::Base
     ss_tax = [(0.042*([raw_income,110100].min)),0].max
     medicare_tax = [(0.0145*([raw_income,110100].min)),0].max
     federal_income_tax = [federal_income_tax,0].max
-
-    erb :index, :locals=>{:federal_tax => federal_income_tax.round, :ss_tax => ss_tax.round, :medicare_tax => medicare_tax.round}
    
+    erb :index, :locals=>{:federal_tax => federal_income_tax.round, :ss_tax => ss_tax.round, :medicare_tax => medicare_tax.round}
+    
+    
   end
 end

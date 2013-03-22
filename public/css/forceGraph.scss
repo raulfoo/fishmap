@@ -1,0 +1,104 @@
+@import "css/mixins";   
+
+.node {
+  cursor: pointer;
+  /*stroke: #3182bd;
+  stroke-width: 1.5px;
+  position: relative;*/
+}
+
+line.link {
+  fill: none;
+  stroke: #9ecae1;
+  stroke-width: 1.5px;
+}
+
+text {
+  color: black;
+  font-size: 12px;
+
+}
+
+.node rect {
+  cursor: pointer;
+  fill: #fff;
+  fill-opacity: .5;
+  stroke: #3182bd;
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font: 10px sans-serif;
+  pointer-events: none;
+}
+
+path.link {
+  fill: none;
+  stroke: #9ecae1;
+  stroke-width: 1.5px;
+}
+
+.chartTree{
+
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.chart{
+  position: relative;
+
+  
+  #pop-up {
+    display: none;
+    position:absolute;
+    color: white;
+    font-size: 14px;
+    background: rgba(0,0,0,0.5);
+    padding: 5px 10px 5px 10px;
+    -moz-border-radius: 8px 8px;
+    border-radius: 8px 8px;
+
+    
+    #pop-up-title {
+      font-size: 15px;
+      width:200px;
+      margin-bottom: 4px;
+      font-weight: bolder;
+    }
+    #pop-up-content {
+      font-size: 12px;
+    }
+      #pop-desc {
+        width: 100px;
+      }
+      #pop-img {
+        font-size: 15px;
+        font-weight: bolder;
+      }
+  }
+  
+  
+  
+  .bubbleNavigateSearch{
+    
+    z-index: 200;
+    color: $red;
+    position: relative;
+    width: 250px;
+    padding: 10px;
+    
+    font-size: 15px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    
+    a{
+      font-size: 1em;
+    }
+  }
+
+}
+
+
+   

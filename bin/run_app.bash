@@ -5,4 +5,4 @@ if [ -f environment.sh ]; then
   source environment.sh
 fi
 
-bundle exec unicorn -c config/unicorn.BudgetUs.conf
+bundle exec unicorn -c config/unicorn.budgetus.conf

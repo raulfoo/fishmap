@@ -1,0 +1,74 @@
+@import "css/mixins";
+
+#tabs {
+
+	font-size: 90%;
+	margin: 20px 0;
+
+}
+
+.tabWrap{
+  min-width: 965px;
+  max-width: 965px;
+  min-height: 200px;
+  background: $lightestGray;
+	clear: both;
+	padding: 15px;
+	display: none;
+}
+
+#tabs ul {
+	float: left;
+	background: #fff;
+	width: 1000px;
+	font-size:1em;
+}
+
+#tabs li {
+
+	margin-left: 8px;
+	list-style: none;
+}
+
+* html #tabs li {
+	display: inline;
+
+}
+
+#tabs li, #tabs li a {
+
+	float: left;
+}
+
+#tabs ul li.active {
+
+	border-top:2px $lightestGray solid;
+	background: $lightestGray;
+}
+
+#tabs ul li.active a {
+	color: #333333;
+}
+
+/*#tabs div {
+  background: $lightestGray;
+	clear: both;
+	padding: 15px;
+}*/
+
+#tabs div h3 {
+	margin-bottom: 12px;
+}
+
+#tabs div p {
+
+	line-height: 150%;
+}
+
+#tabs ul li a {
+
+	text-decoration: none;
+	padding: 8px;
+	color: #000;
+	font-weight: bold;
+}

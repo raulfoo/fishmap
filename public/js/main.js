@@ -61,6 +61,28 @@ $(document).ready(function(){
     }
   });
   
+  $("#hideBrowsing").click(function(){
+    if($(this).text() == "Click to Hide Browsing"){
+      $("#tabs").fadeOut();
+      $(this).text("Show Browsing")
+    }else{
+      $("#tabs").fadeIn();
+      $(this).text("Browse:") 
+    }
+  });
+  
+  $("#hideBrowsing").mouseover(function(){
+    if($(this).text() == "Browse:"){
+      $(this).text("Click to Hide Browsing")
+    }
+  });
+  
+  $("#hideBrowsing").mouseout(function(){
+    if($(this).text() == "Click to Hide Browsing"){
+      $(this).text("Browse:")
+    }
+  });
+  
    
 });
  
@@ -157,7 +179,7 @@ function findData(data,nesting,makeNew,child,budgetType,graphType){
 
   $("#footer").nextAll().remove()
   $("#stepTwo").fadeOut();
-  $("#searching").css("display","block");
+  $("#searching").css("visibility","visible");
   navigationId = data;
   if(barGraph != null){
     barGraph.clearChart();
@@ -208,7 +230,7 @@ function findData(data,nesting,makeNew,child,budgetType,graphType){
       
       $("#clearAll").fadeIn('fast');
       createOutput(output,makeNew,child,budgetType,nesting,proportion,allTax,graphType)
-      $("#searching").fadeOut();
+      $("#searching").css("visibility","hidden")
       $('.govtProgramsWrapper').fadeIn('fast')
      
       if(makeNew != true){

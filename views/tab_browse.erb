@@ -1,0 +1,44 @@
+<% content_for :head do %>
+
+
+<% end %>
+  
+  
+
+<div id="tabs">
+  <ul id="tabTitle" >
+    <li ><a href="#bubbleBrowse" >Randomized Browse</a></li>
+    <li ><a href="#treeBrowse" >Comprehensive List</a></li>
+    <li ><a href="#textSearchWrap" >Text Search</a></li>
+  </ul>
+
+  <div id="bubbleBrowse" class="tabWrap">
+    <%= erb :navigation_tree %>
+  </div>
+
+  <div id="treeBrowse" class="tabWrap">
+    <%= erb :navigation, :layout=> false %>
+  </div>
+  
+  <div id="textSearchWrap" class="tabWrap">
+    <h5> Search: </h5>
+    
+    <div class="tableDisplay">
+      <div id="tableLeft">
+        <table id="searchTable">
+          <tr><td>
+        Enter in program: <input type="text" id="searchProgram"/>
+          
+          
+          </td></tr>
+        </table>
+       
+      </div>
+       <a class="button" id="searchProgramEnter">Search</a>
+    
+     
+  </div>  
+  
+</div>
+ 
+</div> 

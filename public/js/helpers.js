@@ -1,4 +1,3 @@
-
 function commaSeparateNumber(val){
   value = val.toString();
   value = value.split(".")

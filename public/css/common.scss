@@ -183,10 +183,26 @@ blockquote {
     display: table-cell;
     width: $sidebarWidth;
     width: 200px;
-    margin-top: $headerHeight+250;
+    /*margin-top: $headerHeight+250;*/
     padding-left: 40px;
     padding-bottom: 100px;
     top: 0px;
+    
+    
+    .changeBudget{
+     
+      font-size: 2em;
+      .standard{
+        width:200px;
+      }
+      
+      border-bottom-style: solid;
+      border-bottom-size: 2px;
+      border-bottom-color: $darkGray;
+      padding-bottom: 15px;
+    
+    
+    }
     #navigationHeader{
       display: none
     }

@@ -3,17 +3,20 @@
   <head>
     <meta property="og:title" content="BudgetUs"/>
     <meta property="og:url" content="http://budgetus.org"/>
-    <meta property="og:description" content="'CNN's King, John Got Nothin' On Me.'<br> - Samuel L. Jackson, <i>Training Day</i>"/>
+    <meta property="og:description" content="CNN's King, John Got Nothin' On Me. 
+                                               - Samuel L. Jackson, Training Day"/>
     
     <title>Budget US</title>  
     
     <%= @pinion.css_url("/css/main.css") %>
     <%= @pinion.css_url("/css/common.css") %>
     <%= @pinion.css_url("/css/jquery-ui-1.10.1.custom.min.css") %>
-    
+  
+  
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="/js/jquery-ui-1.10.1.custom.min.js"></script>
-    
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
       google.load("visualization", "1", {packages: ["corechart"]});
@@ -34,6 +37,16 @@
     </div>
     <div id="fullPage">
       <div id="sidebar">
+        <% if defined? federal_tax %>
+        <div class="changeBudget">
+          <form class="standard" id="incomeForm" action="/navigate" method="post">
+            Change income:
+              
+            <input type="text" name="income" value="$<%=flash[:value] %>"/>
+            <input type="submit" name="Start" value="Update"/>
+          
+          </form>
+        </div>
         <div id="navigationHeader">
           <h3> Navigation History </h3>
         </div>
@@ -44,6 +57,7 @@
         </div>
         <div id="navigationWrapper"></div>
         </div>
+        <%end%>
       </div>
       <div id="content">
         <%= yield %>
@@ -54,8 +68,8 @@
         <span class="copyright">&copy; <%= Time.now.strftime("%Y") %> Budget US</span>
         <!--<a href="#">Terms of Use</a> |
         <a href="#">Privacy Policy</a> |-->
-        <a href="/about">About</a> 
-        <!--<a href="mailto:contact@socialteeth.org" target="_blank">contact@socialteeth.org</a>-->
+        <a href="/about">About</a> | 
+        <a href="mailto:budgetus.contact@gmail.com" target="_blank">budgetus.contact@gmail.com</a>
       </div>
     </div>
   </body>

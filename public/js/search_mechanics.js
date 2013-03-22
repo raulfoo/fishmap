@@ -11,7 +11,7 @@ $(document).ready(function(){
 
     
     if(data.length < 4){
-      $(".programList").fadeIn();
+       $(".govtProgramsWrapper").fadeIn();
       return
     }else if(e.keyCode != 13){
     //  alert("fadeOut");l

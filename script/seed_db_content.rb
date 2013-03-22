@@ -5,7 +5,7 @@ require "pathological"
 require "yaml"
 require "lib/db"
 #require "lib/uploader"
-=begin
+
 admin_user = User.find(:email => "admin@socialteeth.org")
 if admin_user.nil?
   admin_user = User.create(:name => "Admin User", :email => "admin@socialteeth.org", :password => "admin",
@@ -46,8 +46,4 @@ if demo_user.discussions.empty?
     Comment.each { |comment| DiscussionComment.create(:discussion_id => discussion.id, :comment_id => comment.id) }
   end
 end
-=end
 
-exec "psql BudgetUs"
-exec "copy unique_searches from '/Users/raulfoo/BudgetUs/public/BudgetUs_R_Scripts/uniqueSearchesAll.txt' delimiters ',' csv;"
-puts "what"

@@ -13,6 +13,7 @@ require "lib/currency"
 require "lib/tax_calculate"
 require "lib/show_programs"
 require "lib/search_mechanics"
+require "lib/search_mechanics"
 
 
 
@@ -35,8 +36,10 @@ class BudgetUs < Sinatra::Base
   end
   
   before do
-    @sortingFunction = UniqueSearch.filter(:first_browse => "nested").sort_by(&:browse_name).uniq
-    @sortingAgency =  UniqueSearch.filter(:first_browse => "unested").sort_by(&:browse_name).uniq
+    #@sortingFunction = UniqueSearch.filter(:first_browse => "nested").sort_by(&:browse_name).uniq
+    #@sortingAgency =  UniqueSearch.filter(:first_browse => "unested").sort_by(&:browse_name).uniq
+    @text_search = UniqueSearch.filter(:search_text => true)
+    @descriptions = Description.select(:description)
   end
   
   configure do
@@ -53,8 +56,20 @@ class BudgetUs < Sinatra::Base
     erb :index
   end
   
-   get "/about" do
+  get "/about" do
     erb :faq
+  end
+  
+  get "/navigation" do
+    erb :navigation 
+  end
+  
+  get "/navigation_tree" do
+    erb :navigation_tree
+  end
+  
+  get "/navigate_test" do
+    erb :navigate_test
   end
   
   

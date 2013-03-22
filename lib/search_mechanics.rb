@@ -6,8 +6,8 @@ class BudgetUs < Sinatra::Base
     raw_search = params[:letters]
     full_search = params[:full_search]
     search = Regexp.new(Regexp.escape(search), "i")
-    program_suggestions = UniqueSearch.select(:browse_name).where(:browse_name => search, :search_text => true).sort_by(&:unique_id).uniq   #can make it a little smart by searching by search_name, and then sorting so closest browse_names are at top
-    
+    #program_suggestions = UniqueSearch.select(:browse_name).where(:browse_name => search, :search_text => true).sort_by(&:unique_id).uniq   #can make it a little smart by searching by search_name, and then sorting so closest browse_names are at top
+    program_suggestions = @text_search.filter(:browse_name => search).sort_by(&:unique_id).uniq  
     if full_search == "false"
       output = program_suggestions[0..7]
     else
@@ -37,8 +37,8 @@ class BudgetUs < Sinatra::Base
      search = search.gsub(/ \(.*\)/,"")
     
      search = Regexp.new(Regexp.escape(search), "i")
-     resultAll = UniqueSearch.select(:unique_id, :browse_name, :base_level).where(:search_name => search, :search_text => true).all#.sort_by(&:times_selected)
- 
+     #resultAll = UniqueSearch.select(:unique_id, :browse_name, :base_level).where(:search_name => search, :search_text => true).all#.sort_by(&:times_selected)
+     resultAll =  @text_search.select(:unique_id, :browse_name, :base_level).where(:search_name => search).all
      resultAll.map! {|e| e.values}
   
      if resultAll == nil 
@@ -75,8 +75,8 @@ class BudgetUs < Sinatra::Base
    
      search = params[:input]
      search = Regexp.new(Regexp.escape(search), "i")
-     result = Description.select(:description).where(:name => search).first#.sort_by(&:times_selected)
-     
+     #result = Description.select(:description).where(:name => search).first#.sort_by(&:times_selected)
+     result = @descriptions.select(:description).where(:name => search).first
      if result == nil 
        return_description = "No description available"
      else
@@ -111,6 +111,7 @@ class BudgetUs < Sinatra::Base
           
     if title == "Select a" && params[:level] == "subfunction"
       branches = UniqueSearch.select(:browse_name, :unique_id).where(:first_browse=> "unested").sort_by(&:browse_name)
+      
       new_searches = branches.map {|e| e.values} 
     else
       branches = UniqueSearch.select(:branch_id).where(:unique_id => params[:id]).all[0].values
