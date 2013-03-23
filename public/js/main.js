@@ -51,7 +51,7 @@ $(document).ready(function(){
   });
   
   $(".govtProgramsWrapper").on('click', ".seeGraphs", function(){
-    //alert("chi?");
+   
     if($(this).text() == "Hide"){
       $(this).closest(".projectLevelWrap").find(".programDataBottomRow").fadeOut("fast");
       $(this).text("View More (Graphs)");
@@ -207,7 +207,7 @@ function findData(data,nesting,makeNew,child,budgetType,graphType){
       linkName = outputBig['links']
       
       title = output[0]['current']['title'];
-     // alert(title);
+  
       linkTitleHeader = output[0]['grandparent']
     
       if(makeNew != true && makeNew != "search"){
@@ -248,7 +248,7 @@ function updateNavigation(links,navigationId,idArray){
 
   maxAmount = 8
   currentAmount = $("#navigationWrapper").children().length
-  alert(idArray);
+
   checkRecent = idArray.indexOf(String(navigationId))
 
   if(checkRecent != -1 && checkRecent != (idArray.length-1)){//&& checkRecent != (idArray.length-1)
@@ -273,7 +273,7 @@ function updateNavigation(links,navigationId,idArray){
 
   //if(links != "<ul>"+$("#navigationWrapper").children().eq(0).html()+"</ul>"){
     /*if($("#navigationWrapper").children().eq(0).html().match(/.*:/) == links.match(/.*:/)[0].substr(4)){
-      alert("yes");
+   
       $("#navigationWrapper").children().eq(0).html($("#navigationWrapper").children().eq(0).html().replace(/.*<li>/,"<li>"))
     }*/
     $("#navigationHeader").fadeIn();
@@ -392,7 +392,7 @@ function createOutput(outputBig,makeNew,child,budgetType,nesting,proportion,allT
        divOut = divOut+'</select>'+
       '<div class="programTimeline" id="timeline'+id+'">  </div>'+
       '<input type="radio" id="radioPercent'+id+'" name="graphType'+id+'" value="budget_percent" checked />% of Total Budget '+
-      '<input type="radio" id="radioDollars'+id+'" name="graphType'+id+'" value="budget_dollar" />$(Thousands)'+
+      '<input type="radio" id="radioDollars'+id+'" name="graphType'+id+'" value="budget_dollar" />$(Millions)'+
       '</div>'+
       '<div class="timelineData">'
       

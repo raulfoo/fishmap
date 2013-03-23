@@ -2,20 +2,23 @@ function fontSize(d,i) {
 
 if(d3.event){
   scale = d3.event.scale;
-};
+}
+scale = 1
 var size = parseInt(d.radius)/5;
 var words = d.name.split(' ');
 var word = words[0];
 var width = parseInt(d.radius)*.8;
-var height = width;
+var height = width/2;
 var length = 0;
 d3.select(this).style("font-size", size + "px").text(word);
-while(((this.getBBox().width >= width) || (this.getBBox().height >= height)) && (size > (12/scale)))
+while(((this.getBBox().width >= width) || (this.getBBox().height >= height)) && (size > (10/scale)))
  {
   size--;
   d3.select(this).style("font-size", size + "px");
   this.firstChild.name = word;
  }
+ //alert(size)
+
 
 }
  
@@ -26,7 +29,7 @@ var words = d.name.split(' ');
 var line = new Array();
 var length = 0;
 var text = "";
-var width = parseInt(d.radius)*1;
+var width = parseInt(d.radius)*.7;
 var height = width;
 var word;
 do {

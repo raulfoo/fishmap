@@ -1,4 +1,3 @@
-
 function drawBarGraph(id,input,titles,taxLevel,type,restrictedArray,timelineIds){
 
 divName = "timeline"+id;
@@ -16,7 +15,7 @@ for(i=0;i<input.length;i++){
    
 
    if(type=="dollars"){
-    output.push(parseFloat(Math.round(temp[1])))
+    output.push(parseFloat(Math.round(temp[1]))/1e6)
     }else{
   
     output.push(parseFloat(temp[1]*100));
@@ -45,7 +44,7 @@ if(type=="percent" || type=="budget_percent"){
       //'focusTarget': 'category'
       /*'legendPosition': 'newRow',
       'displayExactValues': true*/
-      vAxis : {title: 'Budget ($)', gridlines: {count: 5},  minValue : 0},
+      vAxis : {title: 'Budget (Million $)', gridlines: {count: 5},  minValue : 0},
       legend :{position: 'top'},
       backgroundColor: 'transparent',
       title : 'Relative to other Spending, 2012',
@@ -128,7 +127,7 @@ function drawLineGraph(id,input,titles,taxLevel,type,restrictedArray,normalBudge
  
     for(j=0;j<temp.length;j++){
      if(type=="dollars"){
-      output.push(Math.round(temp[j]))
+      output.push(Math.round(temp[j])/1e6)
      }else{
       output.push(temp[j]*100);
       }
@@ -151,7 +150,7 @@ function drawLineGraph(id,input,titles,taxLevel,type,restrictedArray,normalBudge
       }
       else{
         var options = {
-          vAxis : {logScale: true, title: 'Budget ($) (Log Scale!)', gridlines: {count: 7}},
+          vAxis : {logScale: true, title: 'Budget (Million $) (Log Scale!)', gridlines: {count: 7}},
           legend :{position: 'top'},
           backgroundColor: 'transparent',
           title : 'Historical Context 1980-2015',

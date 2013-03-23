@@ -38,7 +38,7 @@ var zoom = d3.behavior.zoom()
 var vis = d3.select(".chart").append("svg")
     .attr("width", w)
     .attr("height", h)
-    .call(zoom)
+    //.call(zoom)
     .append("g");
 //zoomDiv = vis.append("g")
 
@@ -71,7 +71,7 @@ function start(){
 
   startLen = root._children.length
   root._children.splice(0,(subfunctionLevelMin-1))
-  root._children.splice((subfunctionLevelMax-1),(startLen-subfunctionLevelMax))
+  root._children.splice((subfunctionLevelMax),(startLen-subfunctionLevelMax))
   $(".bubbleNavigateSearch").fadeIn();
   update(null);
   
@@ -105,7 +105,7 @@ function update(parentString,endId,extend,endLevel,endRadius) {
   force
       .nodes(nodes)
       .links(links)
-      .linkDistance(function(d,i) {return (150+((1+Math.random())*(150)));})
+      .linkDistance(function(d,i) {return (100+((1+Math.random())*(150)));})
       .gravity(1)
       .charge(0)
       .on("tick",tick)
@@ -118,8 +118,8 @@ function update(parentString,endId,extend,endLevel,endRadius) {
         .links(links)
         .gravity(0)
         .charge(-500)
-        .linkDistance(function(d,i) {return (100+(((1+Math.random()*2))*(lastRadius)));})
-        .linkStrength(.5)
+        .linkDistance(function(d,i) {return (100+(((1+Math.random()*1))*(lastRadius)));})
+        .linkStrength(.6)
         .start()
         .on("tick",tick)
      }
@@ -172,10 +172,10 @@ function update(parentString,endId,extend,endLevel,endRadius) {
      .each(wordWrap)
   
 
-  nodeEnter.append("svg:title")
+  /*nodeEnter.append("svg:title")
     .style("text-anchor", "middle")
     .style("fill", "black")
-    .text(5);
+    .text(5);*/
  
 
   // Exit any old nodes..transition()
@@ -199,8 +199,8 @@ function tick() {
      .attr("y2", function(d) { return d.target.y; });
   
 //ease("elastic",1,20)
-    node.transition().ease("elastic",3,200).attr('transform', function (d, i) { 
-        r = d.radius
+    node.transition().ease("elastic",3,400).attr('transform', function (d, i) { 
+        r = d.radius*1.05
         return 'translate(' + Math.max(r, Math.min(w - r, d.x)) + ',' + Math.max(r, Math.min(h - r, d.y)) + ') '
     })
 
@@ -235,12 +235,9 @@ function changeRevealAmt(){
   }
   root.children.forEach(addRemove)*/
   startLen = root.children.length
-  alert(subfunctionLevelMin)
-  alert(subfunctionLevelMax)
-  alert(startLen)
-  root.children.splice((subfunctionLevelMax-1),(startLen-subfunctionLevelMax))
+ 
+  root.children.splice((subfunctionLevelMax),(startLen-subfunctionLevelMax))
   root.children.splice(0,(subfunctionLevelMin-1))
-  root.children.splice((subfunctionLevelMax-1),(startLen-subfunctionLevelMax))
  
   
   update("top",null,null,null,90)
