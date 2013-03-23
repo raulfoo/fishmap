@@ -1,18 +1,22 @@
 $(document).ready(function(){
 
 var w = 900,
-    h = 600,
+    h = 700,
     node,
     link,
     root,
     textLabel,
     allNodes,
     nodeEnter,
-    trans=[0,0],
+    plainJSONChildren,
     scale=1,
     displayCountForce,
+    subfunctionLevelMin =1,
+    subfunctionLevelMax = 10,
     duration = 750;
     
+var trans=[0,0]
+
 var textHeight = .8,
     textWidth = 1.6,
     moveLeft = textWidth/2,
@@ -35,14 +39,21 @@ var vis = d3.select(".chart").append("svg")
     .attr("width", w)
     .attr("height", h)
     .call(zoom)
-    .append("g")
+    .append("g");
 //zoomDiv = vis.append("g")
+
+var plainJSONChildren
 
 
 function start(){
   d3.json("json/subfunctionBubble.json", function(json) {
+ 
+  
   root = json;
   mainRoot = root;
+  plainJSONChildren = $.extend(true, [], root);
+  
+
  
   function collapse(d) {
     if (d.children) {
@@ -55,15 +66,13 @@ function start(){
   }
 
   collapse(root);
-  for((i=root._children.length-1);i>=0;i--){
-    test = Math.random()
-    if(test > .75 ){
-      root._children.splice(i,1)
-      root.placeHold.splice(i,1)
-       
-    }
-  }
-  displayCountForce = root.placeHold.length; 
+  collapse(plainJSONChildren);
+  plainJSONChildren = plainJSONChildren._children
+
+  startLen = root._children.length
+  root._children.splice(0,(subfunctionLevelMin-1))
+  root._children.splice((subfunctionLevelMax-1),(startLen-subfunctionLevelMax))
+  $(".bubbleNavigateSearch").fadeIn();
   update(null);
   
   
@@ -89,6 +98,7 @@ function update(parentString,endId,extend,endLevel,endRadius) {
     
   }
   var links = d3.layout.tree().links(nodes);
+ 
   // Restart the force layout.
   //temp = links
   if(parentString == null){
@@ -107,16 +117,17 @@ function update(parentString,endId,extend,endLevel,endRadius) {
         .nodes(nodes)
         .links(links)
         .gravity(0)
-        .charge(-600)
-        .linkDistance(function(d,i) {return (50+(((1+Math.random()*4))*(lastRadius)));})
-        .linkStrength(1)
+        .charge(-500)
+        .linkDistance(function(d,i) {return (100+(((1+Math.random()*2))*(lastRadius)));})
+        .linkStrength(.5)
         .start()
         .on("tick",tick)
      }
-   
+  
    link = vis.selectAll("line.link")
       .data(links, function(d) { return d.target.id; });
 
+  
   // Enter any new links.
  
   link.enter().insert("svg:line", ".node")
@@ -125,7 +136,7 @@ function update(parentString,endId,extend,endLevel,endRadius) {
       .attr("y1", function(d) { return d.source.y; })
       .attr("x2", function(d) { return d.target.x; })
       .attr("y2", function(d) { return d.target.y; });
-
+  
   // Exit any old links.
   link.exit().remove();
 
@@ -133,7 +144,7 @@ function update(parentString,endId,extend,endLevel,endRadius) {
   // Update the nodes…
   node = vis.selectAll("g.node")
       .data(nodes, function(d) { return d.id; })
-      
+   
     
   nodeEnter = node.enter().append("svg:g")
     .attr("class", "node")
@@ -150,6 +161,7 @@ function update(parentString,endId,extend,endLevel,endRadius) {
       .on("click", click)
       .call(force.drag);
   
+ 
   vis.selectAll("circle")
     .style("fill", color);
     
@@ -164,11 +176,12 @@ function update(parentString,endId,extend,endLevel,endRadius) {
     .style("text-anchor", "middle")
     .style("fill", "black")
     .text(5);
-  
+ 
 
   // Exit any old nodes..transition()
       
   node.exit().remove();
+
   
 }
 
@@ -200,7 +213,8 @@ function color(d) {
     return d.children ? "#336633" : "#66CC00";
     }
   else if(d.level == "subfunction"){
-     return d.children ? "#3182bd" : "#c6dbef";
+      return d.children ? "#3182bd" : "#c6dbef";
+     
   }else if(d.level == "agency"){
      return d.children ? "#D14719" : "#D65C33";
   }else if(d.level == "bureau"){
@@ -209,18 +223,50 @@ function color(d) {
   }
 }
 
+
+function changeRevealAmt(){
+
+  root.children =  $.extend(true, [], plainJSONChildren) //arrange plainJSONChildren such that is in ascending order, find the first that isn't big enough, slice through to the last that isnt big enough, no need to loop here
+  /*function addRemove(d){
+    if(d.id < subfunctionLevel){
+      root.children.shift()
+    }
+    count++
+  }
+  root.children.forEach(addRemove)*/
+  startLen = root.children.length
+  alert(subfunctionLevelMin)
+  alert(subfunctionLevelMax)
+  alert(startLen)
+  root.children.splice((subfunctionLevelMax-1),(startLen-subfunctionLevelMax))
+  root.children.splice(0,(subfunctionLevelMin-1))
+  root.children.splice((subfunctionLevelMax-1),(startLen-subfunctionLevelMax))
+ 
+  
+  update("top",null,null,null,90)
+
+
+}
+
+
 // Toggle children on click.
 function click(d) {
 
  if(d.level != "top" && d.level != "bureau"){
-      $(".bubbleNavigateSearch").html("Click to view<br><a>"+ d.name+"</a>").val(d.find_id)
+      $(".bubbleNavigateSearch").val(d.find_id)
+      $("#bubbleText").html("Click to view<br><a>"+ d.name+"</a>")
+      $("#subfunctionSlider").fadeOut();
     }else if(d.level == "bureau"){
       goToNavigate(d.find_id)
   
     }else if(d.level == "top" && d._children){
-      $(".bubbleNavigateSearch").fadeIn().html("Displaying "+displayCountForce+" of 77 government 'Subfunctions'").val(0)
+      $(".bubbleNavigateSearch").val(0)
+      $("#bubbleText").html("The 10 largest government function are shown. Use the slider to modify your selection")
+      $("#subfunctionSlider").fadeIn();
   }else{
-    $(".bubbleNavigateSearch").html("Browse the heirarchy of government programs. A complete list is available on the next tab.")
+    //$(".bubbleNavigateSearch").html("Click each bubble node to navigate through the agency hiearchy.")
+     $("#bubbleText").html("Click each bubble node to navigate through the agency hiearchy.")
+     $("#subfunctionSlider").fadeOut();
   }
   
   if(d.level != "top"){
@@ -254,6 +300,7 @@ function click(d) {
 }
 
 function flatten(root) {
+ 
  root.fixed=true;
  root.px = 500;
  root.py = 250;
@@ -272,7 +319,8 @@ function flatten(root) {
   }
 
 
-  recurse(root,randomChoose);
+  recurse(root);
+  
   return nodes
 }
 
@@ -392,102 +440,6 @@ function move() {
       .each(wordWrap)
   } 
 
-// Returns a list of all nodes under the root.
-
-
-
-
-function fontSize(d,i) {
-
-if(d3.event){
-  scale = d3.event.scale;
-};
-var size = parseInt(d.radius)/5;
-var words = d.name.split(' ');
-var word = words[0];
-var width = parseInt(d.radius)*.8;
-var height = width;
-var length = 0;
-d3.select(this).style("font-size", size + "px").text(word);
-while(((this.getBBox().width >= width) || (this.getBBox().height >= height)) && (size > (12/scale)))
- {
-  size--;
-  d3.select(this).style("font-size", size + "px");
-  this.firstChild.name = word;
- }
-
-}
- 
-function wordWrap(d, i){
-
-var words = d.name.split(' ');
-
-var line = new Array();
-var length = 0;
-var text = "";
-var width = parseInt(d.radius)*1;
-var height = width;
-var word;
-do {
-   word = words.shift();
-   line.push(word);
-   if (words.length)
-     this.firstChild.name = line.join(' ') + " " + words[0];
-     
-   else
-     this.firstChild.name = line.join(' ');
-   length = this.getBBox().width;
-   if (length < width && words.length) {
-     ;
-   }
-   else {
-     text = line.join(' ');
-
-     this.firstChild.name = text;
-     if (this.getBBox().width > width) { 
-       text = d3.select(this).select(function() {return this.lastChild;}).text();
-       text = text.replace(/\./g,""); 
-       text = text + "...";
-       
-       d3.select(this).select(function() {return this.lastChild;}).text(text);
-       d3.select(this).classed("wordwrapped", true);
-       break;
-    }
-    else
-      ;
- 
-  if (text != '') {
-   
-   /* d3.select(this).append("svg:tspan")
-    .attr("x", 0)
-    .attr("dx", "0.15em")
-    .attr("dy", "0.9em")
-    .text(text);*/
-     d3.select(this)
-    //.attr("x", 0)
-    .text(text);
-  }
-  else
-     ;
- 
-  if(this.getBBox().height > height && words.length) {
-     text = d3.select(this).select(function() {return this.lastChild;}).text();
-     text = text.replace(/\./g,""); 
-     text = text + "...";
-     d3.select(this).select(function() {return this.lastChild;}).text(text);
-     d3.select(this).classed("wordwrapped", true);
- 
-     break;
-  }
-  else
-     ;
- 
-  line = new Array();
-    }
-  } while (words.length);
-  this.firstChild.name = '';
-} 
-
     
 function mover(d) {
         $("#pop-up").fadeOut(100,function () {
@@ -524,14 +476,33 @@ function mout(d) {
 
 
 function goToNavigate(id){
-
+  
   findData(String(id),1,false,null,"budget_percent","line");
+  $("#tabs").fadeOut();
+  $("#hideBrowsing").text("Show Browsing")
 }
 
 $(".bubbleNavigateSearch").click(function(){
   if($(this).val()!=0){
     findData(String($(this).val()),1,false,null,"budget_percent","line");
+    $("#tabs").fadeOut();
+    $("#hideBrowsing").text("Show Browsing")
   }
 });
+
+
+$("#subfunctionSlider").slider({
+    range: true,
+    value: 10,
+    orientation: "horizontal",
+    min: 0,
+    max: 77,
+    values: [1,10],
+    change: function(event, ui) { 
+      subfunctionLevelMin = ui.values[0]
+      subfunctionLevelMax = ui.values[1]
+      changeRevealAmt()   
+    }
+  });
 
 });

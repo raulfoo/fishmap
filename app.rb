@@ -39,7 +39,7 @@ class BudgetUs < Sinatra::Base
     #@sortingFunction = UniqueSearch.filter(:first_browse => "nested").sort_by(&:browse_name).uniq
     #@sortingAgency =  UniqueSearch.filter(:first_browse => "unested").sort_by(&:browse_name).uniq
     @text_search = UniqueSearch.filter(:search_text => true)
-    @descriptions = Description.select(:description)
+    #@descriptions = Description.select(:description)
   end
   
   configure do

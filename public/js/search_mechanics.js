@@ -1,5 +1,13 @@
+var jsonText;
+var temp;
 $(document).ready(function(){
- 
+
+
+$.getJSON("/json/wordSearch.json", function(json){
+  jsonText = json;
+
+});
+
   $("#searchProgram").keyup(function(e){
     data = $(this).val();
     
@@ -43,7 +51,7 @@ function delayHide(){
   
         
 });
-
+/*
 function showDescription(e,go){
   
   data = e.text();
@@ -65,10 +73,42 @@ function showDescription(e,go){
     
     }
   });
+}*/
+
+
+function showDescription(e,go){
+  
+  data = e.text();
+  div = e.closest(".programBudget");
+  div = div.find(".miniDescription");
+  //alert("hello")
+  //alert(data);
+
+  
+  if(go == 2){
+     div.html("")
+     return
+  }
+  
+  description = jQuery.grep(jsonText, function(d){
+    if((d.name).match(data)) {
+     
+      return d.desc
+    }
+    
+  }); 
+  temp = description
+
+  div.html(description[0].desc)
 }
 
 
 
+
+
+
+
+/*
 function findSuggestions(data,viewMore){
 
   $(".opaqueRow").css("visibility","visible");
@@ -89,7 +129,57 @@ function findSuggestions(data,viewMore){
       }
     })
 
+}*/
+
+
+
+
+
+function findSuggestions(data,viewMore){
+
+  $(".opaqueRow").css("visibility","visible");
+  
+  search = new RegExp(data,"gi")
+  test = jQuery.grep(jsonText, function(d){
+    if((d.name).match(search)) {
+      return {"name":d.name,"id":d.id}
+    }
+    
+  }); 
+  
+  count = 0;
+  allOut = "";
+  for(i in test){
+    d = test[i]
+       if(count > 7){
+        allOut = allOut + '<tr class="opaqueRow"><td><p class="textSearchSelect" onclick="getResult';
+        allOut = allOut + "('View More','View More')";
+        allOut = allOut + '>View More</p></td></tr>';
+        
+      }else{
+      allOut = allOut + '<tr class="opaqueRow"><td><p class="textSearchSelect" onclick="getResult';
+      allOut = allOut + "('"+d.name+"','"+d.id+"')";
+      allOut = allOut+ '">'+d.name+'</p></td></tr>';
+      }
+    
+      if(count > 7) break;
+      count++;
+  
+  }     
+     
+         
+     
+     $("#searchTable").children().children().eq(0).nextAll().remove()
+     $("#searchTable").append(allOut);
+   
+         
+       
+
+  
+    
+
 }
+
 
 
 

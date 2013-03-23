@@ -67,6 +67,7 @@ $(document).ready(function(){
       $(this).text("Show Browsing")
     }else{
       $("#tabs").fadeIn();
+      $(".govtProgramsWrapper").css("display","hidden");
       $(this).text("Browse:") 
     }
   });
@@ -247,7 +248,7 @@ function updateNavigation(links,navigationId,idArray){
 
   maxAmount = 8
   currentAmount = $("#navigationWrapper").children().length
-  
+  alert(idArray);
   checkRecent = idArray.indexOf(String(navigationId))
 
   if(checkRecent != -1 && checkRecent != (idArray.length-1)){//&& checkRecent != (idArray.length-1)

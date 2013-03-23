@@ -75,8 +75,8 @@ class BudgetUs < Sinatra::Base
    
      search = params[:input]
      search = Regexp.new(Regexp.escape(search), "i")
-     #result = Description.select(:description).where(:name => search).first#.sort_by(&:times_selected)
-     result = @descriptions.select(:description).where(:name => search).first
+     result = Description.select(:description).where(:name => search).first#.sort_by(&:times_selected)
+     #result = @descriptions.select(:description).where(:name => search).first
      if result == nil 
        return_description = "No description available"
      else
