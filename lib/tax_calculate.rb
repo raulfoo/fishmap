@@ -6,7 +6,7 @@ class BudgetUs < Sinatra::Base
     income = (income.gsub(/[^0-9.]/,'')).to_i
     flash[:value] = income
     raw_income = income
-    income = raw_income-5950 #for deductions
+    income = raw_income-5950-3800 #for deductions
     
 
     tax_thresholds = [0,8700,35350,85650,178650,388350,0]
