@@ -1,7 +1,13 @@
 var barGraph;
 var annotatedtimeline;
-   
+var gdpSize;
+
 $(document).ready(function(){
+
+   $.get("/loadGDP",function(result){
+    gdpSize = JSON.parse(result)
+   });
+    
    
    if($('input[name=income]').val() != null){
     setCookie("income",$('input[name=income]').val(),1);
@@ -335,16 +341,22 @@ function createOutput(outputBig,makeNew,child,budgetType,nesting,proportion,allT
   
     if(output['current']['is_medicare'] == "SS"){
       proportion = $("#ss_tax").val(); //will need to differentiate between medicare and social security spending
-      allTax = 484482000000
+       allTax = 778574000000
     }else if( output['current']['is_medicare'] == "Medicare"){
       proportion = $("#medicare_tax").val(); //will need to differentiate between medicare and social security spending
-      allTax = 778574000000
+   
+       allTax = 484482000000
+    }else{
+      allTax = 2510000000000 //get better number here
     }
     taxLevel = proportion;
-    allTax = 3800000000000 //get better number here
+   
    
 
     var currentShare = proportion * budget;
+  
+    
+    
 
     divOut = ""
     
@@ -359,10 +371,11 @@ function createOutput(outputBig,makeNew,child,budgetType,nesting,proportion,allT
       '<div class="programDataTopRow">'+
       '<div class="programBudget">Budget Tree: '+mainTitle+'<br>Annual Budget for 2012 ($): '+numberToWords(spendingBudget)+'<br>'+
       '<div class="miniDescription"></div>'
-    
-      if((makeNew != true && outputBig.length>1) || makeNew == "search"){
+     
+      if((makeNew != true && outputBig.length>1 && outputIndex < outputBig.length-1) || makeNew == "search"){
          divOut =  divOut+'<a class="seeGraphs">View More (Graphs)</a>'
       }else{
+        
         divOut =  divOut+'<a class="seeGraphs">Hide</a>'
       }
       divOut = divOut +'</div>'+  // commaSeparateNumber(decimalRound(budget*allTax/1000000000))   //Budget (% of total): '+decimalRound(budget*100)+'% <br> 
@@ -372,6 +385,7 @@ function createOutput(outputBig,makeNew,child,budgetType,nesting,proportion,allT
       //'<br>Proposed Share of this Program: <span class="userTaxAmt"></span>'+
       '<tr><td>Tax Change After Your Proposal: </td><td> <p class="userTaxChangeDollar"></p></td></tr>'+
       '<tr><td>Change in US Budget: </td><td><p class="budgetChangePerc"></p></td></tr>'+
+      '<tr><td>Average Benefit (per Adult): </td><td><p class="avgBenefit">$'+Math.round(spendingBudget/2350000)/100+'</p></td></tr>'+
       '</table>'+
       '<br><h6>Drag to change this programs budget --></h6>'+
       '</div>'+
@@ -393,6 +407,7 @@ function createOutput(outputBig,makeNew,child,budgetType,nesting,proportion,allT
       '<div class="programTimeline" id="timeline'+id+'">  </div>'+
       '<input type="radio" id="radioPercent'+id+'" name="graphType'+id+'" value="budget_percent" checked />% of Total Budget '+
       '<input type="radio" id="radioDollars'+id+'" name="graphType'+id+'" value="budget_dollar" />$(Millions)'+
+      '<input type="radio" id="radioGDPPercent'+id+'" name="graphType'+id+'" value="gdp_percent" />% of GDP'+
       '</div>'+
       '<div class="timelineData">'
       
@@ -432,15 +447,18 @@ function createOutput(outputBig,makeNew,child,budgetType,nesting,proportion,allT
     graphArray = output['timeline'];
     titles = output['timeline_titles'];
     
-  
     var type=""
    
     if(budgetType == "budget_dollar"){
       var type="dollars"
       $("#radioDollars"+id).attr("checked","checked");
       
+      }else if(budgetType == "gdp_percent"){
+        var type="gdp_percent"
+        $("#radioGDPPercent"+id).attr("checked","checked");
       }else{
         var type="percent"
+
       }
     
     if(graphType == "line"){
@@ -450,7 +468,7 @@ function createOutput(outputBig,makeNew,child,budgetType,nesting,proportion,allT
 
     }
    
-    if((makeNew != true && outputBig.length>1) || makeNew == "search"){
+    if((makeNew != true && outputBig.length>1 && outputIndex < outputBig.length-1) || makeNew == "search"){
       
       $(".programDataBottomRow").css("display","none");
     }
@@ -503,7 +521,8 @@ function createOutput(outputBig,makeNew,child,budgetType,nesting,proportion,allT
       
 
 function fastNavigate(id){
- 
+  $("#tabs").fadeOut();
+  $("#hideBrowsing").text("Show Browsing")
   findData(id,1,false,null,"budget_percent","line");
 
 }

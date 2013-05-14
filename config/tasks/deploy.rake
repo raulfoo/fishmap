@@ -16,14 +16,14 @@ namespace :fezzik do
   desc "performs pre-push setup"
   remote_task :pre_push_setup, :roles => :root_user do
     puts "performing pre-push setup"
-    add_user("budgetus") unless has_user?("budgetus")
+    add_user("fishmap") unless has_user?("fishmap")
     run "ruby --version > /dev/null || apt-get install -y ruby"
     run "rsync --version > /dev/null || apt-get install -y rsync"
-    run "mkdir -p /opt/#{app}/releases && chown -R budgetus /opt/#{app}"
+    run "mkdir -p /opt/#{app}/releases && chown -R fishmap /opt/#{app}"
   end
 
   desc "performs post-push setup"
-  remote_task :post_push_setup, :roles => :budgetus_user do
+  remote_task :post_push_setup, :roles => :fishmap_user do
     puts "performing post-push setup"
     run "cd #{release_path} && ./script/system_setup.rb"
     puts "bundle install"
@@ -34,7 +34,7 @@ namespace :fezzik do
   end
 
   desc "generates upstart scripts"
-  remote_task :generate_upstart_scripts, :roles => :budgetus_user do
+  remote_task :generate_upstart_scripts, :roles => :fishmap_user do
     puts "generating upstart scripts"
     run "cd #{release_path} && bundle exec foreman export upstart upstart_scripts -a #{app} -u #{user}"
     run "sudo cp #{release_path}/upstart_scripts/* /etc/init"

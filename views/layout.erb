@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta property="og:title" content="BudgetUs"/>
+    <meta property="og:title" content="FishMap"/>
     <meta property="og:url" content="http://budgetus.org"/>
     <meta property="og:description" content="CNN's King, John Got Nothin' On Me. 
                                                - Samuel L. Jackson, Training Day"/>
     
-    <title>Budget US</title>  
+    <title>Fish Map</title>  
     
     <%= @pinion.css_url("/css/main.css") %>
     <%= @pinion.css_url("/css/common.css") %>
@@ -28,16 +28,16 @@
   <body>
     <div id="header">
 
-      <div class="titleDiv"><h2><a href="/">Budget US<a></h2></div>
-      <div class="about">
+      <div class="titleDiv"><h2><a href="/">FishMap!<a></h2></div>
+     <!-- <div class="about">
         <a href="/about">About</a>
-        <%= erb :add_this, :layout=> false %>
-      </div>
+        <%#= erb :add_this, :layout=> false %>
+      </div>-->
      
     </div>
     <div id="fullPage">
-      <div id="sidebar">
-        <% if defined? federal_tax %>
+    <!--  <div id="sidebar">
+        <%# if defined? federal_tax %>
         <div class="changeBudget">
           <form class="standard" id="incomeForm" action="/navigate" method="post">
             Change income:
@@ -57,19 +57,19 @@
         </div>
         <div id="navigationWrapper"></div>
         </div>
-        <%end%>
-      </div>
+        <%#end%>
+      </div>-->
       <div id="content">
         <%= yield %>
       </div>
     </div>
     <div id="footer">
       <div class="container">
-        <span class="copyright">&copy; <%= Time.now.strftime("%Y") %> Budget US</span>
+        <span class="copyright">&copy; <%= Time.now.strftime("%Y") %> FishMap!</span>
         <!--<a href="#">Terms of Use</a> |
         <a href="#">Privacy Policy</a> |-->
-        <a href="/about">About</a> |    
-        <a href="mailto:budgetus.contact@gmail.com" target="_blank">budgetus.contact@gmail.com</a>
+        <!--<a href="/about">About</a> |    
+        <a href="mailto:budgetus.contact@gmail.com" target="_blank">budgetus.contact@gmail.com</a>-->
       </div>
     </div>
   </body>

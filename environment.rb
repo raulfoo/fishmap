@@ -1,6 +1,6 @@
 RACK_ENV = "development"
 DB_HOST = "localhost"
-DB_NAME = "BudgetUs"
+DB_NAME = "fishmap"
 DB_USER = "postgres"
 DB_PASS = ""
 

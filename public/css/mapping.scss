@@ -1,0 +1,411 @@
+@import "css/mixins";
+
+
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar {
+  fill: steelblue;
+}
+
+.x.axis path {
+  display: none;
+}
+
+
+
+
+.counties {
+  fill: none;
+  
+}
+
+.countries{
+  fill: none;
+
+  stroke-linejoin: round;
+  z-index: 1;
+
+}
+
+.no_oceans{
+  fill: none;
+
+  stroke: #000;
+  stroke-linejoin: round;
+  z-index: 1;
+
+}
+
+
+.states {
+  fill:  none;
+  stroke: #fff;
+  stroke-linejoin: round;
+  
+  
+}
+
+
+
+.arc{
+  pointer-events: none;
+  fill: none;
+  stroke: #000;
+  stroke-width: 5px;
+  display:none;
+
+}
+
+#returnZoom{
+  display: none;
+  position: absolute;
+  top: 290px;
+  left: 1145px;
+
+}
+
+.corrTable{
+  font-size: 1.3em;
+  
+    .alignRightTD{
+      padding-left: 8px;
+      text-align: right;
+    }
+
+
+}
+
+#status {
+  p{
+    font-size: 2em;
+    padding: 10px;
+  }
+}
+
+#disclaim{
+  font-style: italic;
+  font-size: .9em;
+  max-width: 200px;
+  float: right;
+  margin-right: 75px;
+  text-align: justify;
+
+}
+.description{
+  display: table;
+  visibility: hidden;
+  
+  font-size: 2em;
+  padding: 0px;
+  min-height: 150px;
+  min-width: 900px;
+  max-width: 900px;
+  
+ 
+  
+
+  #descriptionTableLeft{
+  
+    display: table-cell;
+    .rightAlign{
+      text-align: right;
+    }
+  }
+  
+  #descriptionTableRight{
+    display: table-cell;
+    font-size: .5em;
+    padding-left: 20px;
+    text-align: right;
+   
+  
+  }
+  
+  
+
+}
+
+
+#pop-up {
+  display: none;
+  position:absolute;
+  color: white;
+  font-size: 14px;
+  background: rgba(0,0,0,0.5);
+  padding: 5px 10px 5px 10px;
+  -moz-border-radius: 8px 8px;
+  border-radius: 8px 8px;
+  max-width: 350px;
+
+  
+ 
+  #pop-up-content {
+    font-size: 12px;
+  }
+    #pop-desc {
+      width: 300px;
+      .alignRightTD{
+        padding-left: 8px;
+        text-align: right;
+      }
+    }
+   
+}
+
+
+.topNavigation{
+  display: table;
+
+  .topNavLeft{
+    display: table-cell;
+    
+    .categorySelect li{
+    
+      display: inline;
+      list-style-type: none;
+      padding-right: 20px;
+      
+      a{
+        padding: 5px;
+      }
+      
+      #loadWarning{
+        display: none;
+        font-color: $red;
+      }
+      
+    }
+  
+    #mapLegend{
+      font-size: .6em;
+      min-width: 800px;
+     
+      
+      
+      table{
+    
+        td{
+          height: 15px;
+          padding: 5px;
+        }
+       
+        .legendBox{
+          max-width: 15px;
+          min-width: 15px;
+          height: 100%;
+         
+          
+          float: left;
+        
+        }
+        span{
+          vertical-align: middle;
+          /*float: right;*/
+        }
+      }
+    }
+  }
+    
+    .topNavRight{
+      font-size: .55em;
+      max-width: 400px;
+      display: table-cell;
+      
+      #selectContainer{   
+      
+        display: table;
+        max-width: 400px;
+        min-width: 400px;
+        height: 150px;
+        margin: 15px;
+        
+        
+        #leftSelectContainer{
+          display: table-cell;
+          max-width: 200px;
+          padding: 5px;
+          
+          #leftValues{
+            max-width: 190px;
+            min-width: 190px;
+          }
+          #textSearch {
+            max-width: 125px;
+            min-width: 125px;
+            height: 30px;
+            margin-top: 8px;
+            float: left;
+          }
+          #numMatches{
+            float: right;
+            margin-top: 15px;
+            max-width: 60px;
+          }
+        }
+        #rightSelectContainer{
+          display: table-cell;
+          max-width: 200px;
+          padding: 5px;
+          
+           #rightValues{
+            max-width: 190px;
+            min-width: 190px;
+          }
+        }
+      
+    
+      a {
+        font-size: .9em;
+        padding: 10px;
+        width: 50px;
+        display: block;
+        
+        margin: 0 auto;
+        margin-top: 8px;
+      }
+    }
+  }
+
+
+  
+
+}
+
+
+
+
+#topWindow{
+  display: table;
+  width: 1000px;
+  
+  #chloropleth{
+    display: table-cell;
+   
+  }
+  
+  #topRightSide{
+    display: table-cell;
+    vertical-align: top;
+
+    #chloroInformation{
+      max-width: 300px;
+      min-width: 300px;
+      font-size: .6em;
+      vertical-align: top;
+      p{
+        font-size: 1.2em;
+        font-weight: bold;
+      }
+      table{
+        max-width: 250px;
+        min-width: 250px;
+      
+        td{
+          text-align: right;
+        }
+        td:first-child{
+          text-align: left;
+        }
+      }
+
+      
+      
+    }
+  }
+  
+
+}
+
+.legendBoxDiv{
+  margin-top: 10px;
+}
+
+#import_Export{
+  display: none;
+  padding-left: 50px;
+  font-size: .8em;
+  float: right;
+  
+}
+
+#chloroDetailsWrap{
+  display: table;
+  font-size: .6em;
+  
+ 
+  
+  .chloroDetails{
+    display: table-cell;
+  }
+  #graphLegend{
+    display: table-cell;
+    
+  }
+
+}
+
+.popUpText{
+  
+  
+  p{
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+  
+  .popUpTable{
+    border-radius: 8px 8px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    float: right;
+  
+    td{
+      
+      text-align: right;
+    }
+    td:first-child{
+      max-width: 200px;
+      width: 200px;
+      text-align: left;
+    }
+  }
+}
+
+
+#changeCountryDetails{
+  display: none;
+  
+  
+  #nationChooseText{
+    float: left;
+  }
+  
+  #nationDetailsChoose{
+    float: left;
+    margin-left: 20px;
+    margin-top: 5px;
+  }
+
+}
+
+
+
+
+.q0-9 { fill:rgb(247,251,255); }
+.q1-9 { fill:rgb(222,235,247); }
+.q2-9 {fill:rgb(198,219,239); } 
+
+.q3-9 { fill:rgb(158,202,225); }
+.q4-9 { fill:rgb(107,174,214); }
+.q5-9 { fill:rgb(66,146,198); }
+.q6-9 { fill:rgb(33,113,181); }
+.q7-9 { fill:rgb(8,81,156); }
+.q8-9 { fill:rgb(8,48,107); }
+.q9-9 { fill:rgb(8,48,107); }
+
+.blank {fill: black;}

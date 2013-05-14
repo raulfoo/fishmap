@@ -10,14 +10,11 @@ require "open-uri"
 require "json"
 require "lib/db"
 require "lib/currency"
-require "lib/tax_calculate"
-require "lib/show_programs"
-require "lib/search_mechanics"
-require "lib/search_mechanics"
+require "lib/mapping"
 
 
 
-class BudgetUs < Sinatra::Base
+class FishMap < Sinatra::Base
   enable :sessions
   set :session_secret, "abcdefghijklmnop"
   set :views, "views"
@@ -38,8 +35,9 @@ class BudgetUs < Sinatra::Base
   before do
     #@sortingFunction = UniqueSearch.filter(:first_browse => "nested").sort_by(&:browse_name).uniq
     #@sortingAgency =  UniqueSearch.filter(:first_browse => "unested").sort_by(&:browse_name).uniq
-    @text_search = UniqueSearch.filter(:search_text => true)
-    #@descriptions = Description.select(:description)
+    #@text_search = UniqueSearch.filter(:search_text => true)
+    #@map_list= MapRange.select(:agency, :agency_id).sort_by(&:agency).uniq
+    #@gdp = EconomySize.all
   end
   
   configure do
@@ -60,18 +58,7 @@ class BudgetUs < Sinatra::Base
     erb :faq
   end
   
-  get "/navigation" do
-    erb :navigation 
-  end
-  
-  get "/navigation_tree" do
-    erb :navigation_tree
-  end
-  
-  get "/navigate_test" do
-    erb :navigate_test
-  end
-  
+
   
   def production?() ENV["RACK_ENV"] == "production" end
   

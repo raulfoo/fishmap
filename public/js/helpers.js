@@ -18,6 +18,7 @@ function commaSeparateNumber(val){
 
 function decimalRound(val){
   precision = 2;
+  
   if(Math.abs(val) > 1){
     precision = 2;
   }else{
@@ -39,7 +40,9 @@ function decimalRound(val){
     }
     precision = precision + precision_increase;
   }
+  
   newNum = Math.round(val*Math.pow(10,precision))/Math.pow(10,precision)
+
   return newNum
 
 
@@ -67,3 +70,5 @@ function numberToWords(val){
  
   return numberToWordsOut;
 }
+
+

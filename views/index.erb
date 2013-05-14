@@ -1,67 +1,119 @@
 <% content_for :head do %>
    
-    <%= @pinion.js_url("/assets/js/main.js") %>
-    <%= @pinion.js_url("/assets/js/search_mechanics.js") %>
-    <%= @pinion.js_url("/assets/js/graphing.js") %>
-    <%= @pinion.js_url("/assets/js/helpers.js") %>
-    <%= @pinion.js_url("/assets/js/cookies.js") %>
-    <%= @pinion.js_url("/assets/js/text_indent_browse.js") %>
-    <%= @pinion.js_url("/assets/js/forceGraph_browse.js") %>
-    <%= @pinion.js_url("/assets/js/customTabs.js") %>
-    <%= @pinion.js_url("/assets/js/word_wrapping.js") %>
-    
-    <%= @pinion.css_url("/assets/css/forms.css") %>
-    <%= @pinion.css_url("/assets/css/tabs.css") %>
-    <%= @pinion.css_url("/assets/css/textSearch.css") %>
-    <%= @pinion.css_url("/assets/css/forceGraph.css") %>
+
+   <%= @pinion.js_url("/assets/js/mapping.js") %>
+   <%= @pinion.js_url("/assets/js/fishmeal_click.js") %>
+   <%= @pinion.js_url("/assets/js/trade_click.js") %>
+   <%= @pinion.js_url("/assets/js/production_click.js") %>
+   <%= @pinion.js_url("/assets/js/helpers.js") %>
+   <%= @pinion.js_url("/assets/js/graphHelpers.js") %>
+   <%= @pinion.js_url("/assets/js/mapLegend.js") %>
+   
+   <%= @pinion.js_url("/assets/js/multiSelect.js") %>
+   <%= @pinion.js_url("/assets/js/speciesSearchText.js") %>
+ 
+
+
+    <%= @pinion.css_url("/assets/css/mapping.css") %>
    
     <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://d3js.org/queue.v1.min.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
   
 <% end %>
 
 <div class="margin" >
- 
-  <% if !defined? federal_tax %>
-  <h4 id="stepOne"> Step 1: Enter your Income. We will estimate your taxes and use that<br>
-  to calculate what you paid for each specific government program</h3>
-
-  <form class="standard" id="incomeForm" action="/navigate" method="post">
-    <table>
-      <tr>
-        <td><label class="label">What was your income this year?</label></td>
-        <td><input type="text" name="income" value="$<%=flash[:value] %>"/></td>
-     </tr>
-     <tr>
-      <td></td><td><input type="submit" name="Start" value="Start"/></td>
-     </tr>
-    </table>
-  </form>
-  <% end %>
-  <% if defined? federal_tax %>
-  <%= @pinion.js_url("/assets/js/presets.js") %>
-  
-  <input type="hidden" id="federalTaxes" value="<%=federal_tax%>"/>
-  <input type="hidden" id="medicare_tax" value="<%=medicare_tax%>"/>
-  <input type="hidden" id="ss_tax" value="<%=ss_tax%>"/>
-  <input type="hidden" id="totalRevenues" value=1628000000000/>
-
- 
-  <h4 id="stepTwo"> Search for a program that interests you. We've provided some of the big ones</h4>
-  <h4><a id="hideBrowsing">Browse:</a></h4>
-  <%= erb :tab_browse, :layout=> false %>
-  
-  <div class="govtProgramsWrapper">
-  <div>
-    <a id="searching">Searching...</a>
-    <a id="clearAll" onclick=clearAll(false)>Clear All</a>
-  </div>
-    <div class="programsList">
+  <div class="topNavigation">
+    <div class="topNavLeft">
+      <ul class="categorySelect">
+        <li>
+          <a id="selectFishmeal" class="navLinks">Fishmeal</a>
+        </li>
+         <li>
+          <a id="selectTrade" class="navLinks">Trade</a>
+        </li>
+         <li>
+          <a id="selectCapture" class="navLinks">Capture/Production</a>
+        </li>
+         <li id="loadWarning">
+          Loading...
+        </li>
+      
+      </ul>
+      <div id="mapLegend"></div>
+    </div>
+    <div class="topNavRight">
+      
+      <div id="selectContainer">
+        <div id="leftSelectContainer">
+          <p> All Possible Selections: </p>
+          <select multiple id="leftValues">
+          
+          </select>
+           <a class="button" id="btnLeft">&gt;&gt;</a>
+           <input type="text" id="textSearch" placeholder="Search"/>
+           <p id="numMatches"></p>
+        </div>
+        <div id="rightSelectContainer">
+          <p> Selections to Search:</p>
+          <select multiple id="rightValues">
+          
+          </select>
+           
+          <a class="button" id="btnRight">&lt;&lt;</a>
+          <a class="button" id="changeFishSelect">Change Selection</a>
+        </div>
+      </div> 
+    
     
     </div>
+ 
   </div>
-
   
-  <% end %>
+  <div id="topWindow">
+    <div id="chloropleth"></div>
+    <div id = topRightSide>
+    
+    <div id="chloroInformation"></div>
+    </div>
+  </div>
+  <div id="currentDetailSelection">
+    
+  
+  </div>
+  <div id="changeCountryDetails">
+    <p id="nationChooseText"></p>
+    <select id="nationDetailsChoose">
+      
+    </select>
+    <div id="import_Export">
+      <p> Imports = Left Grouped Column</p>
+      <p> Exports = Right Column</p>
+    </div>
+    
+  </div>
+ 
+  
+  <div id="chloroDetailsWrap">
+    
+    
+    <div id="chloroDetails" class="chloroDetails"></div>
+    <div id="graphLegend"></div>
+  </div>
+  
+  <div id="pop-up">
+  <div id="pop-up-title"></div>
+  <div id="pop-up-content">
+    <table> 
+      <tr>
+        <td><div id="pop-img"></div></td>
+        <td><div id="pop-desc"></div></td>
+      </tr> 
+    </table>
+  </div>
+</div>
+
+<input type="hidden" id="categoryHolder" value="Fishmeal"/>
 
 </div>
 

@@ -7,52 +7,52 @@ end
 
 def set_common_environment
   env :db_host, "localhost"
-  env :db_name, "budgetus"
-  env :db_user, "budgetus"
+  env :db_name, "fishmap"
+  env :db_user, "fishmap"
 end
 
-set :app, "budgetus"
+set :app, "fishmap"
 set_application_paths(app)
-set :user, "budgetus"
+set :user, "fishmap"
 
 role :root_user, :user => "root"
-role :budgetus_user, :user => "budgetus"
+role :fishmap_user, :user => "fishmap"
 
 destination :vagrant do
-  set :domain, "budgetus-vagrant"
+  set :domain, "fishmap-vagrant"
   set_common_environment
   env :rack_env, "production"
-  env :port, 8200
+  env :port, 3200
 end
 
 destination :staging do
-  set :app, "budgetus_staging"
+  set :app, "fishmap_staging"
   set_application_paths(app)
   set :domain, "173.255.223.11"
   set_common_environment
   env :rack_env, "staging"
-  env :db_name, "budgetus_staging"
-  env :db_user, "budgetus_staging"
-  env :port, 8100
+  env :db_name, "fishmap_staging"
+  env :db_user, "fishmap_staging"
+  env :port, 3100
   env :unicorn_workers, 2
-  env :s3_bucket, "staging.budgetus.org"
+  env :s3_bucket, "staging.fishmap.org"
 end
 
 destination :prod do
   set :domain, "173.255.223.11"
   set_common_environment
   env :rack_env, "production"
-  env :db_name, "budgetus"
-  env :db_user, "budgetus"
-  env :port, 8200
+  env :db_name, "fishmap"
+  env :db_user, "fishmap"
+  env :port, 3200
   env :unicorn_workers, 10
-  env :s3_bucket, "budgetus.org"
+  env :s3_bucket, "fishmap.org"
 end
 
 # Load secure credentials
-if ENV.has_key?("BUDGETUS_CREDENTIALS") && File.exist?(ENV["BUDGETUS_CREDENTIALS"])
-  load ENV["BUDGETUS_CREDENTIALS"]
+if ENV.has_key?("fishmap_CREDENTIALS") && File.exist?(ENV["fishmap_CREDENTIALS"])
+  load ENV["fishmap_CREDENTIALS"]
 else
-  puts "Unable to locate the file $BUDGETUS_CREDENTIALS. You need this to deploy."
+  puts "Unable to locate the file $fishmap_CREDENTIALS. You need this to deploy."
   exit 1
 end
