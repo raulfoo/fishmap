@@ -44,9 +44,7 @@ function click_trade(dat){
          
           jsObj[fish] = x[0].value
           tempOut.push(jsObj)
-          console.log(x[0].value)
           if(maxVal < Math.abs(x[0].value)){
-            console.log(maxVal)
             maxVal = Math.abs(x[0].value)
             sumArray[tradeType] = maxVal
             }
@@ -63,9 +61,7 @@ function click_trade(dat){
   
   });
 
-  alert(sumArray["Export"])
-  alert(sumArray["Import"])
-  
+ 
   if (sumArray["Export"] > sumArray["Import"]){
     rankChoose = output["Export"]
     domainSelect = 1
