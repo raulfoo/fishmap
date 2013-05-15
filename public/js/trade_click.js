@@ -17,6 +17,10 @@ function click_trade(dat){
     partners = returnOutput["partners"]
     uniqueFish = returnOutput["uniqueFish"]
     
+    console.log(partners)
+    console.log(uniqueFish)
+    console.log(firstSelect)
+    
   output = []
   output["Import"] = []
   output["Export"] = []
@@ -60,6 +64,8 @@ function click_trade(dat){
     }
   
   });
+  
+  console.log(output)
 
  
   if (sumArray["Export"] > sumArray["Import"]){
@@ -71,7 +77,7 @@ function click_trade(dat){
      domainSelect = 0
   }
   
-  rankingArray = []
+  /*rankingArray = []
   for(i = 0; i< rankChoose.length; i++){
       tempSum = 0
      
@@ -91,7 +97,7 @@ function click_trade(dat){
   
   newRanks = []
   $.each(rankingArray, function(idx, item) {
-      var rank= $.inArray( item, sortedVals)+1;/* index position and add one for 1st,second etc*/
+      var rank= $.inArray( item, sortedVals)+1;// index position and add one for 1st,second etc
       newRanks.push(rank)
   
   })
@@ -125,8 +131,9 @@ function click_trade(dat){
     exportOut.splice(locationIndex,1)
     exportOut.push(aggregatesExport)
   }
-  
-  output = [importOut,exportOut]
+  */
+  output = [output["Import"],output["Export"]]
+  //output = [importOut,exportOut]
 
   graph(output,sortType,dat,uniqueFish,domainSelect)
 

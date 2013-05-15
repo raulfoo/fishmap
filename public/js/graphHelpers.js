@@ -23,6 +23,12 @@ function categorySelect(data,sortType){
     
     firstSelect = "partner"
     secondSelect = "description"
+    
+    output = chooseTopTen(data,uniqueFish,partners,firstSelect,secondSelect)
+    uniqueFish = output[1]
+    partners = output[0]
+  
+  
   }else{
   
     uniqueFish = []
@@ -45,6 +51,12 @@ function categorySelect(data,sortType){
     });
     firstSelect = "description"
     secondSelect = "partner"
+    
+    
+    output = chooseTopTen(data,uniqueFish,partners,firstSelect,secondSelect)
+
+    uniqueFish = output[1]
+    partners = output[0]
   
   }
   return {"firstSelect":firstSelect, "secondSelect":secondSelect, "partners" : partners, "uniqueFish":uniqueFish}
@@ -155,3 +167,58 @@ function chooseTradeType(d){
     return 0
     }
 }
+
+function compare(a,b){
+    if (a.value < b.value) return 1
+    if (a.value > b.value) return -1
+  
+  }
+  
+  
+function chooseTopTen(data,uniqueFish,partners,firstSelect,secondSelect){
+    compareFish =[]
+    uniqueFish.forEach(function(e){
+      total = 0
+      data.filter(function(d) {
+        
+        if(d[secondSelect] == e){
+          total += d.value
+        }
+        
+      });
+      compareFish.push({id: e, value: total})
+      
+    
+    
+    });
+    
+    compareFish.sort(compare)
+    uniqueFish = compareFish.slice(0,Math.min(9,compareFish.length))
+    uniqueFish = uniqueFish.map(function(e){ return e.id});
+    
+    
+    comparePartner =[]
+    partners.forEach(function(e){
+      total = 0
+      data.filter(function(d) {
+        
+        if(d[firstSelect] == e){
+          total += d.value
+        }
+        
+      });
+      comparePartner.push({id: e, value: total})
+      
+    
+    
+    });
+    
+    comparePartner.sort(compare)
+    uniquePartner = comparePartner.slice(0,Math.min(9,comparePartner.length))  //could pass parameters to change domain range/position for this as well
+    uniquePartner = uniquePartner.map(function(e){ return e.id});
+
+    return [uniquePartner,uniqueFish]
+
+}
+    
+    

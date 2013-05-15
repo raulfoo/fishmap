@@ -44,7 +44,7 @@ function click_fishmeal(dat){
   
   });
   
-  output= createRanks(output)
+  //output= createRanks(output)
 
   
   graph(output,sortType,dat,uniqueFish)

@@ -12,7 +12,7 @@ class FishMap < Sinatra::Base
     puts species_select
     
     if species_select != "All"
-      map_select = Splash.filter(:category =>  category, :description => species_select).select_group{[region_id, region_name]}.select_append{sum(value).as(value)}.order(:region_name).all.uniq
+      map_select = Splash.filter(:category =>  category, :description => species_select).select_group{[region_id, region_name, subset]}.select_append{sum(value).as(value)}.order(:region_name).all.uniq
 
     else
       map_select = Splash.filter(:category =>  category).select_group{[region_id, region_name]}.select_append{sum(value).as(value)}.order(:region_name).all.uniq

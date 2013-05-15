@@ -49,7 +49,7 @@ function click_production(dat){
     
  
     
-    outputCapture = createRanks(output)
+    /*outputCapture = createRanks(output)*/
     
     outputAq = []
     datAq.forEach(function(x){

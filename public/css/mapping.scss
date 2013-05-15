@@ -175,10 +175,16 @@
         padding: 5px;
       }
       
-      #loadWarning{
-        display: none;
-        font-color: $red;
-      }
+      
+      
+    }
+    
+    #loadWarning{
+      display: none;
+      color: $red;
+      display: inline;
+      list-style-type: none;
+      padding-right: 20px;
       
     }
   
