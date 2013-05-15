@@ -77,63 +77,8 @@ function click_trade(dat){
      domainSelect = 0
   }
   
-  /*rankingArray = []
-  for(i = 0; i< rankChoose.length; i++){
-      tempSum = 0
-     
-      uniqueFish.forEach(function(key){
-       if(key != "State"){
-        tempSum  += parseFloat(rankChoose[i][key])
-       }
-       
-     });
-     rankingArray.push(tempSum)
-  }
-  
-  sortedVals = rankingArray.slice()
-  sortedVals.sort(function(a,b){ return b-a});
-
-
-  
-  newRanks = []
-  $.each(rankingArray, function(idx, item) {
-      var rank= $.inArray( item, sortedVals)+1;// index position and add one for 1st,second etc
-      newRanks.push(rank)
-  
-  })
-
-  selectIndices = []
-  for(i=1;i<=10;i++){
-    selectIndices.push(newRanks.indexOf(i))
-  }
-  
-  temp = selectIndices.filter(function(d){ return d >= 0})
-  
-  importOut = []
-  exportOut = []
-  temp.forEach(function(d){
-     importOut.push(output["Import"][d])
-     exportOut.push(output["Export"][d])
-  });
-  output = []
-  
-  aggregatesImport = $.grep(importOut, function(e){return e.State == "Other Region, Aggregated"})[0]
-  locationIndex = importOut.indexOf(aggregatesImport)
-  
-  if(locationIndex > -1){
-    importOut.splice(locationIndex,1)
-    importOut.push(aggregatesImport)
-  }
-  aggregatesExport = $.grep(exportOut, function(e){return e.State == "Other Region, Aggregated"})[0]
-  locationIndex = exportOut.indexOf(aggregatesExport)
-
-  if(locationIndex > -1){
-    exportOut.splice(locationIndex,1)
-    exportOut.push(aggregatesExport)
-  }
-  */
+ 
   output = [output["Import"],output["Export"]]
-  //output = [importOut,exportOut]
 
   graph(output,sortType,dat,uniqueFish,domainSelect)
 
