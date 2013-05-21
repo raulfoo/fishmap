@@ -93,7 +93,16 @@ $paddingTop: $headerHeight / 3;
         font-size: 1em;
         padding: 0px;
       }
+      
+      p {
+        margin-left: 275px;
+        font-size: .8em;
+        top: -60px;
+        position: relative;
+        }
     }
+    
+ 
   .about{
     float: right;
     padding-right: 100px;

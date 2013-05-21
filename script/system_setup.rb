@@ -20,7 +20,7 @@ ensure_packages(
 
 ensure_file("config/system_config_files/.bashrc", "#{ENV['HOME']}/.bashrc")
 
-ensure_rbenv_ruby("1.9.2-p290")
+#ensure_rbenv_ruby("1.9.2-p290")
 ensure_gem("bundler")
 
 # Nginx configurations

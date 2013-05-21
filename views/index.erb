@@ -41,6 +41,10 @@
       
       </ul>
       <div id="mapLegend"></div>
+      <div id="radios">
+        <input type = "radio" name="metric" value = "F" checked="checked"/> Gross (Tonnes)
+        <input type = "radio" name="metric" value = "T"/> Per Capita (Kg/person)
+      </div>
     </div>
     <div class="topNavRight">
       
@@ -51,13 +55,12 @@
           
           </select>
            <a class="button" id="btnLeft">&gt;&gt;</a>
-           <input type="text" id="textSearch" placeholder="Search"/>
+           <input type="text" id="textSearch" placeholder="Search by Species/Type"/>
            <p id="numMatches"></p>
         </div>
         <div id="rightSelectContainer">
           <p> Selections to Search:</p>
           <select multiple id="rightValues">
-          
           </select>
            
           <a class="button" id="btnRight">&lt;&lt;</a>

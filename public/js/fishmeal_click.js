@@ -43,9 +43,7 @@ function click_fishmeal(dat){
     }
   
   });
-  
-  //output= createRanks(output)
-
+ 
   
   graph(output,sortType,dat,uniqueFish)
 
@@ -111,16 +109,21 @@ function click_fishmeal(dat){
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
+    
+    textType = "Tonnes"
+    if($("input[type='radio'][name='metric']:checked").val()=="T"){
+      textType = "Kg/Person"
+    }
   
     svg.append("g")
         .attr("class", "y axis")
         .call(yAxis)
       .append("text")
-        .attr("transform", "rotate(-90)")
+        .attr("transform","translate(-60,0)rotate(-90)")
         .attr("y", 6)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text("Population");
+        .text(textType);
   
     var state = svg.selectAll(".state")
         .data(data)

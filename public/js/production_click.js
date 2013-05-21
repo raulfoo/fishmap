@@ -52,6 +52,7 @@ function click_production(dat){
     /*outputCapture = createRanks(output)*/
     
     outputAq = []
+    datAq = datAq.slice(0,15)
     datAq.forEach(function(x){
     
       outputAq.push({species: x.description, value: x.value}) 
@@ -59,7 +60,7 @@ function click_production(dat){
     });
     outputAq.reverse()
     
-    graph(outputCapture,outputAq,sortType,dat,uniqueFish)
+    graph(output,outputAq,sortType,dat,uniqueFish)
     
   }
   
@@ -128,17 +129,22 @@ function click_production(dat){
               .attr("transform", function(d) {
                   return "rotate(-30)" 
                   });
+                  
+    textType = "Tonnes"
+    if($("input[type='radio'][name='metric']:checked").val()=="T"){
+      textType = "Kg/Person"
+    }
     
     
       svg.append("g")
           .attr("class", "y axis")
           .call(yAxis)
         .append("text")
-          .attr("transform", "translate(-40,0)")
+          .attr("transform","translate(-60,0)rotate(-90)")
           .attr("y", 6)
           .attr("dy", ".71em")
           .style("text-anchor", "end")
-          .text("Tonnes");
+          .text(textType);
     
       var state = svg.selectAll(".state")
           .data(data)
@@ -244,16 +250,18 @@ function click_production(dat){
             .attr("transform", function(d) {
                 return "rotate(-30)" 
                 });
+                
+   
   
     svg.append("g")
         .attr("class", "y axis")
         .call(yAxis)
       .append("text")
-        .attr("transform", "translate(-40,0)")
+        .attr("transform","translate(-60,0)rotate(-90)")
         .attr("y", 6)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text("Tonnes");
+        .text(textType);
   
     svg.selectAll(".bar")
         .data(data)

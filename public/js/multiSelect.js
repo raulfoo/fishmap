@@ -46,6 +46,7 @@ function buildRegionSelect(dat,current,category){
 
   $("#nationChooseText").html("<p>"+category+" details for: </p>")
   content = ""
+  dat.sort(compare)
   dat.forEach(function(e) {
     if(e.region_id == current){
       content = content+'<option value="'+e.region_id+'" selected="selected">'+e.region_name+'</option>'

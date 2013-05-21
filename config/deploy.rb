@@ -50,9 +50,9 @@ destination :prod do
 end
 
 # Load secure credentials
-if ENV.has_key?("fishmap_CREDENTIALS") && File.exist?(ENV["fishmap_CREDENTIALS"])
-  load ENV["fishmap_CREDENTIALS"]
+if ENV.has_key?("FISHMAP_CREDENTIALS") && File.exist?(ENV["FISHMAP_CREDENTIALS"])
+  load ENV["FISHMAP_CREDENTIALS"]
 else
-  puts "Unable to locate the file $fishmap_CREDENTIALS. You need this to deploy."
+  puts "Unable to locate the file $FISHMAP_CREDENTIALS. You need this to deploy."
   exit 1
 end

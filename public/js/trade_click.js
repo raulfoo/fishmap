@@ -17,10 +17,7 @@ function click_trade(dat){
     partners = returnOutput["partners"]
     uniqueFish = returnOutput["uniqueFish"]
     
-    console.log(partners)
-    console.log(uniqueFish)
-    console.log(firstSelect)
-    
+  
   output = []
   output["Import"] = []
   output["Export"] = []
@@ -65,7 +62,6 @@ function click_trade(dat){
   
   });
   
-  console.log(output)
 
  
   if (sumArray["Export"] > sumArray["Import"]){
@@ -159,17 +155,21 @@ var svg = d3.select("#chloroDetails").append("svg")
             .attr("transform", function(d) {
                 return "rotate(-30)" 
                 });
-
+                
+  textType = "Tonnes"
+  if($("input[type='radio'][name='metric']:checked").val()=="T"){
+    textType = "Kg/Person"
+  }
+  
   svg.append("g")
       .attr("class", "y axis")
       .call(yAxis)
     .append("text")
-      //.attr("transform", "rotate(-90)")
-      .attr("transform", "translate(-40,0)")
+      .attr("transform","translate(-60,0)rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Tonnes");
+      .text(textType);
 
   var state = svg.selectAll(".state")
       .data(data)

@@ -10,14 +10,10 @@ var mouseoverInfo;
 var details;
 var connectionArray;
 var allConnections;
-
-
-
 var testThresh;
-
-
 var dataOut;
 var x;
+var allowNavigate = true;
 var width = 960,
       height = 500,
       scale,
@@ -41,42 +37,77 @@ d3.selection.prototype.moveToFront = function() {
 };
 
 
-
-
 $(document).ready(function(){
 
-   $("#selectFishmeal").css("background-color","#FFDC8E")
+  $("#selectFishmeal").css("background-color","#FFDC8E")
   
   $("#selectFishmeal").click(function(){
-    $(".navLinks").css("background-color","white")
+
+    if(allowNavigate){
+      getData(arcs,"Fishmeal","true")
+      $(".navLinks").css("background-color","white")
+      $("#categoryHolder").val("Fishmeal")
+      $(this).css("background-color","#FFDC8E")
+    }
     
-    $("#categoryHolder").val("Fishmeal")
-    getData(arcs,"Fishmeal","true")
-    $(this).css("background-color","#FFDC8E")
-  
   });
   
   $("#selectTrade").click(function(){
-    $(".navLinks").css("background-color","white")
-    
-    $("#categoryHolder").val("Trade")
-    getData(arcs,"Trade","true")
-    $(this).css("background-color","#FFDC8E")
+
+      if(allowNavigate){
+        getData(arcs,"Trade","true")
+        $(".navLinks").css("background-color","white")
+        $("#categoryHolder").val("Trade")
+        $(this).css("background-color","#FFDC8E")
+      }
+ 
   })
   
   $("#selectCapture").click(function(){
-    $(".navLinks").css("background-color","white")
-    
-    $("#categoryHolder").val("Production")
-    getData(arcs,"Production","true")
-    $(this).css("background-color","#FFDC8E")
+
+    if(allowNavigate){
+      getData(arcs,"Production","true")
+      $(".navLinks").css("background-color","white")
+      $("#categoryHolder").val("Production") 
+      $(this).css("background-color","#FFDC8E")
+    }
     
   })
   
    $("#changeFishSelect").click(function () {
-     typeToView = $("#categoryHolder").val();
-     getData(arcs,typeToView,"false")
+     
+     if(allowNavigate){
+      typeToView = $("#categoryHolder").val();
+      getData(arcs,typeToView,"false")
+      }
   
+  });
+  
+  $(document).on("mousedown", ".legendBox", function(){
+    //alert("chi");
+    tempVar = ($(this).attr("title"));
+    selects = ".q"+tempVar+"-9"
+    $(selects).css("stroke-width","5");
+    $(selects).css("stroke","red");
+  });
+  
+   $(document).on("mouseup", ".legendBox", function(){
+    tempVar = ($(this).attr("title"));
+    selects = ".q"+tempVar+"-9"
+    $(selects).css("stroke-width","1");
+    $(selects).css("stroke","#000");
+  });
+  
+  $(document).on("mouseover", ".legendBox", function(){
+  
+    $(this).css("border-width","1");
+    $(this).css("border-color","red");
+  });
+  
+   $(document).on("mouseout", ".legendBox", function(){
+  
+    $(this).css("border-width","1");
+    $(this).css("border-color","black");
   });
   
    $("#nationDetailsChoose").change(function(){
@@ -93,65 +124,61 @@ $(document).ready(function(){
    
    })
    
+    $("input[type='radio'][name='metric']").change(function(){
+      if(allowNavigate){
+        typeToView = $("#categoryHolder").val()
+        getData(arcs,typeToView,"false")
+      }else{
+      
+        $("input[type='radio'][name='metric']:not(:checked)").attr("checked","true")
+      }
+    })
+   
    $("#textSearch").keyup(function(){
-    if($(this).val().length > 3){
+    if($(this).val().length > 2){
       searchText($(this).val());
     
     }else{
       $("#leftValues option:selected").attr("selected",false)
-      //$("#leftValues option:selected").removeProp("selected")
       $("#numMatches").html("")
     
     }
+    
+   
    
    })
 
   
-  //getStartData();
   loadMapData()
-  function getStartData(){
-  
- 
-   $.ajax({
-        type: 'GET',
-        url: '/create_associations',
-        data: {species: "All"},
-        success: function(output) {
-          allConnections = JSON.parse(output)
-            
-        }
-      });
-  
-    loadMapData()
-  
-  }
-  
   
   
   function getData(arcs,categorySelect,reset){
+    allowNavigate = false
     $("#chloroDetails").html("");
     $("#graphLegend").html("");
     $("#import_Export").fadeOut();
     $("#changeCountryDetails").fadeOut()
-
     
+    arcs.selectAll(".arc").remove()
+
     $("#loadWarning").fadeIn("fast")
     $("#descriptionTableRight").css("visibility","visible");
     
-    arcs.selectAll(".arc").remove()
+    per_capita =  $("input[type='radio'][name='metric']:checked").val()
     
     if(reset == "true") $("#rightValues").html("")
     speciesSel = $.map($("#rightValues option"),function(e){return $(e).val()});
     if(speciesSel == "") speciesSel = "All"
-
+    
     $.ajax({
-        type: 'GET',
+        type: 'POST',
         url: '/change_map',
-        data: {id: categorySelect, species: speciesSel},
+        data: {id: categorySelect, species: speciesSel, metric: per_capita},
         success: function(output) {
           output= JSON.parse(output)
           outputStep = output['map_values']
           rateById.forEach(function(d,i) {this.set(d,0)})
+
           lookupCounty = [];
           for(i=0;i<outputStep.length;i++){
             rateById.set(outputStep[i].region_id, outputStep[i].value)
@@ -162,7 +189,6 @@ $(document).ready(function(){
             buildMultiSelect(output['speciesOptions'])
             }
           thresholdArray = output['thresholds']
-          connectionArray = output['connections']
           details = output['details']
           
           testThresh = thresholdArray
@@ -170,8 +196,6 @@ $(document).ready(function(){
           thresholdArray  = testThresh.map(function(d){ return d.level_value})
           newColors = testThresh.map(function(d){ return d.color})
           
-       
-        
           uniqueNations = output['nationIds']
        
           mouseoverInfo = []
@@ -183,16 +207,11 @@ $(document).ready(function(){
           maxConnection= output["assocArray"]["max"]
           mouseoverInfo = temp
    
-          //temp = allConnections[categorySelect]["data"];
-          //mouseoverInfo = temp;
-          //maxConnection =  allConnections[categorySelect]["max"]
-
-          thresholdArray[thresholdArray.length-1] =  thresholdArray[thresholdArray.length-1]+.01
+          thresholdArray[thresholdArray.length-1] =  thresholdArray[thresholdArray.length-1]
           var quantizeChange = d3.scale.threshold()
             .domain(thresholdArray)
             .range(d3.range(testThresh.length).map(function(i) { return "q" + i + "-9"; }));
           
-         
           //d3.select("#chloropleth").selectAll("g").selectAll("path").attr("class", function(d) { return quantizeChange(rateById.get(d.id)); })
           arcs.selectAll("path").attr("class", function(d) { return quantizeChange(rateById.get(d.id)); })
           
@@ -203,17 +222,14 @@ $(document).ready(function(){
           }
           
           arcs.selectAll("path").style("fill", function(d) {  
-            if(parseInt(rateById.get(d.id))==0) {
+            if(parseFloat(rateById.get(d.id))==0) {
               return "white"
             }else{
               return this.getAttribute("style","fill")
             }
           });
 
-          
-
-          
-       
+        
           arcs.selectAll("g")
             .data( function(d,i) {return makeConnectionLines(d,i,temp)})
             .enter().append("path")
@@ -224,9 +240,9 @@ $(document).ready(function(){
           
             drawLegend(testThresh)
             
-
-            
             $("#loadWarning").fadeOut()
+            allowNavigate = true
+
         }
       });
   
@@ -247,13 +263,7 @@ $(document).ready(function(){
     }else return 0
   }
  
-      
-
-
-  /*var quantize = d3.scale.threshold()
-      .domain([0,2186.316,2436.062,2625.776,2937.09,3103.672,3322.938,3633.146,10853.32])
-      .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));*/
- 
+   
   var path = d3.geo.path().projection(projection);
   
   var arc = d3.geo.greatArc();
@@ -307,26 +317,29 @@ $(document).ready(function(){
   
   
   function click(d) {
-   
-    infoSelect = details.filter(function(nation) { return nation.region_id == d.id});
-    
-    
-    if(infoSelect.length>0){ 
-      category = infoSelect[0].category
-      if(category == "Trade"){
-        click_trade(infoSelect)
-      }else if(category == "Production"){
-        click_production(infoSelect)
-      }else if(category == "Fishmeal"){
-        click_fishmeal(infoSelect)
-      }
+    theTest = outputStep.filter(function(nation) { return nation.region_id == d.id});
+    if(theTest.length > 0){
+      infoSelect = details.filter(function(nation) { return nation.region_id == d.id});
       
-      $("#changeCountryDetails").fadeIn()
-      buildRegionSelect(outputStep,d.id,category)
-    }else{
-      disclaim = "No data, currently details for '"+details[0].category+"' are limited to the top 10 species.\n"+
-      "None of the fish species fell within that range for " + d.id;
-      $("#chloroDetails").html(disclaim)
+      
+      if(infoSelect.length>0){ 
+        category = infoSelect[0].category
+        if(category == "Trade"){
+          click_trade(infoSelect)
+        }else if(category == "Production"){
+          click_production(infoSelect)
+        }else if(category == "Fishmeal"){
+          click_fishmeal(infoSelect)
+        }
+        
+        $("#changeCountryDetails").fadeIn()
+        buildRegionSelect(outputStep,d.id,category)
+      }else{
+        disclaim = "No data, currently details for '"+details[0].category+"' are limited to the top 10 species.\n"+
+        "None of the fish species fell within that range for " + d.id;
+        $("#chloroDetails").html(disclaim)
+        $("#graphLegend").html("")
+      }
     }
     
   }
@@ -345,7 +358,7 @@ $(document).ready(function(){
       if($("#selectCapture").css("background-color") != "rgb(255, 255, 255)" && $("#selectCapture").css("background-color") != "rgba(0, 0, 0, 0)"){
         category = "Production"
       }else{
-        category = "other"
+        category = "Trade"
       }
  
           
@@ -368,13 +381,13 @@ $(document).ready(function(){
       
     
       info = "<div class='mouseoverInfoBlock'><p> Current Region: "+  theTest[0].region_name+"</p>"
-      info = info+"<p>Net Trade: "+commaSeparateNumber(totals)+"</p>"
+      info = info+"<p>Net "+category+": "+commaSeparateNumber(Math.round(totals*100)/100)+"</p>"
    
       if(topExports.length>0){
         if(category == "Production"){
           info = info+"<p> Primary Ocean Fisheries</p><table>"
         }else{
-        info = info+"<p> Top Export Markets/Desintation</p><table>"
+        info = info+"<p> Top Export Markets/Destination</p><table>"
       }
       
       topExports.forEach(function(d){
