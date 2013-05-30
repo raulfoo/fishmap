@@ -9,13 +9,16 @@ Sequel.migration do
       String :partner
       String :description
       Float :value
-      Float :percent_constrained
-      Float :percent_all
+      Float :region_percent
+      Float :type_percent
+      Float :partner_percent
+      Integer :year
       
             
       index :region_id
       index :category
       index :partner
+      index :year
       
     
     end

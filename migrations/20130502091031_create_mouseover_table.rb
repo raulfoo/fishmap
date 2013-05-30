@@ -9,11 +9,13 @@ Sequel.migration do
       String :partner_id
       String :description
       Float :value
+      Integer :year
       
       index :region_id
       index :category
       index :partner_id
       index :description
+      index :year
       
     end
       

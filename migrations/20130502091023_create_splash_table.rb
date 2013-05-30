@@ -8,10 +8,12 @@ Sequel.migration do
       String :subset
       String :description
       Float :value
+      Integer :year
       
       index :region_id
       index :category
       index :description
+      index :year
       
     
     end

@@ -1,6 +1,13 @@
 @import "css/mixins";
 
 
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+
 
 .axis path,
 .axis line {
@@ -30,6 +37,8 @@
 
   stroke-linejoin: round;
   z-index: 1;
+  cursor: hand; 
+  cursor: pointer; 
 
 }
 
@@ -39,7 +48,7 @@
   stroke: #000;
   stroke-linejoin: round;
   z-index: 1;
-
+  
 }
 
 
@@ -188,9 +197,31 @@
       
     }
     
-    #radios{
+    #sliderContainer{
+      display: table;
       font-size: .7em;
+      .slideLabel{
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      #radios{
+        display: table-cell;
       
+        padding-right: 20px;
+        }
+        #slider{
+          margin: 10px;
+         
+          
+          display: table-cell;
+          width: 175px;
+          height: 10px;
+        }
+        #amount{
+          padding-left: 35px;
+          display: table-cell;
+        }
+        
     }
     
     #mapLegend{
@@ -217,6 +248,9 @@
               border-style: solid;
               border-width: 1px;
               border-color: black;
+              cursor: hand; 
+              cursor: pointer; 
+
             
             }
           }
@@ -336,13 +370,7 @@
   margin-top: 10px;
 }
 
-#import_Export{
-  display: none;
-  padding-left: 50px;
-  font-size: .8em;
-  float: right;
-  
-}
+
 
 #chloroDetailsWrap{
   display: table;
@@ -389,10 +417,34 @@
 
 #changeCountryDetails{
   display: none;
+  width: 800px;
+  max-width: 800px;
+  min-width: 800px;
   
+  #totalsSummary{
   
+    display: inline-block;
+    font-size: .8em;
+    padding-top: 15px;
+    clear: left;
+    float: left;
+    
+    
+    td{
+        text-align: right;
+        padding-left: 10px;
+
+      }
+      td:first-child{
+        text-align: left;
+        padding-left: 0px;
+      }
+    }
+
+
   #nationChooseText{
     float: left;
+    display: inline-block;
   }
   
   #nationDetailsChoose{
@@ -400,6 +452,142 @@
     margin-left: 20px;
     margin-top: 5px;
   }
+  #nationDetailsChooseYear{
+    float: left;
+    margin-left: 20px;
+    margin-top: 5px;
+  }
+  
+  #changeGraphType{
+    display:none;
+    display: inline-block;
+    width: 50px;
+    font-size: .6em;
+    padding: 5px;
+    margin-left: 10px;
+  }
+  
+  #import_Export{
+    display: inline-block;
+    padding-top: 10px;
+    font-size: .8em;
+    clear: left;
+    float: left;
+    
+  }
+ 
+
+}
+
+#graphLoadWarning{
+  display: none;
+  float: right;
+  color: $red;
+  width: 250px;
+  display: block;
+  text-align: right;
+  padding-top: 15px;
+
+}
+    
+
+
+
+
+.graphSpeciesChange{
+  font-size: .55em;
+  max-width: 400px;
+  display: table-cell;
+  float: right;
+  display: none;
+  
+  #selectContainerBottom{   
+  
+    display: table;
+    max-width: 400px;
+    min-width: 400px;
+    height: 150px;
+    margin: 15px;
+    
+    
+    #leftSelectContainerBottom{
+      display: table-cell;
+      max-width: 250px;
+      padding: 5px;
+      #leftValuesBottom{
+        max-width: 190px;
+        min-width: 190px;
+        min-height: 120px;
+      }
+      p{
+        font-size: .8em;
+      }
+      
+     
+    }
+    
+    #middleSelectContainerBottom{
+      display: table-cell;
+      vertical-align: middle;
+     
+      #textSearchBottom {
+        max-width: 125px;
+        min-width: 125px;
+        height: 30px;
+        margin-top: 8px;
+        float: left;
+      }
+      #numMatchesBottom{
+        float: right;
+        margin-top: 15px;
+       
+
+        max-width: 60px;
+        min-width: 60px;
+        max-height: 20px;
+        min-height: 20px;
+      }
+       
+    
+    
+    }
+    #rightSelectContainerBottom{
+      display: table-cell;
+      max-width: 250px;
+      padding: 5px;
+      
+      #rightValuesBottom{
+        max-width: 190px;
+        min-width: 190px;
+        min-height: 120px;
+      }
+      
+     
+    }
+  
+
+    a {
+      font-size: .9em;
+      padding: 10px;
+      width: 50px;
+      display: block;
+      
+      margin: 0 auto;
+      margin-top: 8px;
+    }
+  }
+}
+
+.legend{
+  cursor: hand; 
+  cursor: pointer; 
+
+
+}
+
+.g{
+  cursor: hand; 
+  cursor: pointer; 
 
 }
 

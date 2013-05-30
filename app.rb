@@ -59,7 +59,6 @@ class FishMap < Sinatra::Base
   end
   
 
-  
   def production?() ENV["RACK_ENV"] == "production" end
   
   #def enforce_required_params(fields)

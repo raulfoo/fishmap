@@ -120,44 +120,49 @@ $.each(rankingArray, function(idx, item) {
 
    
 function mouseoverFunc(d,i,data,switchSort){
+
   if(switchSort == "region"){
       select1 = "partner"
-       select2 = "description"
+      select2 = "description"
+      select3 = "partner_percent"
     }else{
        select1 = "description"
        select2 = "partner"
+       select3 = "type_percent"
     }
-
   
-  workDat = data.filter(function(e) { return e[select1] == d.name && e[select2] == d.column});
+ 
+  if(data[0].category=="Trade"){
+    workDat = data.filter(function(e) { return e[select1] == d.name && e[select2] == d.column && e.subset == d.tradeType && e['year'] == d.date});
+  }else{
+    workDat = data.filter(function(e) { return e[select1] == d.name && e[select2] == d.column && e['year'] == d.date});
+
+  }
   workDat = workDat[0]
   
 
   var popLeft = (d3.event.pageX+50);
   var popTop = (d3.event.pageY-125);
 
-  popUpText = "<div class='popUpText'><p>Selection: "+workDat[select1] +"</p><p>Value: "+workDat.value+"</p>"
-  popUpText = popUpText+"<table class='popUpTable'>"+
-   
-    "<tr><td>"+workDat[select1]+" share of total "+workDat.region_name+" production </td><td>"+workDat.percent_constrained+"</td></tr>"
-  if(workDat.percent_all<=100 && switchSort == "species"){
-    popUpText=popUpText+"<tr><td>"+workDat.region_name +" share of global "+workDat[select1]+" production </td><td>"+workDat.percent_all+"</td></tr>"
-  }
   
-  popUpText =  popUpText+"</table></div>"
+   popUpText = "<div class='popUpText'><p>Selection: "+workDat[select1] +" --> "+workDat[select2]+"</p><p>Value: "+workDat.value+"</p>"+
+  "<table class='popUpTable'>"+
+  "<tr><td>% share of total "+workDat.region_name+" "+data[0].category+"</td><td>"+workDat.region_percent+"</td></tr>"+
+  "<tr><td>% share of global "+workDat[select1]+"</td><td>"+workDat[select3]+"</td></tr>"+
+  "</table></div>"
     
-  $("#pop-up").fadeOut(100,function () {
+  $("#pop-up").fadeOut(0,function () {
  
     $("#pop-desc").html(popUpText);
 
     $("#pop-up").css({"left":popLeft,"top":popTop});
-    $("#pop-up").fadeIn(100);
+    $("#pop-up").fadeIn(0);
   });
 
 }
 
 function mout(d) {
-  $("#pop-up").fadeOut(50);
+  $("#pop-up").fadeOut(0);
 }
 
 function chooseTradeType(d){
@@ -173,6 +178,12 @@ function compare(a,b){
     if (a.value > b.value) return -1
   
   }
+  
+function compareYear(a,b){
+  if (a.year > b.year) return 1
+  if (a.year < b.year) return -1
+
+}
   
   
 function chooseTopTen(data,uniqueFish,partners,firstSelect,secondSelect){

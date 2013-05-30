@@ -8,40 +8,40 @@ class FishMap < Sinatra::Base
     per_capita = params[:metric]
     category = params[:id]
     species_select = params[:species]
-    
+    year = params[:year].to_i
+        
     if species_select != "All"
-      map_select = Splash.filter(:category =>  category, :description => species_select).select_group{[region_id, region_name, subset]}.select_append{sum(value).as(value)}.order(:region_name).all.uniq
+      map_select = Splash.filter(:category =>  category, :year => year, :description => species_select).select_group{[region_id, region_name, subset]}.select_append{sum(value).as(value)}.order(:region_name).all.uniq
 
     else
-      map_select = Splash.filter(:category =>  category).select_group{[region_id, region_name]}.select_append{sum(value).as(value)}.order(:region_name).all.uniq
+      map_select = Splash.filter(:category =>  category,  :year => year).select_group{[region_id, region_name]}.select_append{sum(value).as(value)}.order(:region_name).all.uniq
 
     end
     
     map_select.map! {|e| e.values}
     
-    p map_select.size
-    detail_species = Splash.filter(:category =>  category).select(:description).order(:description).all.uniq
-    detail_species = detail_species.map!{|e| e.description}
  
+    detail_species = Splash.filter(:category =>  category, :year => year).select(:description).order(:description).all.uniq
+    detail_species = detail_species.map!{|e| e.description}
+=begin    
     if species_select != "All"
-      details = Detail.filter(:category =>  category, :description => species_select).all.uniq#select_group{[region_id, region_name, partner, "category".to_sym]}.select_append{[sum(value).as(value), sum(percent_all).as(percent_all), sum(percent_constrained).as(percent_constrained)]}.all.uniq
+      details = Detail.filter(:category =>  category,  :year => year, :description => species_select).all.uniq#select_group{[region_id, region_name, partner, "category".to_sym]}.select_append{[sum(value).as(value), sum(percent_all).as(percent_all), sum(percent_constrained).as(percent_constrained)]}.all.uniq
 
     else
-      details = Detail.filter(:category =>  category).all.uniq#select_group{[region_id, region_name, partner, "category".to_sym]}.select_append{[sum(value).as(value), sum(percent_all).as(percent_all), sum(percent_constrained).as(percent_constrained)]}.all.uniq
+      details = Detail.filter(:category =>  category,  :year => year).all.uniq#select_group{[region_id, region_name, partner, "category".to_sym]}.select_append{[sum(value).as(value), sum(percent_all).as(percent_all), sum(percent_constrained).as(percent_constrained)]}.all.uniq
 
     end
     
     details.map! {|e| e.values}    
-    
-    unique_region = Connection.filter(:category => category).select(:region_id).order(:region_id).all.uniq
+=end    
+    unique_region = Connection.filter(:category => category,  :year => year).select(:region_id).order(:region_id).all.uniq
     unique_region.map!{|e| e.region_id}
   
     if per_capita == "T"
-      populations = Population.filter(:year => 2010).all
+      populations = Population.filter(:year => year).all
       populations.map!{|e| e.values}
       
-   
-      [map_select,details].each do |section|
+      [map_select].each do |section|  #[map_select,details].each do |section|
         section.each do |temp|
           divisor = populations.select{|e| e[:region_id] == temp[:region_id]}[0]
           if divisor != nil && divisor[:value] > 0
@@ -57,15 +57,71 @@ class FishMap < Sinatra::Base
       end
     end
     
-  
     thresholdDat = map_select.map{|e| e[:value]}
     thresholds = createThresholds(thresholdDat)
     
-    associationArray = createAssociations(category,species_select,per_capita)
+    associationArray = createAssociations(category,species_select,per_capita,year)
     
+    years = Splash.where(:category => category).select(:year).sort_by(&:year)
+    year_min = years[0].year
+    year_max=  years[(years.size-1)].year
   
-    output = {:map_values => map_select, :thresholds => thresholds, :details=> details, :nationIds => unique_region, :speciesOptions => detail_species, :assocArray => associationArray}
+    #year_min = 1990
+    #year_max = 2010
+    #output = {:map_values => map_select, :thresholds => thresholds, :details=> details, :nationIds => unique_region, :speciesOptions => detail_species, :assocArray => associationArray}
+    output = {:map_values => map_select, :thresholds => thresholds, :nationIds => unique_region, :speciesOptions => detail_species, :assocArray => associationArray, :yearMin => year_min, :yearMax => year_max}
     
+    return output.to_json
+  
+  end
+  
+  
+  
+  post "/getDetails" do
+    
+    per_capita = params[:metric]
+    category = params[:type]
+    region_id = params[:region]
+    species_select = params[:species]
+    year = params[:year]
+    
+ 
+    if species_select != "All"
+      details = Detail.filter(:category =>  category, :region_id => region_id, :description => species_select).all.uniq#select_group{[region_id, region_name, partner, "category".to_sym]}.select_append{[sum(value).as(value), sum(percent_all).as(percent_all), sum(percent_constrained).as(percent_constrained)]}.all.uniq
+
+    else
+      details = Detail.filter(:category =>  category, :region_id => region_id).all.uniq#select_group{[region_id, region_name, partner, "category".to_sym]}.select_append{[sum(value).as(value), sum(percent_all).as(percent_all), sum(percent_constrained).as(percent_constrained)]}.all.uniq
+
+    end
+    
+    details.map! {|e| e.values}    
+    
+    #unique_region = Connection.filter(:category => category,  :year => year).select(:region_id).order(:region_id).all.uniq
+    #unique_region.map!{|e| e.region_id}
+  
+    if per_capita == "T"
+      #populations = Population.filter(:year => year).all
+      populations = Population.filter(:region_id => region_id).all
+      populations.map!{|e| e.values}
+      
+   
+      [details].each do |section|
+        section.each do |temp|
+          divisor = populations.select{|e| e[:year] == temp[:year]}[0]
+          if divisor != nil && divisor[:value] > 0
+            temp[:value] = (temp[:value].to_f)/((divisor[:value].to_f)/1000)
+           
+          else
+            temp[:value] = 0  # should really just remove this entry if error
+          end
+          
+        end
+        
+        section.delete_if{|e| e[:value] == 0}
+      end
+    end
+    
+    output = {:details => details}
     return output.to_json
   
   end
@@ -79,7 +135,6 @@ class FishMap < Sinatra::Base
     blues = []
     
     data = data.sort
-        
     splits = 8
     num_negatives = 0
    
@@ -182,11 +237,11 @@ class FishMap < Sinatra::Base
   end
   
   
-  def createAssociations(cate,species,metric)
+  def createAssociations(cate,species,metric,year)
     if species == "All"
-      connections = Connection.filter(:category => cate).select_group{[category, region_id, partner_id, region_name, partner_name,]}.select_append{sum(value).as(value)}.all.uniq
+      connections = Connection.filter(:category => cate,  :year => year).select_group{[category, region_id, partner_id, region_name, partner_name,]}.select_append{sum(value).as(value)}.order(:value).reverse.all.uniq
     else
-      connections = Connection.filter(:category => cate, :description => species).select_group{[category, region_id, partner_id, region_name, partner_name,]}.select_append{sum(value).as(value)}.all.uniq
+      connections = Connection.filter(:category => cate,  :year => year, :description => species).select_group{[category, region_id, partner_id, region_name, partner_name,]}.select_append{sum(value).as(value)}.order(:value).reverse.all.uniq
     end
     
     if metric == "T"
@@ -207,6 +262,9 @@ class FishMap < Sinatra::Base
     unique_regions.each do |e|
       tempArray = Array.new()
       selects = fishmeal.select{|d| d[:region_id] == e}
+      selects = selects.slice(0,4).push(selects.slice(selects.length-5,selects.length-1)).uniq.flatten #limited to just the top 5 and bottom 5
+      selects.delete_if {|x| x == nil}
+   
       selects.each do |z|
         source = centroids.find{|a| a[:id] == z[:region_id]}
         target = centroids.find{|a| a[:id] == z[:partner_id]}

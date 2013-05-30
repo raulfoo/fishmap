@@ -37,7 +37,11 @@ d3.selection.prototype.moveToFront = function() {
 };
 
 
+
+
 $(document).ready(function(){
+  
+ 
 
   $("#selectFishmeal").css("background-color","#FFDC8E")
   
@@ -83,6 +87,32 @@ $(document).ready(function(){
   
   });
   
+  $("#changeFishBottom").click(function () {
+    if(allowNavigate){
+      speciesSel = $.map($("#rightValuesBottom option"),function(e){return $(e).val().split("||")[0]});
+      if(speciesSel == ""){
+        infoSelectLimited = infoSelect
+      }else if($("#groupingTypeHolder").val() == "region"){
+        infoSelectLimited = infoSelect.filter(function(e){ return speciesSel.indexOf(e.partner) >=0 })
+      }else{
+        infoSelectLimited = infoSelect.filter(function(e){ return speciesSel.indexOf(e.description) >=0 })
+
+      }
+      
+      //category = infoSelect[0].category
+        category = $("#categoryHolder").val() 
+        if(category == "Trade"){
+          click_trade(infoSelectLimited,$("#graphTypeHolder").val(),"false")
+        }else if(category == "Production"){
+          click_production(infoSelectLimited,$("#graphTypeHolder").val(),"false")
+        }else if(category == "Fishmeal"){
+          click_fishmeal(infoSelectLimited,$("#graphTypeHolder").val(),"false")
+        }
+      }
+   
+  
+  });
+  
   $(document).on("mousedown", ".legendBox", function(){
     //alert("chi");
     tempVar = ($(this).attr("title"));
@@ -110,17 +140,11 @@ $(document).ready(function(){
     $(this).css("border-color","black");
   });
   
-   $("#nationDetailsChoose").change(function(){
+   $(".changeGraphFromDropDown").change(function(){
    
-    idSearch = $(this).val()
-    infoSelect = details.filter(function(nation) { return nation.region_id == idSearch});
-    if($("#categoryHolder").val() == "Fishmeal"){
-      click_fishmeal(infoSelect)
-      }else if($("#categoryHolder").val() == "Trade"){
-        click_trade(infoSelect)
-      }else{
-        click_production(infoSelect)
-      }
+    idSearch = $("#nationDetailsChoose").val()
+    $("#amountVal").val($("#nationDetailsChooseYear").val())
+    click({id: idSearch})
    
    })
    
@@ -147,14 +171,60 @@ $(document).ready(function(){
    
    
    })
+   
+   $("#textSearchBottom").keyup(function(){
+    if($(this).val().length > 2){
+      searchTextBottom($(this).val());
+    
+    }else{
+      $("#leftValuesBottom option:selected").attr("selected",false)
+      $("#numMatchesBottom").html("")
+    
+    }
+    
+   
+   
+   })
+   
+   $("#changeGraphType").click(function(){
+    //dat = infoSelect.filter(function(e) { return e.year == 2009})
+    if($(this).html() != "View Full Time Series"){
+      graphType = "Bar Chart"
+      $("#nationDetailsChooseYear").css("visibility","")
+      $("#graphTypeHolder").val("Bar Chart")
+      $("#changeGraphType").html("View Full Time Series")
+
+
+      
+    }else{
+      graphType = "Time Series"
+      $("#nationDetailsChooseYear").css("visibility","hidden")
+      $("#graphTypeHolder").val("Time Series")
+      $("#changeGraphType").html("View Data for "+$("#amountVal").val())
+
+
+    }
+      category = $("#categoryHolder").val() 
+      //category = infoSelect[0].category
+      if(category == "Trade"){
+        click_trade(infoSelect,graphType)
+      }else if(category == "Production"){
+        click_production(infoSelect,graphType)
+      }else if(category == "Fishmeal"){
+        click_fishmeal(infoSelect,graphType)
+      }       
+   
+   });
 
   
   loadMapData()
   
-  
+});  
+
   function getData(arcs,categorySelect,reset){
     allowNavigate = false
     $("#chloroDetails").html("");
+    $(".graphSpeciesChange").fadeOut();
     $("#graphLegend").html("");
     $("#import_Export").fadeOut();
     $("#changeCountryDetails").fadeOut()
@@ -164,16 +234,20 @@ $(document).ready(function(){
     $("#loadWarning").fadeIn("fast")
     $("#descriptionTableRight").css("visibility","visible");
     
+   
     per_capita =  $("input[type='radio'][name='metric']:checked").val()
     
     if(reset == "true") $("#rightValues").html("")
     speciesSel = $.map($("#rightValues option"),function(e){return $(e).val()});
     if(speciesSel == "") speciesSel = "All"
     
+    yearVal = $("#amountVal").val();
+    if(categorySelect == "Trade" && yearVal < 1988) yearVal = 1988
+    
     $.ajax({
         type: 'POST',
         url: '/change_map',
-        data: {id: categorySelect, species: speciesSel, metric: per_capita},
+        data: {id: categorySelect, species: speciesSel, metric: per_capita, year: yearVal},
         success: function(output) {
           output= JSON.parse(output)
           outputStep = output['map_values']
@@ -189,7 +263,6 @@ $(document).ready(function(){
             buildMultiSelect(output['speciesOptions'])
             }
           thresholdArray = output['thresholds']
-          details = output['details']
           
           testThresh = thresholdArray
           
@@ -240,6 +313,18 @@ $(document).ready(function(){
           
             drawLegend(testThresh)
             
+            
+            yearMax = output['yearMax']
+            if($("#categoryHolder").val() == "Fishmeal"){
+              yearMax = Math.min(yearMax,2009)
+            }
+            yearMin = Math.max(output['yearMin'],1981)
+            $("#minTopSlide").html(yearMin)
+            $("#maxTopSlide").html(yearMax)
+            
+            $("#slider").slider("option", "min", yearMin)
+            $("#slider").slider("option", "max", yearMax)
+            
             $("#loadWarning").fadeOut()
             allowNavigate = true
 
@@ -264,18 +349,12 @@ $(document).ready(function(){
   }
  
    
-  var path = d3.geo.path().projection(projection);
-  
-  var arc = d3.geo.greatArc();
-  var links = []
-  
-  var svg = d3.select("#chloropleth").append("svg")
-      .attr("width", width)
-      .attr("height", height)
+ 
       
 
             
   function loadMapData(){
+  
     queue()
         .defer(d3.json, "/json/fisheries.json")
         .defer(d3.json, "/json/nations.json")
@@ -284,6 +363,16 @@ $(document).ready(function(){
 
   
   function ready(error, us, no_oceans) {
+     var path = d3.geo.path().projection(projection);
+  
+     var arc = d3.geo.greatArc();
+     var links = []
+      
+     var svg = d3.select("#chloropleth").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+
+
     
     dataOut = us
   
@@ -296,8 +385,8 @@ $(document).ready(function(){
     arcs.append("path")
         .attr("class", "regions")
         .attr("d", path)
-        .on ("mouseover",mover)
-        .on ("mouseout",mout)
+        .on("mouseover",mover)
+        .on("mouseout",moutgo)
         .on("click", click)
         
     var noOcean = svg.append("svg:g")
@@ -317,32 +406,68 @@ $(document).ready(function(){
   
   
   function click(d) {
-    theTest = outputStep.filter(function(nation) { return nation.region_id == d.id});
-    if(theTest.length > 0){
-      infoSelect = details.filter(function(nation) { return nation.region_id == d.id});
+  
+   $("#graphLoadWarning").html("Loading").fadeIn()
+
+   region_id = d.id
+   speciesSel = $.map($("#rightValues option"),function(e){return $(e).val()});
+   if(speciesSel == "") speciesSel = "All"
+   per_capita =  $("input[type='radio'][name='metric']:checked").val()
+   $("#nationDetailsChooseYear").css("visibility","")
+
+   $.ajax({
+        type: 'POST',
+        url: '/getDetails',
+        data: {type: $("#categoryHolder").val(), region: region_id, species: speciesSel, metric: per_capita, year: $("#amountVal").val()},
+        success: function(output) {
+          output = JSON.parse(output)
+          output = output["details"]
+          //details = output.filter(function(e) { return e.year == 2009})
+          details = output
       
-      
-      if(infoSelect.length>0){ 
-        category = infoSelect[0].category
-        if(category == "Trade"){
-          click_trade(infoSelect)
-        }else if(category == "Production"){
-          click_production(infoSelect)
-        }else if(category == "Fishmeal"){
-          click_fishmeal(infoSelect)
-        }
+          theTest = outputStep.filter(function(nation) { return nation.region_id == d.id});
+          if(theTest.length > 0){
+            infoSelect = details.filter(function(nation) { return nation.region_id == d.id});
+            
+            
+            if(infoSelect.length>0){ 
+              category = $("#categoryHolder").val() 
+              if(category == "Trade"){
+                click_trade(infoSelect,$("#graphTypeHolder").val())
+              }else if(category == "Production"){
+                click_production(infoSelect,$("#graphTypeHolder").val())
+              }else if(category == "Fishmeal"){
+                click_fishmeal(infoSelect,$("#graphTypeHolder").val())
+              }       
+              //buildNationalMultiSelect(infoSelect)
+              //$(".graphSpeciesChange").fadeIn();    
         
-        $("#changeCountryDetails").fadeIn()
-        buildRegionSelect(outputStep,d.id,category)
-      }else{
-        disclaim = "No data, currently details for '"+details[0].category+"' are limited to the top 10 species.\n"+
-        "None of the fish species fell within that range for " + d.id;
-        $("#chloroDetails").html(disclaim)
-        $("#graphLegend").html("")
-      }
-    }
+              $("#graphLoadWarning").html("").fadeOut('fast')
+
+              $("#changeCountryDetails").fadeIn()
+              buildRegionSelect(outputStep,d.id,category)
+            }else{
+              disclaim = "No data, currently details for '"+details[0].category+"' are limited to the top 10 species.\n"+
+              "None of the fish species fell within that range for " + d.id;
+              $("#chloroDetails").html(disclaim)
+              $("#graphLegend").html("")
+            }
+          }
+         }
+         
+     
+
+      })
     
   }
+  
+   function moutgo(d) {
+      //$(this).css("stroke-width","1");
+      //$(this).css("stroke","#000"); 
+      $(this).parent().find(".arc").css("display","none")
+      $("#chloroInfo").html();
+  }
+  
   
   
   
@@ -353,13 +478,13 @@ $(document).ready(function(){
     $(this).parent().find(".arc").css("display","block")
     
     theTest = outputStep.filter(function(nation) { return nation.region_id == d.id})
-  
+    category = $("#categoryHolder").val() 
     if(mouseoverInfo[d.id] && theTest.length>0){
-      if($("#selectCapture").css("background-color") != "rgb(255, 255, 255)" && $("#selectCapture").css("background-color") != "rgba(0, 0, 0, 0)"){
+      /*if($("#selectCapture").css("background-color") != "rgb(255, 255, 255)" && $("#selectCapture").css("background-color") != "rgba(0, 0, 0, 0)"){
         category = "Production"
       }else{
         category = "Trade"
-      }
+      }*/
  
           
       mouseoverInfo[d.id].sort(function(a, b) {
@@ -406,18 +531,11 @@ $(document).ready(function(){
       info = info+"</div>"
      
       $("#chloroInformation").html(info)
-      $(this).css("stroke-width","5");
-      $(this).css("stroke","white");
+      //$(this).css("stroke-width","5");
+      //$(this).css("stroke","white");
      
     }
   
   }
   
-  function mout(d) {
-      $(this).css("stroke-width","1");
-      $(this).css("stroke","#000"); 
-     $(this).parent().find(".arc").css("display","none")
-     $("#chloroInfo").html();
-  }
-  
-});
+ 

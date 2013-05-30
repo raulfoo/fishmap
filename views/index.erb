@@ -8,6 +8,7 @@
    <%= @pinion.js_url("/assets/js/helpers.js") %>
    <%= @pinion.js_url("/assets/js/graphHelpers.js") %>
    <%= @pinion.js_url("/assets/js/mapLegend.js") %>
+   <%= @pinion.js_url("/assets/js/slider.js") %>
    
    <%= @pinion.js_url("/assets/js/multiSelect.js") %>
    <%= @pinion.js_url("/assets/js/speciesSearchText.js") %>
@@ -41,9 +42,16 @@
       
       </ul>
       <div id="mapLegend"></div>
-      <div id="radios">
-        <input type = "radio" name="metric" value = "F" checked="checked"/> Gross (Tonnes)
-        <input type = "radio" name="metric" value = "T"/> Per Capita (Kg/person)
+      <div id="sliderContainer">
+        <div id="radios">
+          <input type = "radio" name="metric" value = "F" checked="checked"/> Gross (Tonnes)
+          <input type = "radio" name="metric" value = "T"/> Per Capita (Kg/person)
+        </div>
+        <span id="minTopSlide" class="slideLabel" >1981</span><div id="slider"></div><span id="maxTopSlide" class="slideLabel">2010</span>
+        
+        <div id="amount"></div>        
+        <input type="hidden" id="amountVal" value="2009"/>
+
       </div>
     </div>
     <div class="topNavRight">
@@ -84,25 +92,64 @@
     
   
   </div>
+  <div class="graphSpeciesChange">
+  
+  <div id="selectContainerBottom">
+    <div id="leftSelectContainerBottom">
+      <p> All Possible Selections For Region: </p>
+      <select multiple id="leftValuesBottom">
+      
+      </select>
+      <p> Sorted By Decreasing Tonnage. Only Top 9 Selections by Weight Will be Graphed </p>
+    </div>
+    <div id="middleSelectContainerBottom">
+      <a class="button" id="btnLeftBottom">&gt;&gt;</a>
+      <a class="button" id="btnRightBottom">&lt;&lt;</a>
+    
+      <input type="text" id="textSearchBottom" placeholder="Search by Species/Type"/>
+      <p id="numMatchesBottom"></p>
+    </div>
+    <div id="rightSelectContainerBottom">
+      <p> Selections to Search:</p>
+      <select multiple id="rightValuesBottom">
+      </select>
+      <a class="button" id="changeFishBottom">Change Selection</a>
+
+       
+     
+    </div>
+  </div> 
+
+  
+  </div>
   <div id="changeCountryDetails">
     <p id="nationChooseText"></p>
-    <select id="nationDetailsChoose">
+    <select id="nationDetailsChoose" class="changeGraphFromDropDown">
       
     </select>
+    <select id="nationDetailsChooseYear" class="changeGraphFromDropDown">
+    </select>
+    <a class="button" id="changeGraphType">View Full Time Series</a>
+    <div id="totalsSummary"></div>
     <div id="import_Export">
       <p> Imports = Left Grouped Column</p>
       <p> Exports = Right Column</p>
     </div>
-    
   </div>
- 
+  <div id="graphLoadWarning"></div>
+
+
   
   <div id="chloroDetailsWrap">
+  
     
     
     <div id="chloroDetails" class="chloroDetails"></div>
     <div id="graphLegend"></div>
   </div>
+  
+  
+ 
   
   <div id="pop-up">
   <div id="pop-up-title"></div>
@@ -117,6 +164,9 @@
 </div>
 
 <input type="hidden" id="categoryHolder" value="Fishmeal"/>
+<input type="hidden" id="groupingTypeHolder" value="region"/>
+<input type="hidden" id="graphTypeHolder" value="Bar Chart"/>
+
 
 </div>
 
