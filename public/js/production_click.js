@@ -21,7 +21,7 @@ function click_production(dat,graphType,buildNewSelection){
   
     $("#groupingTypeHolder").val(sortType)
     if(buildNewSelection==true){
-      buildNationalMultiSelect(infoSelect,sortType)
+      buildNationalMultiSelect(dat,sortType)
     }
     $(".graphSpeciesChange").fadeIn();   
     
@@ -117,7 +117,7 @@ function click_production(dat,graphType,buildNewSelection){
     $("#groupingTypeHolder").val(sortType)
 
     if(buildNewSelection==true){
-      buildNationalMultiSelect(infoSelect,sortType)
+      buildNationalMultiSelect(dat,sortType)
     }
     $(".graphSpeciesChange").fadeIn();   
     

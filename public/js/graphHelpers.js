@@ -146,9 +146,14 @@ function mouseoverFunc(d,i,data,switchSort){
 
   
    popUpText = "<div class='popUpText'><p>Selection: "+workDat[select1] +" --> "+workDat[select2]+"</p><p>Value: "+workDat.value+"</p>"+
-  "<table class='popUpTable'>"+
-  "<tr><td>% share of total "+workDat.region_name+" "+data[0].category+"</td><td>"+workDat.region_percent+"</td></tr>"+
-  "<tr><td>% share of global "+workDat[select1]+"</td><td>"+workDat[select3]+"</td></tr>"+
+  "<table class='popUpTable'>"
+  if(workDat.category == "Production"){
+    popUpText = popUpText+"<tr><td>% share of total "+workDat.region_name+" "+workDat.subset+" "+workDat.category+"</td><td>"+workDat.region_percent+"</td></tr>"
+  }else{
+      popUpText = popUpText+"<tr><td>% share of total "+workDat.region_name+" "+workDat.category+"</td><td>"+workDat.region_percent+"</td></tr>"
+
+  }
+  popUpText = popUpText + "<tr><td>% share of global "+workDat[select1]+"</td><td>"+workDat[select3]+"</td></tr>"+
   "</table></div>"
     
   $("#pop-up").fadeOut(0,function () {

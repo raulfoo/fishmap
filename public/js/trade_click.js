@@ -23,7 +23,7 @@ function click_trade(dat,graphType,buildNewSelection){
 
     $("#groupingTypeHolder").val(sortType)
     if(buildNewSelection == true){
-      buildNationalMultiSelect(infoSelect.filter(function(e) { return e.year == $("#amountVal").val()}),sortType)
+      buildNationalMultiSelect(dat,sortType)
     }
     $(".graphSpeciesChange").fadeIn();   
     
@@ -120,7 +120,7 @@ function click_trade(dat,graphType,buildNewSelection){
     
     buildNewSelection = buildNewSelection || true
     if(buildNewSelection==true){
-      buildNationalMultiSelect(infoSelect.filter(function(e) { return e.year == $("#amountVal").val()}),sortType)
+      buildNationalMultiSelect(dat,sortType)
     }
     $(".graphSpeciesChange").fadeIn();    
     
@@ -230,7 +230,6 @@ function click_trade(dat,graphType,buildNewSelection){
       switchSort = "region"
       }
     
-    console.log(domainSelect)
     
 
       
@@ -379,10 +378,12 @@ var svg = d3.select("#chloroDetails").append("svg")
    
    if(sortType == "region"){
       switchSort = "species"
+       titleText = "with"
       
       }else{
       
       switchSort = "region"
+      titleText = "of"
       }
       
       textType = "Tonnes"
@@ -575,7 +576,7 @@ var svg = d3.select("#chloroDetails").append("svg")
         .attr("text-anchor", "middle")  
         .style("font-size", "16px") 
         .style("text-decoration", "underline")  
-        .text(rawData[0].region_name+" trade with "+cities[0].type);
+        .text(rawData[0].region_name+" trade "+titleText+" "+cities[0].type);
     
     
     

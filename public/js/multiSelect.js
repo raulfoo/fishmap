@@ -4,17 +4,21 @@ $(document).ready(function(){
   $("#btnRight").click(function () {
       var selectedItem = $("#rightValues option:selected");
       x = selectedItem
-    
+      if (x.length > 0){
+
       newContent = sortListAlphabetical(x,"leftValues")
       $("#leftValues").html(newContent)
+      }
   });
   
   $("#btnLeft").click(function () {
       var selectedItem = $("#leftValues option:selected");
        x = selectedItem
-     
-      newContent = sortListAlphabetical(x,"rightValues")
-      $("#rightValues").html(newContent)
+      if (x.length > 0){
+
+        newContent = sortListAlphabetical(x,"rightValues")
+        $("#rightValues").html(newContent)
+      }
   });
   
   $("#rightValues").change(function () {
@@ -25,18 +29,23 @@ $(document).ready(function(){
  $("#btnRightBottom").click(function () {
      var selectedItem = $("#rightValuesBottom option:selected");
      x = selectedItem
-    
-     newContent = sortListAmount(x,"leftValuesBottom")
-     $("#leftValuesBottom").html(newContent)
+
+     if (x.length > 0){
+      
+       newContent = sortListAmount(x,"leftValuesBottom")
+       $("#leftValuesBottom").html(newContent)
+     }
   });
   
   $("#btnLeftBottom").click(function () {
      var selectedItem = $("#leftValuesBottom option:selected");
-     x = selectedItem
-
-     newContent = sortListAmount(x,"rightValuesBottom")
-     $("#rightValuesBottom").html(newContent)
+      x = selectedItem
+     if (x.length > 0){
      
+
+       newContent = sortListAmount(x,"rightValuesBottom")
+       $("#rightValuesBottom").html(newContent)
+     }
   });
   
   $("#rightValuesBottom").change(function () {
@@ -164,28 +173,30 @@ function buildRegionSelect(dat,current,category){
       content = content+'<option value="'+e.region_id+'">'+e.region_name+'</option>'
     }
   });
+  if($("#changeGraphType").html() == "View Full Time Series"){
+    yearContent = ""
+    /*if( $("#categoryHolder").val() == "Fishmeal"){
+        yearMax = Math.min(yearMax,2009)
+        if($("#amountVal").val()==2010) $("#amountVal").val(2009)
+      }
+    */
+   
+    for(i=yearMin;i<=yearMax;i++){
+      if(i ==$("#amountVal").val()){
+        yearContent = yearContent+'<option value="'+i+'" selected="selected">'+i+'</option>'
+      }else{
+        yearContent = yearContent+'<option value="'+i+'">'+i+'</option>'
   
-  yearContent = ""
-  /*if( $("#categoryHolder").val() == "Fishmeal"){
-      yearMax = Math.min(yearMax,2009)
-      if($("#amountVal").val()==2010) $("#amountVal").val(2009)
+      }
     }
-  */
- 
-  for(i=yearMin;i<=yearMax;i++){
-    if(i ==$("#amountVal").val()){
-      yearContent = yearContent+'<option value="'+i+'" selected="selected">'+i+'</option>'
+    
+    
+    $("#nationDetailsChooseYear").html(yearContent)
+    $("#nationDetailsChooseYear").css("visibility","")
+    
     }else{
-      yearContent = yearContent+'<option value="'+i+'">'+i+'</option>'
-
+     $("#nationDetailsChooseYear").css("visibility","hidden")
     }
-  }
-  
-  
-  $("#nationDetailsChoose").html(content)
-  $("#nationDetailsChooseYear").html(yearContent)
-  
-  
-
+    $("#nationDetailsChoose").html(content)
 
 }

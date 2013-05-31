@@ -334,7 +334,7 @@ $(document).ready(function(){
   }
   
   function selectColor(id){
-    if(id.value <= 0){
+    if(id.value < 0){
       return "red"
       }else{
       return "blue"
@@ -445,7 +445,12 @@ $(document).ready(function(){
               $("#graphLoadWarning").html("").fadeOut('fast')
 
               $("#changeCountryDetails").fadeIn()
-              buildRegionSelect(outputStep,d.id,category)
+              //if($("#changeGraphType").html() == "View Full Time Series"){
+              
+                  buildRegionSelect(outputStep,d.id,category)
+               // }else{
+                //  buildRegionSelect(outputStep.filter(function(e) { return e.year == $("#amountVal").val()}),d.id,category)
+               // }
             }else{
               disclaim = "No data, currently details for '"+details[0].category+"' are limited to the top 10 species.\n"+
               "None of the fish species fell within that range for " + d.id;
@@ -465,7 +470,7 @@ $(document).ready(function(){
       //$(this).css("stroke-width","1");
       //$(this).css("stroke","#000"); 
       $(this).parent().find(".arc").css("display","none")
-      $("#chloroInfo").html();
+      $("#chloroInformation").html("");
   }
   
   

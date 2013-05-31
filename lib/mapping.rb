@@ -245,7 +245,7 @@ class FishMap < Sinatra::Base
     end
     
     if metric == "T"
-      populations = Population.filter(:year => 2010).all
+      populations = Population.filter(:year => year).all
       populations.map!{|e| e.values}
     end
     
@@ -261,7 +261,7 @@ class FishMap < Sinatra::Base
     fishmealArray = Hash.new()
     unique_regions.each do |e|
       tempArray = Array.new()
-      selects = fishmeal.select{|d| d[:region_id] == e}
+      selects = fishmeal.select{|d| d[:region_id] == e && d[:partner_name] != "Aquaculture"}
       selects = selects.slice(0,4).push(selects.slice(selects.length-5,selects.length-1)).uniq.flatten #limited to just the top 5 and bottom 5
       selects.delete_if {|x| x == nil}
    
