@@ -6,7 +6,8 @@ function click_production(dat,graphType,buildNewSelection){
   realRawDat = dat
   dat = dat.filter(function(e) { return e.year == $("#amountVal").val()})
   
-  sortType = "region"
+  //sortType = "region"
+  sortType = $("#groupingTypeHolder").val()
   if(graphType == "Bar Chart"){
     prepareData(dat,sortType,buildNewSelection);
   }else{
@@ -40,9 +41,9 @@ function click_production(dat,graphType,buildNewSelection){
     aqTotals = 0
     datAq.forEach(function(e){ aqTotals+= e.value})
      
-    summaryContent = "<table><tr><td>Total Production: </td><td>"+commaSeparateNumber(decimalRound(captureTotals+aqTotals))+
-    "</td></tr><tr><td>Capture Production: </td><td>"+commaSeparateNumber(decimalRound(captureTotals))+
-    "</td></tr><tr><td>Aquaculture Production: </td><td>"+commaSeparateNumber(decimalRound(aqTotals))+"</td></tr></table>"
+    summaryContent = "<table><tr><td><a>Total Production: </a></td><td>"+commaSeparateNumber(decimalRound(captureTotals+aqTotals))+
+    "</td></tr><tr><td><a  title='Capture'>Capture Production: </a></td><td>"+commaSeparateNumber(decimalRound(captureTotals))+
+    "</td></tr><tr><td><a title='Aquaculture'>Aquaculture Production: </a></td><td>"+commaSeparateNumber(decimalRound(aqTotals))+"</td></tr></table>"
      
      
     $("#totalsSummary").html(summaryContent)
@@ -63,6 +64,7 @@ function click_production(dat,graphType,buildNewSelection){
       partners.forEach(function(type){
         temp = dataSet.filter(function(cat) { return cat[firstSelect] == type});
         output = []
+        outputTracker = 0
         if(temp){
           jsObj = {}
           jsObj["State"] = type
@@ -80,9 +82,12 @@ function click_production(dat,graphType,buildNewSelection){
                 
               })
               
-              if(valuesArray.length > 5){
+              if(valuesArray.length > 4){
                 tempOut = {name: x[0][secondSelect], type : type, values: valuesArray, tradeType: x[0]['subset']}
                 output.push(tempOut)
+                valuesArray.forEach(function(e){
+                  outputTracker+=e.graphValue
+                })
               }
               
               //jsObj[fish] = x[0].value
@@ -93,16 +98,18 @@ function click_production(dat,graphType,buildNewSelection){
           });
           
           if(output.length>0){
-            bigOut.push(output)
+            bigOut.push({'output': output, 'value' : outputTracker} )
            }
         }
         //add elements for title and maybe for legend
    
     });
+    
   });
-  
+   
+   bigOut.sort(compare)
    bigOut.forEach(function(d){ 
-    time_series_graph(d,sortType,dat,uniqueFish)
+    time_series_graph(d.output,sortType,dat,uniqueFish)
    });
 
   
@@ -137,9 +144,9 @@ function click_production(dat,graphType,buildNewSelection){
      aqTotals = 0
      datAq.forEach(function(e){ aqTotals+= e.value})
      
-     summaryContent = "<table><tr><td>Total Production: </td><td>"+commaSeparateNumber(decimalRound(captureTotals+aqTotals))+
-     "</td></tr><tr><td>Capture Production: </td><td>"+commaSeparateNumber(decimalRound(captureTotals))+
-     "</td></tr><tr><td>Aquaculture Production: </td><td>"+commaSeparateNumber(decimalRound(aqTotals))+"</td></tr></table>"
+     summaryContent = "<table><tr><td><a title='All'>Total Production: </a></td><td>"+commaSeparateNumber(decimalRound(captureTotals+aqTotals))+
+     "</td></tr><tr><td><a title='Capture'>Capture Production: </a></td><td>"+commaSeparateNumber(decimalRound(captureTotals))+
+     "</td></tr><tr><td><a title='Aquaculture'>Aquaculture Production: </a></td><td>"+commaSeparateNumber(decimalRound(aqTotals))+"</td></tr></table>"
      
      
     $("#totalsSummary").html(summaryContent)

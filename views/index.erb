@@ -9,6 +9,7 @@
    <%= @pinion.js_url("/assets/js/graphHelpers.js") %>
    <%= @pinion.js_url("/assets/js/mapLegend.js") %>
    <%= @pinion.js_url("/assets/js/slider.js") %>
+    <%= @pinion.js_url("/assets/js/user_instructions.js") %>
    
    <%= @pinion.js_url("/assets/js/multiSelect.js") %>
    <%= @pinion.js_url("/assets/js/speciesSearchText.js") %>
@@ -24,6 +25,8 @@
 <% end %>
 
 <div class="margin" >
+
+  <div id="navigationWrapper">
   <div class="topNavigation">
     <div class="topNavLeft">
       <ul class="categorySelect">
@@ -54,12 +57,12 @@
 
       </div>
     </div>
-    <div class="topNavRight">
+    <div class="topNavRight" >
       
-      <div id="selectContainer">
+      <div id="selectContainer" class="selectContainers">
         <div id="leftSelectContainer">
           <p> All Possible Selections: </p>
-          <select multiple id="leftValues">
+          <select multiple="multiple" id="leftValues">
           
           </select>
            <a class="button" id="btnLeft">&gt;&gt;</a>
@@ -67,8 +70,9 @@
            <p id="numMatches"></p>
         </div>
         <div id="rightSelectContainer">
-          <p> Selections to Search:</p>
-          <select multiple id="rightValues">
+          <p> Selections to <span><select id="include_exclude"><option value="include">Include</option><option value="exclude">Exclude</option></select></span></p>
+        
+          <select multiple="multiple" id="rightValues">
           </select>
            
           <a class="button" id="btnRight">&lt;&lt;</a>
@@ -88,57 +92,60 @@
     <div id="chloroInformation"></div>
     </div>
   </div>
+  </div>
+  <div id="allDetails">
   <div id="currentDetailSelection">
     
   
-  </div>
-  <div class="graphSpeciesChange">
-  
-  <div id="selectContainerBottom">
-    <div id="leftSelectContainerBottom">
-      <p> All Possible Selections For Region: </p>
-      <select multiple id="leftValuesBottom">
-      
+ 
+
+    <div id="changeCountryDetails">
+      <p id="nationChooseText"></p>
+      <select id="nationDetailsChoose" class="changeGraphFromDropDown">
+        
       </select>
-      <p> Sorted By Decreasing Tonnage. Only Top 9 Selections by Weight Will be Graphed </p>
-    </div>
-    <div id="middleSelectContainerBottom">
-      <a class="button" id="btnLeftBottom">&gt;&gt;</a>
-      <a class="button" id="btnRightBottom">&lt;&lt;</a>
-    
-      <input type="text" id="textSearchBottom" placeholder="Search by Species/Type"/>
-      <p id="numMatchesBottom"></p>
-    </div>
-    <div id="rightSelectContainerBottom">
-      <p> Selections to Search:</p>
-      <select multiple id="rightValuesBottom">
+      <select id="nationDetailsChooseYear" class="changeGraphFromDropDown">
       </select>
-      <a class="button" id="changeFishBottom">Change Selection</a>
-
-       
-     
+      <a class="button" id="changeGraphType" title="Timeseries">View Full Time Series</a>
+      <div id="totalsSummary"></div>
+      <div id="import_Export">
+        <p> Imports = Left Grouped Column</p>
+        <p> Exports = Right Column</p>
+      </div>
     </div>
-  </div> 
-
-  
-  </div>
-  <div id="changeCountryDetails">
-    <p id="nationChooseText"></p>
-    <select id="nationDetailsChoose" class="changeGraphFromDropDown">
+    <div id="graphLoadWarning"></div>
+    <div class="graphSpeciesChange" >
       
-    </select>
-    <select id="nationDetailsChooseYear" class="changeGraphFromDropDown">
-    </select>
-    <a class="button" id="changeGraphType">View Full Time Series</a>
-    <div id="totalsSummary"></div>
-    <div id="import_Export">
-      <p> Imports = Left Grouped Column</p>
-      <p> Exports = Right Column</p>
+      <div id="selectContainerBottom" class="selectContainers">
+        <div id="leftSelectContainerBottom">
+          <p> All Possible Selections For Region: </p>
+          <select multiple="multiple" id="leftValuesBottom">
+          
+          </select>
+          <p> Sorted By Decreasing Tonnage. Only Top 9 Selections by Weight Will be Graphed </p>
+        </div>
+        <div id="middleSelectContainerBottom">
+          <a class="button" id="btnLeftBottom">&gt;&gt;</a>
+          <a class="button" id="btnRightBottom">&lt;&lt;</a>
+        
+          <input type="text" id="textSearchBottom" placeholder="Search by Species/Type"/>
+          <p id="numMatchesBottom"></p>
+        </div>
+        <div id="rightSelectContainerBottom">
+          <p> Selections to <span><select id="include_excludeBottom"><option value="include">Include</option><option value="exclude">Exclude</option></select></span></p>
+          <select multiple="multiple" id="rightValuesBottom">
+          </select>
+          <a class="button" id="changeFishBottom">Change Selection</a>
+      
+           
+         
+        </div>
+      </div> 
+  
+  
     </div>
+
   </div>
-  <div id="graphLoadWarning"></div>
-
-
   
   <div id="chloroDetailsWrap">
   
@@ -150,7 +157,7 @@
   
   
  
-  
+  </div>
   <div id="pop-up">
   <div id="pop-up-title"></div>
   <div id="pop-up-content">
@@ -166,6 +173,8 @@
 <input type="hidden" id="categoryHolder" value="Fishmeal"/>
 <input type="hidden" id="groupingTypeHolder" value="region"/>
 <input type="hidden" id="graphTypeHolder" value="Bar Chart"/>
+<input type="hidden" id="regionHolder" value=""/>
+<input type="hidden" id="regionSubset" value="All"/>
 
 
 </div>

@@ -4,6 +4,7 @@
   font-size: 2em;
   /*width: 1000px;*/
   
+
   #stepOne{
     display: none;
     color: $red;
@@ -51,7 +52,7 @@
     
     #browseWrap{
       display: table-cell;
-      padding: 10px;  
+      padding-bottom: 10px;  
      
       
       .browseAlignment{

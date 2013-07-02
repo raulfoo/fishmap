@@ -7,7 +7,8 @@ function click_trade(dat,graphType,buildNewSelection){
   realRawDat = dat
   dat = dat.filter(function(e) { return e.year == $("#amountVal").val()})
   
-  sortType = "region"
+  sortType = $("#groupingTypeHolder").val()
+  
   if(graphType == "Bar Chart"){
     prepareData(dat,sortType, buildNewSelection);
   }else{
@@ -49,9 +50,9 @@ function click_trade(dat,graphType,buildNewSelection){
     importTotals = 0
     datImport.forEach(function(e){ importTotals+= e.value})
    
-    summaryContent = "<table><tr><td>Net Trade: </td><td>"+commaSeparateNumber(decimalRound(exportTotals-importTotals))+
-    "</td></tr><tr><td>Gross Exports: </td><td>"+commaSeparateNumber(decimalRound(exportTotals))+
-    "</td></tr><tr><td>Gross Imports: </td><td>"+commaSeparateNumber(decimalRound(importTotals))+"</td></tr></table>"
+    summaryContent = "<table><tr><td><a title = 'All'>Gross Trade: </a></td><td>"+commaSeparateNumber(decimalRound(exportTotals+importTotals))+
+    "</td></tr><tr><td><a title = 'Export'>Exports: </a></td><td>"+commaSeparateNumber(decimalRound(exportTotals))+
+    "</td></tr><tr><td><a title = 'Import'>Imports: </a></td><td>"+commaSeparateNumber(decimalRound(importTotals))+"</td></tr></table>"
    
    
     $("#totalsSummary").html(summaryContent)
@@ -62,6 +63,8 @@ function click_trade(dat,graphType,buildNewSelection){
     partners.forEach(function(type){
       temp = dat.filter(function(cat) { return cat[firstSelect] == type});
       output = []
+      outputTracker = 0
+
       if(temp){
         ["Import","Export"].forEach(function(tradeType){
           //jsObj = {}
@@ -83,9 +86,12 @@ function click_trade(dat,graphType,buildNewSelection){
                 
               })
               
-              if(valuesArray.length > 5){
+              if(valuesArray.length > 4){
                 tempOut = {name: x[0][secondSelect], type : type, values: valuesArray, tradeType: tradeType}
                 output.push(tempOut)
+                 valuesArray.forEach(function(e){
+                  outputTracker+=e.graphValue
+                })
               }
               
               //jsObj[fish] = x[0].value
@@ -97,7 +103,9 @@ function click_trade(dat,graphType,buildNewSelection){
         });
         
         if(output.length>0){
-          bigOut.push(output)
+          //bigOut.push(output)
+             bigOut.push({'output': output, 'value' : outputTracker} )
+           
          }
       }
     //add elements for title and maybe for legend
@@ -105,9 +113,9 @@ function click_trade(dat,graphType,buildNewSelection){
   });
   
   
-  
+   bigOut.sort(compare)
    bigOut.forEach(function(d){ 
-    time_series_graph(d,sortType,dat,uniqueFish,limitedDat)
+    time_series_graph(d.output,sortType,dat,uniqueFish,limitedDat)
    });
    $("#graphLoadWarning").html("")
 
@@ -148,9 +156,9 @@ function click_trade(dat,graphType,buildNewSelection){
     importTotals = 0
     datImport.forEach(function(e){ importTotals+= e.value})
    
-    summaryContent = "<table><tr><td>Net Trade: </td><td>"+commaSeparateNumber(decimalRound(exportTotals-importTotals))+
-    "</td></tr><tr><td>Gross Exports: </td><td>"+commaSeparateNumber(decimalRound(exportTotals))+
-    "</td></tr><tr><td>Gross Imports: </td><td>"+commaSeparateNumber(decimalRound(importTotals))+"</td></tr></table>"
+    summaryContent = "<table><tr><td><a title = 'All'>Net Trade: </a></td><td>"+commaSeparateNumber(decimalRound(exportTotals+importTotals))+
+    "</td></tr><tr><td><a title = 'Export'>Gross Exports: </a></td><td>"+commaSeparateNumber(decimalRound(exportTotals))+
+    "</td></tr><tr><td><a title = 'Import'>Gross Imports: </a></td><td>"+commaSeparateNumber(decimalRound(importTotals))+"</td></tr></table>"
    
    
     $("#totalsSummary").html(summaryContent)

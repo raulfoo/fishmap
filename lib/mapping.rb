@@ -23,6 +23,7 @@ class FishMap < Sinatra::Base
  
     detail_species = Splash.filter(:category =>  category, :year => year).select(:description).order(:description).all.uniq
     detail_species = detail_species.map!{|e| e.description}
+    
 =begin    
     if species_select != "All"
       details = Detail.filter(:category =>  category,  :year => year, :description => species_select).all.uniq#select_group{[region_id, region_name, partner, "category".to_sym]}.select_append{[sum(value).as(value), sum(percent_all).as(percent_all), sum(percent_constrained).as(percent_constrained)]}.all.uniq
@@ -303,6 +304,71 @@ class FishMap < Sinatra::Base
     return {:data => fishmealArray, :max => maxFishmeal}
   
   
+  end
+  
+  
+  post "/create_rank_list" do
+    category = params[:category]
+    year = params[:year]
+    species = params[:species]
+    subset=params[:subset]
+    per_capita = params[:per_capita]
+    
+    subset_hash = "subset"
+    if category == "Fishmeal"
+      subset_hash = "partner"
+    end
+    
+    p year
+    if year == "All"
+      year = (1980..2010).to_a
+    end
+    
+    subset_hash = subset_hash.to_sym
+    
+    if species == "All" || species == nil || species == ""
+      species = /.*/
+    end
+
+    
+    if subset != "All"
+      ranks = Detail.where(:category=> category, :year => year, subset_hash => subset, :description => species).select(:region_name, subset_hash, :region_id).group_by(subset_hash, :region_name, :region_id).select_append{sum(value).as(value)}.all
+      #ranks = ranks.select{|e| e.subset == subset}
+    else
+
+      if category == "Fishmeal"
+        ranks = Detail.where(:category=> category, :year => year, subset_hash=>['Export','Import','Re-export'], :description => species).select(:region_name, :region_id).group_by(:region_name, :region_id).select_append{sum(value).as(value)}.all
+
+      else
+        ranks = Detail.where(:category=> category, :year => year, :description => species).select(:region_name, :region_id).group_by(:region_name, :region_id).select_append{sum(value).as(value)}.all
+      end
+    end
+    
+    ranks.map!{|e| e.values}
+    
+    
+    if per_capita == "T"
+      populations = Population.filter(:year => year).all
+      populations.map!{|e| e.values}
+      
+      [ranks].each do |section|  #[map_select,details].each do |section|
+        section.each do |temp|
+          divisor = populations.select{|e| e[:region_id] == temp[:region_id]}[0]
+          if divisor != nil && divisor[:value] > 0
+            temp[:value] = (temp[:value].to_f)/((divisor[:value].to_f)/1000)
+           
+          else
+            temp[:value] = 0  # should really just remove this entry if error
+          end
+          
+        end
+        
+        section.delete_if{|e| e[:value] == 0}
+      end
+    end
+    
+    
+    return ranks.to_json
   end
 
 end

@@ -4,9 +4,12 @@ $(document).ready(function(){
   $("#btnRight").click(function () {
       var selectedItem = $("#rightValues option:selected");
       x = selectedItem
+      //alert("left")
+      //console.log(x)
       if (x.length > 0){
 
       newContent = sortListAlphabetical(x,"leftValues")
+      
       $("#leftValues").html(newContent)
       }
   });
@@ -14,6 +17,8 @@ $(document).ready(function(){
   $("#btnLeft").click(function () {
       var selectedItem = $("#leftValues option:selected");
        x = selectedItem
+      //  alert("right")
+      //console.log(x)
       if (x.length > 0){
 
         newContent = sortListAlphabetical(x,"rightValues")
@@ -63,11 +68,19 @@ function sortListAlphabetical(x,container){
   dat = []
     
   x.appendTo("#"+container)
-   
-  $("#"+container).val().forEach(function(d){
-    dat.push(d)
-  });
   
+  //console.log(x)
+ 
+  /*$("#"+container).val().forEach(function(d){
+    dat.push(d)
+    console.log("chi")
+  });*/
+  
+  $("#"+container+" option").each(function(){
+    dat.push($(this).val())
+    //console.log("chi")
+  });
+  //console.log(dat) 
   content=""
   dat.sort().forEach(function(e) {
     content = content+'<option value="'+e+'">'+e+'</option>'
@@ -160,18 +173,39 @@ function buildNationalMultiSelect(dat,sortType){
 
 }
 
+$(document).on("click", "#totalsSummary a", function(){
+  
+  $("#regionSubset").val($(this).attr("title"))
+  getRegionRanks($(this).attr("title"))
+  /*$.ajax({
+        type: 'POST',
+        url: '/create_rank_list',
+        data: {category: $("#categoryHolder").val(),species: speciesSel, year: $("#amountVal").val(), subset: $(this).attr("title")},
+        success: function(output) {
+          output = JSON.parse(output)
+          
+          buildRegionSelect(output,$("#regionHolder").val(),$("#categoryHolder").val()) 
+          
+          
+          
+          }
+        });*/
+
+})
 
 function buildRegionSelect(dat,current,category){
 
-  $("#nationChooseText").html("<p>"+category+" details for: </p>")
+  $("#nationChooseText").html("<p>"+$("#regionSubset").val()+" "+category+" for: </p>")
   content = ""
   dat.sort(compare)
+  index = 1
   dat.forEach(function(e) {
     if(e.region_id == current){
-      content = content+'<option value="'+e.region_id+'" selected="selected">'+e.region_name+'</option>'
+      content = content+'<option value="'+e.region_id+'" selected="selected">'+e.region_name+' (Rank: '+index+')</option>'
     }else{
-      content = content+'<option value="'+e.region_id+'">'+e.region_name+'</option>'
+      content = content+'<option value="'+e.region_id+'">'+e.region_name+' (Rank: '+index+')</option>'
     }
+    index++
   });
   if($("#changeGraphType").html() == "View Full Time Series"){
     yearContent = ""
@@ -200,3 +234,29 @@ function buildRegionSelect(dat,current,category){
     $("#nationDetailsChoose").html(content)
 
 }
+
+function getRegionRanks(subsetType){
+
+ if($("#changeGraphType").attr("title")=="Year"){
+  yearValue = "All"
+ }else{
+  yearValue =  $("#amountVal").val()
+ }
+ 
+ $.ajax({
+    type: 'POST',
+    url: '/create_rank_list',
+    data: {category: $("#categoryHolder").val(),species: speciesSel, year: yearValue, subset: subsetType, per_capita: $("#radios :checked").val()},
+    success: function(output) {
+      output = JSON.parse(output)
+      
+      buildRegionSelect(output,$("#regionHolder").val(),$("#categoryHolder").val()) 
+      
+      
+      
+      }
+    });
+    
+  }
+
+

@@ -120,7 +120,7 @@ $.each(rankingArray, function(idx, item) {
 
    
 function mouseoverFunc(d,i,data,switchSort){
-
+  $("#instructions").html("Click to Rearrange the Grouping Categories of this Graph")
   if(switchSort == "region"){
       select1 = "partner"
       select2 = "description"
@@ -145,7 +145,7 @@ function mouseoverFunc(d,i,data,switchSort){
   var popTop = (d3.event.pageY-125);
 
   
-   popUpText = "<div class='popUpText'><p>Selection: "+workDat[select1] +" --> "+workDat[select2]+"</p><p>Value: "+workDat.value+"</p>"+
+   popUpText = "<div class='popUpText'><p>Selection: "+workDat[select1] +" --> "+workDat[select2]+"</p><p>Value: "+commaSeparateNumber(workDat.value)+"</p>"+
   "<table class='popUpTable'>"
   if(workDat.category == "Production"){
     popUpText = popUpText+"<tr><td>% share of total "+workDat.region_name+" "+workDat.subset+" "+workDat.category+"</td><td>"+workDat.region_percent+"</td></tr>"
@@ -167,6 +167,7 @@ function mouseoverFunc(d,i,data,switchSort){
 }
 
 function mout(d) {
+  $("#instructions").html("If you see a color, click on it.")
   $("#pop-up").fadeOut(0);
 }
 

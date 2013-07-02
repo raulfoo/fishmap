@@ -4,7 +4,8 @@ function click_fishmeal(dat,graphType,buildNewSelection){
   realRawDat = dat
   dat = dat.filter(function(e) { return e.year == Math.min($("#amountVal").val(),2009)})
   
-  sortType = "region"
+  sortType = $("#groupingTypeHolder").val()
+ 
   if(graphType == "Bar Chart"){
     prepareData(dat,sortType,buildNewSelection);
   }else{
@@ -41,12 +42,34 @@ function click_fishmeal(dat,graphType,buildNewSelection){
     uniqueFish = returnOutput["uniqueFish"]
     bigOut = []
     
+     console.log("fishmeal")
+     console.log(dat)
+     
+    datProduction = dat.filter(function(e) { return e.partner == "Production" })
+    datExport = dat.filter(function(e) { return e.partner == "Export" })
+    datImport = dat.filter(function(e) { return e.partner == "Import" })
+
+    ProductionTotals = 0 
+    datProduction.forEach(function(e){  ProductionTotals+= e.value})
+
+    ImportTotals = 0
+    datImport.forEach(function(e){  ImportTotals += e.value})
+    ExportTotals = 0
+    datExport.forEach(function(e){ ExportTotals+= e.value}) 
+    
     fishmealTotals = 0
     dat.forEach(function(e){ fishmealTotals+= e.value})
-  
+    
+       
+    summaryContent = "<table><tr><td><a title='Production'>Fishmeal Production: </a></td><td>"+commaSeparateNumber(decimalRound(ProductionTotals))+
+    "</td></tr><tr><td><a  title='All'>Gross Fishmeal Trade: </a></td><td>"+commaSeparateNumber(decimalRound(ExportTotals+ImportTotals))+
+    "</td></tr><tr><td><a  title='Export'>Fishmeal Exports: </a></td><td>"+commaSeparateNumber(decimalRound(ExportTotals))+
+
+    "</td></tr><tr><td><a title='Import'>Fishmeal Imports: </a></td><td>"+commaSeparateNumber(decimalRound(ImportTotals))+"</td></tr></table>"
+     
    
-    summaryContent = "<table><tr><td>Total Fishmeal Production and Trade: </td><td>"+commaSeparateNumber(decimalRound(fishmealTotals))+
-    "</td></tr></table>"
+    //summaryContent = "<table><tr><td><a>Total Fishmeal Production and Trade: </a></td><td>"+commaSeparateNumber(decimalRound(fishmealTotals))+
+    //"</td></tr></table>"
      
     $("#totalsSummary").html(summaryContent)
 
@@ -55,7 +78,9 @@ function click_fishmeal(dat,graphType,buildNewSelection){
     
     partners.forEach(function(type){
     temp = dat.filter(function(cat) { return cat[firstSelect] == type});
-     output = []
+    output = []
+    outputTracker = 0
+
     if(temp){
       jsObj = {}
       jsObj["State"] = type
@@ -76,6 +101,9 @@ function click_fishmeal(dat,graphType,buildNewSelection){
           if(valuesArray.length > 5){
             tempOut = {name: x[0][secondSelect], type : type, values: valuesArray}
             output.push(tempOut)
+            valuesArray.forEach(function(e){
+              outputTracker+=e.graphValue
+            })
           }
           
           //jsObj[fish] = x[0].value
@@ -86,7 +114,9 @@ function click_fishmeal(dat,graphType,buildNewSelection){
       });
       
       if(output.length>0){
-        bigOut.push(output)
+       // bigOut.push(output)
+          bigOut.push({'output': output, 'value' : outputTracker} )
+
        }
     }
     //add elements for title and maybe for legend
@@ -95,7 +125,7 @@ function click_fishmeal(dat,graphType,buildNewSelection){
   });
   
    bigOut.forEach(function(d){ 
-    time_series_graph(d,sortType,dat,uniqueFish)
+    time_series_graph(d.output,sortType,dat,uniqueFish)
    });
 
   
@@ -128,13 +158,31 @@ function click_fishmeal(dat,graphType,buildNewSelection){
     uniqueFish = returnOutput["uniqueFish"]
     output = []
     
+    //console.log("fishmeal")
+   // console.log(dat)
+    datProduction = dat.filter(function(e) { return e.partner == "Production" })
+    datExport = dat.filter(function(e) { return e.partner == "Export" })
+    datImport = dat.filter(function(e) { return e.partner == "Import" })
+
+    ProductionTotals = 0 
+    datProduction.forEach(function(e){  ProductionTotals+= e.value})
+
+    ImportTotals = 0
+    datImport.forEach(function(e){  ImportTotals += e.value})
+    ExportTotals = 0
+    datExport.forEach(function(e){ ExportTotals+= e.value}) 
+    
     fishmealTotals = 0
     dat.forEach(function(e){ fishmealTotals+= e.value})
-  
-   
-    summaryContent = "<table><tr><td>Total Fishmeal Production and Trade: </td><td>"+commaSeparateNumber(decimalRound(fishmealTotals))+
-    "</td></tr></table>"
+    
+       
+    summaryContent = "<table><tr><td><a title='Production'>Fishmeal Production: </a></td><td>"+commaSeparateNumber(decimalRound(ProductionTotals))+
+    "</td></tr><tr><td><a  title='All'>Gross Fishmeal Trade: </a></td><td>"+commaSeparateNumber(decimalRound(ExportTotals+ImportTotals))+
+    "</td></tr><tr><td><a  title='Export'>Fishmeal Exports: </a></td><td>"+commaSeparateNumber(decimalRound(ExportTotals))+
+
+    "</td></tr><tr><td><a title='Import'>Fishmeal Imports: </a></td><td>"+commaSeparateNumber(decimalRound(ImportTotals))+"</td></tr></table>"
      
+   
     $("#totalsSummary").html(summaryContent)
 
   partners.forEach(function(type){

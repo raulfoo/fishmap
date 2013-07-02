@@ -1,6 +1,9 @@
 @import "css/mixins";
 
 
+ 
+
+
 .line {
   fill: none;
   stroke: steelblue;
@@ -414,166 +417,176 @@
   }
 }
 
-
-#changeCountryDetails{
-  display: none;
-  width: 800px;
-  max-width: 800px;
-  min-width: 800px;
+#currentDetailSelection{
+  display: table;
   
-  #totalsSummary{
-  
-    display: inline-block;
-    font-size: .8em;
-    padding-top: 15px;
-    clear: left;
-    float: left;
+  #changeCountryDetails{
+    display: table-cell;
+    display: none;
+    width: 100%;
+    max-width: 100%;
+    min-width: 70px;
     
+    #totalsSummary{
     
-    td{
-        text-align: right;
-        padding-left: 10px;
-
-      }
-      td:first-child{
-        text-align: left;
-        padding-left: 0px;
-      }
-    }
-
-
-  #nationChooseText{
-    float: left;
-    display: inline-block;
-  }
-  
-  #nationDetailsChoose{
-    float: left;
-    margin-left: 20px;
-    margin-top: 5px;
-  }
-  #nationDetailsChooseYear{
-    float: left;
-    margin-left: 20px;
-    margin-top: 5px;
-  }
-  
-  #changeGraphType{
-    display:none;
-    display: inline-block;
-    width: 50px;
-    font-size: .6em;
-    padding: 5px;
-    margin-left: 10px;
-  }
-  
-  #import_Export{
-    display: inline-block;
-    padding-top: 10px;
-    font-size: .8em;
-    clear: left;
-    float: left;
-    
-  }
- 
-
-}
-
-#graphLoadWarning{
-  display: none;
-  float: right;
-  color: $red;
-  width: 250px;
-  display: block;
-  text-align: right;
-  padding-top: 15px;
-
-}
-    
-
-
-
-
-.graphSpeciesChange{
-  font-size: .55em;
-  max-width: 400px;
-  display: table-cell;
-  float: right;
-  display: none;
-  
-  #selectContainerBottom{   
-  
-    display: table;
-    max-width: 400px;
-    min-width: 400px;
-    height: 150px;
-    margin: 15px;
-    
-    
-    #leftSelectContainerBottom{
-      display: table-cell;
-      max-width: 250px;
-      padding: 5px;
-      #leftValuesBottom{
-        max-width: 190px;
-        min-width: 190px;
-        min-height: 120px;
-      }
-      p{
-        font-size: .8em;
+      display: inline-block;
+      font-size: .8em;
+      padding-top: 15px;
+      clear: left;
+      float: left;
+      
+      a{
+        font-size: .9em;
+      
       }
       
-     
-    }
-    
-    #middleSelectContainerBottom{
-      display: table-cell;
-      vertical-align: middle;
-     
-      #textSearchBottom {
-        max-width: 125px;
-        min-width: 125px;
-        height: 30px;
-        margin-top: 8px;
-        float: left;
-      }
-      #numMatchesBottom{
-        float: right;
-        margin-top: 15px;
-       
-
-        max-width: 60px;
-        min-width: 60px;
-        max-height: 20px;
-        min-height: 20px;
-      }
-       
-    
-    
-    }
-    #rightSelectContainerBottom{
-      display: table-cell;
-      max-width: 250px;
-      padding: 5px;
       
-      #rightValuesBottom{
-        max-width: 190px;
-        min-width: 190px;
-        min-height: 120px;
-      }
-      
-     
-    }
+      td{
+          text-align: right;
+          padding-left: 10px;
   
-
-    a {
-      font-size: .9em;
-      padding: 10px;
+        }
+        td:first-child{
+          text-align: left;
+          padding-left: 0px;
+        }
+      }
+  
+  
+    #nationChooseText{
+      float: left;
+      display: inline-block;
+    }
+    
+    #nationDetailsChoose{
+      float: left;
+      margin-left: 20px;
+      margin-top: 5px;
+    }
+    #nationDetailsChooseYear{
+      float: left;
+      margin-left: 20px;
+      margin-top: 5px;
+    }
+    
+    #changeGraphType{
+      display:none;
+      display: inline-block;
       width: 50px;
-      display: block;
+      font-size: .6em;
+      padding: 5px;
+      margin-left: 10px;
+    }
+    
+    #import_Export{
+      display: inline-block;
+      padding-top: 10px;
+      font-size: .8em;
+      clear: left;
+      float: left;
       
-      margin: 0 auto;
-      margin-top: 8px;
+    }
+   
+  
+  }
+  
+  #graphLoadWarning{
+    display: none;
+    float: right;
+    color: $red;
+    width: 250px;
+    display: block;
+    text-align: right;
+    padding-top: 15px;
+  
+  }
+      
+  
+  
+  
+  
+  .graphSpeciesChange{
+    font-size: .55em;
+    max-width: 400px;
+ 
+    display: table-cell;
+    visibility: hidden;
+   
+    
+    #selectContainerBottom{   
+    
+      display: table;
+      max-width: 400px;
+      min-width: 400px;
+      height: 150px;
+      margin: 15px;
+      
+      
+      #leftSelectContainerBottom{
+        display: table-cell;
+        max-width: 250px;
+        padding: 5px;
+        #leftValuesBottom{
+          max-width: 190px;
+          min-width: 190px;
+          min-height: 120px;
+        }
+        p{
+          font-size: .8em;
+        }
+        
+       
+      }
+      
+      #middleSelectContainerBottom{
+        display: table-cell;
+        vertical-align: middle;
+       
+        #textSearchBottom {
+          max-width: 125px;
+          min-width: 125px;
+          height: 30px;
+          margin-top: 8px;
+          float: left;
+        }
+        #numMatchesBottom{
+          float: right;
+          margin-top: 15px;
+         
+  
+          max-width: 60px;
+          min-width: 60px;
+          max-height: 20px;
+          min-height: 20px;
+        }
+         
+      
+      
+      }
+      #rightSelectContainerBottom{
+        display: table-cell;
+        max-width: 250px;
+        padding: 5px;
+        
+        #rightValuesBottom{
+          max-width: 190px;
+          min-width: 190px;
+          min-height: 120px;
+        }
+        
+       
+      }
+    
+  
+      a {
+        font-size: .9em;
+        padding: 10px;
+        width: 50px;
+        display: block;
+        
+        margin: 0 auto;
+        margin-top: 8px;
+      }
     }
   }
 }

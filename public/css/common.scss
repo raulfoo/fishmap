@@ -78,7 +78,7 @@ $paddingTop: $headerHeight / 3;
 
   width: 100%;
   margin-top: 30px;
-  min-width: 800px;
+  min-width: 1325px;
   margin-bottom: 20px;
   border-bottom-style: solid;
   border-bottom-color: $darkGray;
@@ -87,20 +87,56 @@ $paddingTop: $headerHeight / 3;
   .titleDiv{
       font-size:2em;
       float: left;
-      padding-left: 75px;
+      
+      height: 100px;
+      width: 100%;
+      max-width: 100%;
       
       a{
         font-size: 1em;
         padding: 0px;
+        padding-left: 75px;
       }
       
       p {
-        margin-left: 275px;
-        font-size: .8em;
-        top: -60px;
-        position: relative;
+       
         }
+      
+     #headerTableDisplay{ 
+       display: table;
+      
+       font-size: .8em;
+       top: -70px;
+       width: 100%;
+       position: relative;
+        
+        #instructions{
+         display: table-cell;
+         color: $red;
+         max-width: 600px;
+         min-width: 600px; 
+         width: 600px;
+        
+         top: 0px;
+         height: 50px;
+         padding-left: 325px;
+    
+       }
+       #hide_show{
+         
+         float: right;
+         font-size: 1.2em;
+         padding-left: 30px;
+         padding-right: 70px;
+         
+       
+         
+        
+        }
+      }
     }
+    
+  
     
  
   .about{
@@ -128,7 +164,7 @@ $paddingTop: $headerHeight / 3;
   
   height: 20px;
   width: 100%;
-  min-width: 800px;
+  min-width: 1325px;
   top: 100%;
   @include linear-gradient(#555, #111);
   bottom: 0px;
@@ -165,22 +201,23 @@ blockquote {
 
 
 #fullPage{
-  display: table;
+  /*display: table;*/
   min-height: 100%;
   
   #content {
-    display: table-cell;
+    /*display: table-cell;*/
     padding-left: 50px;
     padding-right: 50px;
     padding-bottom: 100px;
     
     min-height: 800px;
-    min-width: 800px;
+    min-width: 1200px;
+    margin: auto;
     
     & > * {
       margin: auto;
-      width: 1000px;
-     
+      width: 1200px;
+      
       
       
     }
