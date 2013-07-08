@@ -87,15 +87,23 @@ $paddingTop: $headerHeight / 3;
   .titleDiv{
       font-size:2em;
       float: left;
+      position: relative;
+      
+      top: -50px;
+
       
       height: 100px;
       width: 100%;
       max-width: 100%;
-      
+      h2{
+        margin-left: 70px;
+      }
       a{
         font-size: 1em;
         padding: 0px;
         padding-left: 75px;
+        
+        
       }
       
       p {

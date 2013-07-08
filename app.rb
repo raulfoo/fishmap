@@ -58,6 +58,10 @@ class FishMap < Sinatra::Base
     erb :faq
   end
   
+  get "/map" do
+    erb :map
+  end
+  
 
   def production?() ENV["RACK_ENV"] == "production" end
   
