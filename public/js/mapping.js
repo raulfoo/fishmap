@@ -297,12 +297,15 @@ $(document).ready(function(){
     yearVal = $("#amountVal").val();
     if(categorySelect == "Trade" && yearVal < 1988) yearVal = 1988
     
+    
+    //add a slider that shows max and min values, slide to filter by exporters > or imports >, filter by that number in the database search below
     $.ajax({
         type: 'POST',
         url: '/change_map',
-        data: {id: categorySelect, species: speciesSel, metric: per_capita, year: yearVal},
+        data: {id: categorySelect, species: speciesSel, metric: per_capita, year: yearVal, filterThreshold: $("#filterThreshold").val()},
         success: function(output) {
           output= JSON.parse(output)
+          console.log(output)
           outputStep = output['map_values']
           rateById.forEach(function(d,i) {this.set(d,0)})
 
@@ -310,6 +313,8 @@ $(document).ready(function(){
           for(i=0;i<outputStep.length;i++){
             rateById.set(outputStep[i].region_id, outputStep[i].value)
           }
+          
+          //set slider_value_filter values here with max and min
           
           if(reset == "true"){
           $("#rightValues").html("")
@@ -338,14 +343,20 @@ $(document).ready(function(){
             .domain(thresholdArray)
             .range(d3.range(testThresh.length).map(function(i) { return "q" + i + "-9"; }));
           
+          
+           var quantizeChangeTest = d3.scale.threshold()
+            .domain(thresholdArray)
+            .range(d3.range(testThresh.length).map(function(i) { return testThresh[i]['color'] }));
+          
           //d3.select("#chloropleth").selectAll("g").selectAll("path").attr("class", function(d) { return quantizeChange(rateById.get(d.id)); })
           arcs.selectAll("path").attr("class", function(d) { return quantizeChange(rateById.get(d.id)); })
-          
+          arcs.selectAll("path").style("fill", function(d) { return quantizeChangeTest(rateById.get(d.id)); })
+
       
-          for(i = 0; i<testThresh.length; i++){
+          /*for(i = 0; i<testThresh.length; i++){
             $(".q"+i+"-9").css("fill",newColors[i])
             
-          }
+          }*/
           
           arcs.selectAll("path").style("fill", function(d) {  
             if(parseFloat(rateById.get(d.id))==0) {
@@ -377,6 +388,10 @@ $(document).ready(function(){
             
             $("#slider").slider("option", "min", yearMin)
             $("#slider").slider("option", "max", yearMax)
+            console.log(output['absolute_min'])
+            //$("#slider_value_filter").slider("option", "min", output['absolute_min'])
+            //$("#slider_value_filter").slider("option", "max",  output['absolute_max'])
+            //$("#slider_value_filter").slider("option", "step", (output['absolute_max']-output['absolute_min'])/20)
             
             if($("#amountVal").val() !=  $("#slider").slider("value")){
               $("#slider").slider("value",$("#amountVal").val())
@@ -442,13 +457,17 @@ $(document).ready(function(){
       .selectAll("g")
         .data(topojson.feature(us, us.objects.fishery_map_raw).features)
       .enter().append("svg:g")
+        
     
     arcs.append("path")
         .attr("class", "regions")
+       
         .attr("d", path)
+        .style("fill", "none")
         .on("mouseover",mover)
         .on("mouseout",moutgo)
         .on("click", click)
+        
         
     var noOcean = svg.append("svg:g")
         .attr("class", "no_oceans")
@@ -467,6 +486,33 @@ $(document).ready(function(){
   
   
   function click(d) {
+  
+  
+   if(event.altKey){
+    console.log(d)
+    alert("hey")
+    //mover(d)
+    var $container = $('#chloropleth').select("svg").html()
+    // Canvg requires trimmed content
+    //content = $container.html()//.trim(),
+    content = $('#chloropleth').select("svg").html()
+    
+   
+    canvas = document.getElementById('svg-canvas');
+
+    // Draw svg on canvas
+    canvg(canvas, content);
+
+    // Change img be SVG representation
+    //var theImage = canvas.toDataURL('image/png');
+    //$('#svg-img').attr('src', theImage);
+    
+    
+
+
+
+   }else{
+ 
   
    $("#graphLoadWarning").html("Loading").fadeIn()
    
@@ -533,6 +579,7 @@ $(document).ready(function(){
      
 
       })
+      }
     
   }
   

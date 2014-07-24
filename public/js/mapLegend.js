@@ -2,7 +2,7 @@ function drawLegend(dat){
   output = "<div class='legendBoxDiv'><div class='newLine'><div class='floatLeft'>Exports/Destinations:</div>"
   qIndex = 
   
-  negatives = temp= dat.filter(function(d) {return d.level_value <= 0})
+  negatives = dat.filter(function(d) {return d.level_value <= 0})
   
   temp= dat.filter(function(d) {return d.level_value > 0}) 
   qIndex = negatives.length

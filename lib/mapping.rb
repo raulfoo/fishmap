@@ -9,7 +9,11 @@ class FishMap < Sinatra::Base
     category = params[:id]
     species_select = params[:species]
     year = params[:year].to_i
+    filter_val = params[:filterThreshold].to_i
+    p filter_val
         
+        
+    #yeah add a greater than, or less than parameter here if the slider value is not 0    
     if species_select != "All"
       map_select = Splash.filter(:category =>  category, :year => year, :description => species_select).select_group{[region_id, region_name, subset]}.select_append{sum(value).as(value)}.order(:region_name).all.uniq
 
@@ -19,8 +23,27 @@ class FishMap < Sinatra::Base
     end
     
     map_select.map! {|e| e.values}
+    just_values = map_select.map{|e| e[:value]}
     
- 
+   # p just_values
+    min_value = just_values.min
+    max_value = just_values.max
+    #filter map_select by >< values here
+   # p "wut here"
+    #p map_select
+    if filter_val > 0
+      map_select = map_select.select! {|e| e[:value] >= 0}
+      map_select = map_select.sort_by {|e| e[:value]}
+      map_select = map_select.slice(((map_select.length/10).floor-1)*filter_val.abs,map_select.length)
+    elsif filter_val < 0 
+      map_select = map_select.select! {|e| e[:value] <= 0}
+      map_select = map_select.sort_by {|e| -e[:value]}
+
+      map_select = map_select.slice(((map_select.length/10).floor-1)*filter_val.abs,map_select.length)
+      p map_select
+    end
+    
+    #map_select.select! {|e| e[:value] >10000}
     detail_species = Splash.filter(:category =>  category, :year => year).select(:description).order(:description).all.uniq
     detail_species = detail_species.map!{|e| e.description}
     
@@ -61,6 +84,8 @@ class FishMap < Sinatra::Base
     thresholdDat = map_select.map{|e| e[:value]}
     thresholds = createThresholds(thresholdDat)
     
+    p "wutwutwut"
+    p thresholds
     associationArray = createAssociations(category,species_select,per_capita,year)
     
     years = Splash.where(:category => category).select(:year).sort_by(&:year)
@@ -70,7 +95,7 @@ class FishMap < Sinatra::Base
     #year_min = 1990
     #year_max = 2010
     #output = {:map_values => map_select, :thresholds => thresholds, :details=> details, :nationIds => unique_region, :speciesOptions => detail_species, :assocArray => associationArray}
-    output = {:map_values => map_select, :thresholds => thresholds, :nationIds => unique_region, :speciesOptions => detail_species, :assocArray => associationArray, :yearMin => year_min, :yearMax => year_max}
+    output = {:map_values => map_select, :thresholds => thresholds, :nationIds => unique_region, :speciesOptions => detail_species, :assocArray => associationArray, :yearMin => year_min, :yearMax => year_max, :absolute_min => min_value, :absolute_max => max_value}
     
     return output.to_json
   
@@ -130,6 +155,7 @@ class FishMap < Sinatra::Base
   
   def createThresholds(data)
     
+    #this may take some work
     raw_reds = ["#67000D","#A50F15","#CB181D", "#EF3B2C","#FB6A4A","#FC9272","#FCBBA1","#FEE0D2","#FFF5F0"]
     raw_blues = ["#F7FBFF", "#DEEBF7", "#C6DBEF", "#9ECAE1", "#6BAED6", "#4292C6", "#2171B5", "#08519C", "#08306B"] #"#F7FBFF"
     reds = []
@@ -138,72 +164,138 @@ class FishMap < Sinatra::Base
     data = data.sort
     splits = 8
     num_negatives = 0
-   
+    outArray = []
     
-    neg_data = data.select{|e| e<0}
-    num_negatives = neg_data.size
-    
-    pos_data = data.select{|e| e>=0}
-    num_neg_groups = 0
-    neg_group_size = 0
-    neg_splits = (splits*(num_negatives.to_f/data.size.to_f)).floor
-    if neg_splits > 0
-      neg_group_size = (num_negatives/neg_splits).floor
-    end
-    
-    
-    
-    if neg_group_size > 0
-      num_neg_groups = neg_splits+1
-      #neg_splits = num_neg_groups-1
+    if data.max < 0 #do only reds
+      raw_reds = raw_reds.reverse
+
+      p "hello"
+      p data
+      data = data.reverse
+      split_size = [1,(data.size/8).floor].max
       
-      if num_neg_groups > 2
+      firstBinAdd = data.size % (split_size*8)
+      colorIndex = 0
+      temp_threshold = data[split_size-1+firstBinAdd]
+      temp_color = raw_reds[colorIndex]
+      outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0001)})
+      colorIndex = 1
+      temp_dat = data.slice(split_size+firstBinAdd,data.length) 
+      temp_dat.each_slice(split_size) do |slice|
+        p slice
+        temp_threshold = slice.min
+        temp_color = raw_reds[colorIndex]
+        outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0001)})
+        colorIndex += 1
+      end
+      outArray = outArray.sort_by{|e| e[:level_value]}
+
+      
+    elsif data.min > 0  # do only reds
+
+      split_size = [1,(data.size/8).floor].max
+      firstBinAdd = data.size % (split_size*8)
+      colorIndex = 0
+      temp_threshold = data[split_size-1+firstBinAdd]
+      temp_color = raw_blues[colorIndex]
+      outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0001)})
+      colorIndex = 1
+      temp_dat = data.slice(split_size+firstBinAdd,data.length) 
+      temp_dat.each_slice(split_size) do |slice|
+        temp_threshold = slice.max
+        temp_color = raw_blues[colorIndex]
+        outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0001)})
+        colorIndex += 1
+      end
+      
+    else # do this stuff
+      
+      p "look here"
+      p data
+     
+      
+      neg_data = data.select{|e| e<0}
+      num_negatives = neg_data.size
+      
+      pos_data = data.select{|e| e>=0}
+      num_neg_groups = 0
+      neg_group_size = 0
+      neg_splits = (splits*(num_negatives.to_f/data.size.to_f)).floor
+      if neg_splits > 0
+        neg_group_size = (num_negatives/neg_splits).floor
+      end
+      
+      
+      
+      if neg_group_size > 0
+        num_neg_groups = neg_splits+1
+        #neg_splits = num_neg_groups-1
+        
+        if num_neg_groups > 2
+          selects = [0,8]
+          shiftUp = ((7 % (num_neg_groups-2))/2).floor
+          (1..(num_neg_groups-2)).each do |z|
+            temp = shiftUp+z*((7/(num_neg_groups-2)).floor)
+            selects.push(temp)
+          end
+        
+          
+          selects = selects.sort
+          selects.each do |d|
+            reds.push(raw_reds.slice(d))
+          
+          end
+        end
+      end
+        
+      
+    
+      num_pos_groups = [[9-num_neg_groups,3].max,data.length].min
+      pos_group_size = [(pos_data.size/num_pos_groups).floor,1].max
+      pos_splits = num_pos_groups
+      
+     
+      if num_pos_groups > 2
         selects = [0,8]
-        shiftUp = ((7 % (num_neg_groups-2))/2).floor
-        (1..(num_neg_groups-2)).each do |z|
-          temp = shiftUp+z*((7/(num_neg_groups-2)).floor)
+        shiftUp = ((7 % (num_pos_groups-2))/2).ceil
+        (1..(num_pos_groups-2)).each do |z|
+          temp = shiftUp+z*((7/(num_pos_groups-2)).floor)
           selects.push(temp)
         end
       
-        
         selects = selects.sort
         selects.each do |d|
-          reds.push(raw_reds.slice(d))
+          blues.push(raw_blues.slice(d))
         
         end
       end
-    end
       
-    
-  
-    num_pos_groups = [[9-num_neg_groups,3].max,data.length].min
-    pos_group_size = [(pos_data.size/num_pos_groups).floor,1].max
-    pos_splits = num_pos_groups
-    
-   
-    if num_pos_groups > 2
-      selects = [0,8]
-      shiftUp = ((7 % (num_pos_groups-2))/2).ceil
-      (1..(num_pos_groups-2)).each do |z|
-        temp = shiftUp+z*((7/(num_pos_groups-2)).floor)
-        selects.push(temp)
+      outArray = Array.new()
+     
+      if(neg_data.size > 0)
+        (1..(neg_splits)).each do |step|
+          if step < (neg_splits)
+            temp_threshold = neg_data[(step*neg_group_size)-1]
+          else
+            temp_threshold = neg_data.last
+          end
+          if temp_threshold < 0 
+            temp_color = reds.shift
+          else
+            temp_color = blues.shift
+          end
+          outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0001)})
+        
+          
+        end
       end
-    
-      selects = selects.sort
-      selects.each do |d|
-        blues.push(raw_blues.slice(d))
+     
       
-      end
-    end
-    
-    outArray = Array.new()
-   
-    if(neg_data.size > 0)
-      (1..(neg_splits)).each do |step|
-        if step < (neg_splits)
-          temp_threshold = neg_data[(step*neg_group_size)-1]
+      (1..(pos_splits)).each do |step|
+        if step < (pos_splits)
+          temp_threshold = pos_data[(step*pos_group_size)-1]
         else
-          temp_threshold = neg_data.last
+          temp_threshold = pos_data.last 
         end
         if temp_threshold < 0 
           temp_color = reds.shift
@@ -214,25 +306,8 @@ class FishMap < Sinatra::Base
       
         
       end
-    end
-   
-    
-    (1..(pos_splits)).each do |step|
-      if step < (pos_splits)
-        temp_threshold = pos_data[(step*pos_group_size)-1]
-      else
-        temp_threshold = pos_data.last 
-      end
-      if temp_threshold < 0 
-        temp_color = reds.shift
-      else
-        temp_color = blues.shift
-      end
-      outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0001)})
-    
       
     end
-    
     
     return outArray
   end

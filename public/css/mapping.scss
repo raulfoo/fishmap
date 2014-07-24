@@ -1,15 +1,12 @@
 @import "css/mixins";
 
 
- 
-
 
 .line {
   fill: none;
   stroke: steelblue;
   stroke-width: 1.5px;
 }
-
 
 
 .axis path,
@@ -26,8 +23,6 @@
 .x.axis path {
   display: none;
 }
-
-
 
 
 .counties {
@@ -54,7 +49,6 @@
   
 }
 
-
 .states {
   fill:  none;
   stroke: #fff;
@@ -62,8 +56,6 @@
   
   
 }
-
-
 
 .arc{
   pointer-events: none;
@@ -200,67 +192,95 @@
       
     }
     
-    #sliderContainer{
+    #mapLegendContainer{
       display: table;
-      font-size: .7em;
-      .slideLabel{
-        padding-left: 20px;
-        padding-right: 20px;
-      }
-      #radios{
-        display: table-cell;
       
-        padding-right: 20px;
-        }
-        #slider{
-          margin: 10px;
-         
-          
-          display: table-cell;
-          width: 175px;
-          height: 10px;
-        }
-        #amount{
-          padding-left: 35px;
-          display: table-cell;
+      .mapLegConClass1{
+        display: table-cell;
+        min-width: 100px;
+        width: 100px;
+        float: top;
+        
+        p{
+          font-size: .6em;
+          min-width: 100px;
+          width: 100px;
+        
         }
         
-    }
-    
-    #mapLegend{
-      font-size: .6em;
-      min-width: 800px;
-     
-      .legendBoxDiv{
-      
-        .newLine{
-          display: inline-block;
-          width: 800px;
-       
-      
-          .floatLeft{
-            padding: 10px;
-            float: left;
-            
-            .legendBox{
-              max-width: 15px;
-              min-width: 15px;
-              height: 15px;
-              float: left;
+        #slider_value_filter{
+              margin: 10px;
+              width: 20px;
+              min-height: 150px;
+              height: 150px;
+              font-size: .7em;
+             
+            }
+        }
+      .mapLegConClass2{
+        
+        #sliderContainer{
+          display: table;
+          font-size: .7em;
+          .slideLabel{
+            padding-left: 20px;
+            padding-right: 20px;
+          }
+          #radios{
+            display: table-cell;
+          
+            padding-right: 20px;
+            }
+            #slider{
+              margin: 10px;
+             
               
-              border-style: solid;
-              border-width: 1px;
-              border-color: black;
-              cursor: hand; 
-              cursor: pointer; 
-
+              display: table-cell;
+              width: 175px;
+              height: 10px;
+            }
+            #amount{
+              padding-left: 35px;
+              display: table-cell;
+            }
             
+        }
+        
+        #mapLegend{
+          font-size: .6em;
+          min-width: 800px;
+         
+          .legendBoxDiv{
+          
+            .newLine{
+              display: inline-block;
+              width: 800px;
+           
+          
+              .floatLeft{
+                padding: 10px;
+                float: left;
+                
+                .legendBox{
+                  max-width: 15px;
+                  min-width: 15px;
+                  height: 15px;
+                  float: left;
+                  
+                  border-style: solid;
+                  border-width: 1px;
+                  border-color: black;
+                  cursor: hand; 
+                  cursor: pointer; 
+    
+                
+                }
+              }
             }
           }
         }
       }
     }
-   
   }
     
     .topNavRight{
@@ -330,6 +350,31 @@
 #topWindow{
   display: table;
   width: 1000px;
+  
+  .mapLegConClass1{
+      display: table-cell;
+      min-width: 100px;
+      width: 100px;
+      vertical-align: top;
+      margin-top: 250px;
+      
+    
+      
+     p{
+      font-size: .6em;
+      min-width: 100px;
+      width: 100px;
+      }
+      
+      #slider_value_filter{
+        margin: 10px;
+        width: 20px;
+        min-height: 150px;
+        height: 150px;
+        font-size: .7em;
+         
+        }
+  }
   
   #chloropleth{
     display: table-cell;
@@ -606,11 +651,10 @@
 
 
 
-
+/*
 .q0-9 { fill:rgb(247,251,255); }
 .q1-9 { fill:rgb(222,235,247); }
 .q2-9 {fill:rgb(198,219,239); } 
-
 .q3-9 { fill:rgb(158,202,225); }
 .q4-9 { fill:rgb(107,174,214); }
 .q5-9 { fill:rgb(66,146,198); }
@@ -618,5 +662,5 @@
 .q7-9 { fill:rgb(8,81,156); }
 .q8-9 { fill:rgb(8,48,107); }
 .q9-9 { fill:rgb(8,48,107); }
-
+*/
 .blank {fill: black;}

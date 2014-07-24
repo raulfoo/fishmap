@@ -24,6 +24,12 @@ $(document).ready(function(){
   })
   
   
+  $(".countries").dblclick(function(){
+    alert("hello")
+  
+  })
+  
+  
 
   
   

@@ -1,27 +1,50 @@
 <% content_for :head do %>
    
 
-   <%= @pinion.js_url("/assets/js/mapping.js") %>
-   <%= @pinion.js_url("/assets/js/fishmeal_click.js") %>
-   <%= @pinion.js_url("/assets/js/trade_click.js") %>
-   <%= @pinion.js_url("/assets/js/production_click.js") %>
-   <%= @pinion.js_url("/assets/js/helpers.js") %>
-   <%= @pinion.js_url("/assets/js/graphHelpers.js") %>
-   <%= @pinion.js_url("/assets/js/mapLegend.js") %>
-   <%= @pinion.js_url("/assets/js/slider.js") %>
-    <%= @pinion.js_url("/assets/js/user_instructions.js") %>
-   
-   <%= @pinion.js_url("/assets/js/multiSelect.js") %>
-   <%= @pinion.js_url("/assets/js/speciesSearchText.js") %>
+   <%#= @pinion.js_url("/assets/js/slider.js") %>
+
+   <%#= @pinion.js_url("/assets/js/mapping.js") %>
+   <%#= @pinion.js_url("/assets/js/fishmeal_click.js") %>
+   <%#= @pinion.js_url("/assets/js/trade_click.js") %>
+   <%#= @pinion.js_url("/assets/js/production_click.js") %>
+   <%#= @pinion.js_url("/assets/js/helpers.js") %>
+   <%#= @pinion.js_url("/assets/js/graphHelpers.js") %>
+   <%#= @pinion.js_url("/assets/js/mapLegend.js") %>
+   <%#= @pinion.js_url("/assets/js/user_instructions.js") %>
+   <%#= @pinion.js_url("/assets/js/html2canvas.js") %>
+   <%#= @pinion.js_url("/assets/js/multiSelect.js") %>
+   <%#= @pinion.js_url("/assets/js/speciesSearchText.js") %>
+
+   <script>
+    [
+      'js/slider.js',
+      'js/fishmeal_click.js',
+      'js/trade_click.js',
+      'js/production_click.js',
+      'js/helpers.js',
+      'js/graphHelpers.js',
+      'js/mapLegend.js',
+      'js/user_instructions.js',
+      'js/html2canvas.js',
+      'js/multiSelect.js',
+      'js/speciesSearchText.js',
+      'js/mapping.js',
+    ].forEach(function(src) {
+      var script = document.createElement('script');
+      script.src = src;
+      script.async = false;
+      document.head.appendChild(script);
+    });
+    </script>
  
 
 
     <%= @pinion.css_url("/assets/css/mapping.css") %>
    
-    <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="http://d3js.org/queue.v1.min.js"></script>
     <script src="http://d3js.org/topojson.v1.min.js"></script>
-  
+    <script src="http://canvg.googlecode.com/svn/trunk/canvg.js"></script> 
+    <script type="text/javascript" src="http://canvg.googlecode.com/svn/trunk/rgbcolor.js"></script> 
 <% end %>
 
 <div class="margin" >
@@ -44,17 +67,25 @@
         </li>
       
       </ul>
-      <div id="mapLegend"></div>
-      <div id="sliderContainer">
-        <div id="radios">
-          <input type = "radio" name="metric" value = "F" checked="checked"/> Gross (Tonnes)
-          <input type = "radio" name="metric" value = "T"/> Per Capita (Kg/person)
+      <div id="mapLegendContainer">
+        <!--<div class="mapLegConClass1">
+          <p> Filter by Net Exports </p>
+          <div id="slider_value_filter"></div>
+        </div>-->
+        <div class="mapLegConClass2">
+          <div id="mapLegend"></div>
+          <div id="sliderContainer">
+            <div id="radios">
+              <input type = "radio" name="metric" value = "F" checked="checked"/> Gross (Tonnes)
+              <input type = "radio" name="metric" value = "T"/> Per Capita (Kg/person)
+            </div>
+            <span id="minTopSlide" class="slideLabel" >1981</span><div id="slider"></div><span id="maxTopSlide" class="slideLabel">2010</span>
+            
+            <div id="amount"></div>        
+            <input type="hidden" id="amountVal" value="2009"/>
+            <input type="hidden" id="filterThreshold" value="0"/>
+          </div>
         </div>
-        <span id="minTopSlide" class="slideLabel" >1981</span><div id="slider"></div><span id="maxTopSlide" class="slideLabel">2010</span>
-        
-        <div id="amount"></div>        
-        <input type="hidden" id="amountVal" value="2009"/>
-
       </div>
     </div>
     <div class="topNavRight" >
@@ -86,7 +117,13 @@
   </div>
   
   <div id="topWindow">
-    <div id="chloropleth"></div>
+      <div class="mapLegConClass1">
+        <p> Filter by Net Exports </p>
+        <div id="slider_value_filter"></div>
+      </div>
+      <div id="chloropleth"></div>
+    </div>
+    
     <div id = topRightSide>
     
     <div id="chloroInformation"></div>
@@ -176,6 +213,9 @@
 <input type="hidden" id="regionHolder" value=""/>
 <input type="hidden" id="regionSubset" value="All"/>
 
+
+<img id="svg-img" />
+<canvas id="svg-canvas"></canvas>
 
 </div>
 
