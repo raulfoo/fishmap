@@ -10,15 +10,15 @@ class FishMap < Sinatra::Base
     species_select = params[:species]
     year = params[:year].to_i
     filter_val = params[:filterThreshold].to_i
-    p filter_val
+    #p filter_val
         
         
     #yeah add a greater than, or less than parameter here if the slider value is not 0    
     if species_select != "All"
-      map_select = Splash.filter(:category =>  category, :year => year, :description => species_select).select_group{[region_id, region_name, subset]}.select_append{sum(value).as(value)}.order(:region_name).all.uniq
+      map_select = Splash.filter(:category =>  category, :year => year, :description => species_select).select_group{[region_id, region_name, subset]}.select_append{sum(value).as(value)}.order(:value).all.uniq
 
     else
-      map_select = Splash.filter(:category =>  category,  :year => year).select_group{[region_id, region_name]}.select_append{sum(value).as(value)}.order(:region_name).all.uniq
+      map_select = Splash.filter(:category =>  category,  :year => year).select_group{[region_id, region_name, subset]}.select_append{sum(value).as(value)}.order(:value).all.uniq
 
     end
     
@@ -30,17 +30,19 @@ class FishMap < Sinatra::Base
     max_value = just_values.max
     #filter map_select by >< values here
    # p "wut here"
+    #p "check filter"
     #p map_select
+    #p filter_val
     if filter_val > 0
-      map_select = map_select.select! {|e| e[:value] >= 0}
+      map_select = map_select.select {|e| e[:value] >= 0}
       map_select = map_select.sort_by {|e| e[:value]}
       map_select = map_select.slice(((map_select.length/10).floor-1)*filter_val.abs,map_select.length)
     elsif filter_val < 0 
-      map_select = map_select.select! {|e| e[:value] <= 0}
+      map_select = map_select.select {|e| e[:value] <= 0}
       map_select = map_select.sort_by {|e| -e[:value]}
 
       map_select = map_select.slice(((map_select.length/10).floor-1)*filter_val.abs,map_select.length)
-      p map_select
+      #p map_select
     end
     
     #map_select.select! {|e| e[:value] >10000}
@@ -82,16 +84,21 @@ class FishMap < Sinatra::Base
     end
     
     thresholdDat = map_select.map{|e| e[:value]}
+    p "thresholdDat"
+    p thresholdDat
     thresholds = createThresholds(thresholdDat)
     
-    p "wutwutwut"
-    p thresholds
+    #p "wutwutwut"
+    #p thresholds
+    #p species_select
     associationArray = createAssociations(category,species_select,per_capita,year)
     
     years = Splash.where(:category => category).select(:year).sort_by(&:year)
     year_min = years[0].year
     year_max=  years[(years.size-1)].year
-  
+    
+    #add importer exporters
+    
     #year_min = 1990
     #year_max = 2010
     #output = {:map_values => map_select, :thresholds => thresholds, :details=> details, :nationIds => unique_region, :speciesOptions => detail_species, :assocArray => associationArray}
@@ -169,23 +176,26 @@ class FishMap < Sinatra::Base
     if data.max < 0 #do only reds
       raw_reds = raw_reds.reverse
 
-      p "hello"
-      p data
+     # p "hello"
+      #p data
       data = data.reverse
       split_size = [1,(data.size/8).floor].max
       
       firstBinAdd = data.size % (split_size*8)
+       if data.size < 8 
+        firstBinAdd = 0
+      end
       colorIndex = 0
       temp_threshold = data[split_size-1+firstBinAdd]
       temp_color = raw_reds[colorIndex]
-      outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0001)})
+      outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0000)})
       colorIndex = 1
       temp_dat = data.slice(split_size+firstBinAdd,data.length) 
       temp_dat.each_slice(split_size) do |slice|
-        p slice
+        #p slice
         temp_threshold = slice.min
         temp_color = raw_reds[colorIndex]
-        outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0001)})
+        outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0000)})
         colorIndex += 1
       end
       outArray = outArray.sort_by{|e| e[:level_value]}
@@ -196,22 +206,25 @@ class FishMap < Sinatra::Base
       split_size = [1,(data.size/8).floor].max
       firstBinAdd = data.size % (split_size*8)
       colorIndex = 0
+      if data.size < 8 
+        firstBinAdd = 0
+      end
       temp_threshold = data[split_size-1+firstBinAdd]
       temp_color = raw_blues[colorIndex]
-      outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0001)})
+      outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0000)})
       colorIndex = 1
       temp_dat = data.slice(split_size+firstBinAdd,data.length) 
       temp_dat.each_slice(split_size) do |slice|
         temp_threshold = slice.max
         temp_color = raw_blues[colorIndex]
-        outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0001)})
+        outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0000)})
         colorIndex += 1
       end
       
     else # do this stuff
       
-      p "look here"
-      p data
+      #p "look here"
+      #p data
      
       
       neg_data = data.select{|e| e<0}
@@ -284,7 +297,7 @@ class FishMap < Sinatra::Base
           else
             temp_color = blues.shift
           end
-          outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0001)})
+          outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0000)})
         
           
         end
@@ -302,7 +315,7 @@ class FishMap < Sinatra::Base
         else
           temp_color = blues.shift
         end
-        outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0001)})
+        outArray.push({:color => temp_color, :level_value => (temp_threshold+0.0000)})
       
         
       end
@@ -325,7 +338,10 @@ class FishMap < Sinatra::Base
       populations.map!{|e| e.values}
     end
     
+    #p "check connection"
+    
     connections.map! {|e| e.values}
+    #p connections
     
     centroids = Centroid.all
     centroids.map! {|e| e.values}
@@ -337,13 +353,16 @@ class FishMap < Sinatra::Base
     fishmealArray = Hash.new()
     unique_regions.each do |e|
       tempArray = Array.new()
-      selects = fishmeal.select{|d| d[:region_id] == e && d[:partner_name] != "Aquaculture"}
+      selects = fishmeal.select{|d| d[:region_id] == e} #&& d[:partner_name] != "Aquaculture"
       selects = selects.slice(0,4).push(selects.slice(selects.length-5,selects.length-1)).uniq.flatten #limited to just the top 5 and bottom 5
       selects.delete_if {|x| x == nil}
    
       selects.each do |z|
         source = centroids.find{|a| a[:id] == z[:region_id]}
         target = centroids.find{|a| a[:id] == z[:partner_id]}
+        if z[:partner_name] == "Aquaculture"
+          target = source
+        end
         if metric == "T"
           divisor = populations.select{|e| e[:region_id] == z[:region_id]}[0]
         
@@ -375,7 +394,8 @@ class FishMap < Sinatra::Base
       fishmealArray[e.to_sym] = tempArray
     end
     
-   
+    #p "arraycheck"
+    #p fishmealArray
     return {:data => fishmealArray, :max => maxFishmeal}
   
   
@@ -388,13 +408,16 @@ class FishMap < Sinatra::Base
     species = params[:species]
     subset=params[:subset]
     per_capita = params[:per_capita]
+    grouping = params[:grouping].to_sym
     
     subset_hash = "subset"
     if category == "Fishmeal"
       subset_hash = "partner"
+    elsif
+      subset_hash = grouping
     end
     
-    p year
+    #p year
     if year == "All"
       year = (1980..2010).to_a
     end
@@ -404,18 +427,23 @@ class FishMap < Sinatra::Base
     if species == "All" || species == nil || species == ""
       species = /.*/
     end
-
+    
+    #p "check all this"
+    #p subset
+    #p subset_hash
+    #p species
+    #p grouping
     
     if subset != "All"
-      ranks = Detail.where(:category=> category, :year => year, subset_hash => subset, :description => species).select(:region_name, subset_hash, :region_id).group_by(subset_hash, :region_name, :region_id).select_append{sum(value).as(value)}.all
+      ranks = Detail.where(:category=> category, :year => year, subset_hash => subset,  grouping => species).select(:region_name, subset_hash, :region_id).group_by(subset_hash, :region_name, :region_id).select_append{sum(value).as(value)}.all
       #ranks = ranks.select{|e| e.subset == subset}
     else
 
       if category == "Fishmeal"
-        ranks = Detail.where(:category=> category, :year => year, subset_hash=>['Export','Import','Re-export'], :description => species).select(:region_name, :region_id).group_by(:region_name, :region_id).select_append{sum(value).as(value)}.all
+        ranks = Detail.where(:category=> category, :year => year, subset_hash=>['Export','Import','Re-export'],  grouping  => species).select(:region_name, :region_id).group_by(:region_name, :region_id).select_append{sum(value).as(value)}.all
 
       else
-        ranks = Detail.where(:category=> category, :year => year, :description => species).select(:region_name, :region_id).group_by(:region_name, :region_id).select_append{sum(value).as(value)}.all
+        ranks = Detail.where(:category=> category, :year => year,  grouping  => species).select(:region_name, :region_id).group_by(:region_name, :region_id).select_append{sum(value).as(value)}.all
       end
     end
     

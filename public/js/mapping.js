@@ -70,11 +70,13 @@ $(document).ready(function(){
       $("#regionSubset").val("All")
       $("#amountVal").val(2009)
       
-
+      $("#hide_show").css("display","none")
+      $("#hide_show").html("Show Map") 
       getData(arcs,"Fishmeal","true")
       $(".navLinks").css("background-color","white")
       $("#categoryHolder").val("Fishmeal")
       $(this).css("background-color","#FFDC8E")
+      $("#groupingTypeHolder").val("species")
     }
     
   });
@@ -83,13 +85,18 @@ $(document).ready(function(){
       if(allowNavigate){
         $("#textSearch").val("")
         $("#regionSubset").val("All")
-             $("#amountVal").val(2010)
-
+        $("#amountVal").val(2010)
+        
+        $("#hide_show").css("display","none")
+        $("#hide_show").html("Show Map") 
+      
         getData(arcs,"Trade","true")
 
         $(".navLinks").css("background-color","white")
         $("#categoryHolder").val("Trade")
         $(this).css("background-color","#FFDC8E")
+        $("#groupingTypeHolder").val("species")
+
       }
  
   })
@@ -97,15 +104,22 @@ $(document).ready(function(){
   $("#selectCapture").click(function(){
 
     if(allowNavigate){
+      $("#filterThreshold").val(0)
+      $("#slider_value_filter").slider('value',0)
+      $("#slideFilterValue").text("Show All")
+     
       $("#textSearch").val("")
       $("#regionSubset").val("All")
       $("#amountVal").val(2010)
-
+      $("#hide_show").css("display","none")
+      $("#hide_show").html("Show Map") 
       getData(arcs,"Production","true")
 
       $(".navLinks").css("background-color","white")
       $("#categoryHolder").val("Production") 
       $(this).css("background-color","#FFDC8E")
+      $("#groupingTypeHolder").val("species")
+
     }
     
   })
@@ -143,6 +157,7 @@ $(document).ready(function(){
         if(category == "Trade"){
           click_trade(infoSelectLimited,$("#graphTypeHolder").val(),"false")
         }else if(category == "Production"){
+          $("#groupingTypeHolder").val("species")
           click_production(infoSelectLimited,$("#graphTypeHolder").val(),"false")
         }else if(category == "Fishmeal"){
           click_fishmeal(infoSelectLimited,$("#graphTypeHolder").val(),"false")
@@ -185,7 +200,7 @@ $(document).ready(function(){
    
     idSearch = $("#nationDetailsChoose").val()
     $("#amountVal").val($("#nationDetailsChooseYear").val())
-    click({id: idSearch})
+    click({id: idSearch, playThrough: true})
    
    })
    
@@ -253,6 +268,8 @@ $(document).ready(function(){
       if(category == "Trade"){
         click_trade(infoSelect,graphType)
       }else if(category == "Production"){
+        $("#groupingTypeHolder").val("species")
+
         click_production(infoSelect,graphType)
       }else if(category == "Fishmeal"){
         click_fishmeal(infoSelect,graphType)
@@ -276,6 +293,7 @@ $(document).ready(function(){
     $("#graphLegend").html("");
     $("#import_Export").fadeOut();
     $("#changeCountryDetails").fadeOut()
+    $("#numMatches").html("")
     
     arcs.selectAll(".arc").remove()
 
@@ -305,9 +323,39 @@ $(document).ready(function(){
         data: {id: categorySelect, species: speciesSel, metric: per_capita, year: yearVal, filterThreshold: $("#filterThreshold").val()},
         success: function(output) {
           output= JSON.parse(output)
-          console.log(output)
+         //console.log(output)
           outputStep = output['map_values']
           rateById.forEach(function(d,i) {this.set(d,0)})
+          outputStep = outputStep.sort(compare).reverse()
+          outputStepNegatives = outputStep.filter(function(e) { return e["value"]<0})
+          outputStepNegatives.forEach(function(e,i){
+            e["rank"] = "Importer Rank: " + (i+1)
+          })
+          outputStepPositives = outputStep.filter(function(e) { return e["value"]>=0})
+          compareLength = outputStepPositives.length
+          tempCategory = $("#categoryHolder").val()
+          
+          if(tempCategory == "Production"){
+            ["Capture","Aquaculture"].forEach(function(subsetType){
+              temp = outputStepPositives.filter(function(k){ return k['subset']==subsetType})
+              compareLength = temp.length
+              temp.forEach(function(e,i){
+                e["rank"] = subsetType+" Production Rank: "+(compareLength-(i))
+              })
+            })
+          
+          }else{
+            
+            outputStepPositives.forEach(function(e,i){
+              if(tempCategory == "Production"){
+                e["rank"] = "Producer Rank: "+(compareLength-(i))
+              }else{
+                e["rank"] = "Exporter Rank: " + (compareLength-(i))
+              }
+            })
+          
+          }
+          outputStep = _.flatten([outputStepNegatives,outputStepPositives])
 
           lookupCounty = [];
           for(i=0;i<outputStep.length;i++){
@@ -334,11 +382,43 @@ $(document).ready(function(){
           temp = []
           
           temp = output["assocArray"]["data"]
+        
+          for(i in temp){
+            partnerDuplicatedCheck = []
+            //if(temp[i].length<2) continue
+            temp2 = temp[i]
+            popIndex = 0
+            goodArray = []
+            temp[i].forEach(function(e,j){
+             spliceCheck = partnerDuplicatedCheck.indexOf(e.partner)
+             if(spliceCheck==-1){          
+                goodArray.push(e)
+             }
+              partnerDuplicatedCheck.push(e.partner)
+            })
+            temp[i] = goodArray
+            
+          }
           allConnections = temp
+        
           maxConnection= output["assocArray"]["max"]
           mouseoverInfo = temp
-   
-          thresholdArray[thresholdArray.length-1] =  thresholdArray[thresholdArray.length-1]
+          
+          
+          if(thresholdArray.length == 1){
+            if(thresholdArray>=0) {
+              thresholdArray[0] = thresholdArray[0]+1
+            }else{
+              thresholdArray[0] =  thresholdArray[0] -1
+            }
+            //testThresh.push(testThresh[0])
+           // testThresh[0]['level_value'] = testThresh[0]['level_value']-1
+          }else{
+
+            thresholdArray[thresholdArray.length-1] =  thresholdArray[thresholdArray.length-1]+1
+            thresholdArray[0] = thresholdArray[0]+1
+          }
+       
           var quantizeChange = d3.scale.threshold()
             .domain(thresholdArray)
             .range(d3.range(testThresh.length).map(function(i) { return "q" + i + "-9"; }));
@@ -349,8 +429,23 @@ $(document).ready(function(){
             .range(d3.range(testThresh.length).map(function(i) { return testThresh[i]['color'] }));
           
           //d3.select("#chloropleth").selectAll("g").selectAll("path").attr("class", function(d) { return quantizeChange(rateById.get(d.id)); })
-          arcs.selectAll("path").attr("class", function(d) { return quantizeChange(rateById.get(d.id)); })
-          arcs.selectAll("path").style("fill", function(d) { return quantizeChangeTest(rateById.get(d.id)); })
+          arcs.selectAll("path").attr("class", function(d) { 
+          tempVal = rateById.get(d.id)
+          if(tempVal != 0){
+            return quantizeChange(rateById.get(d.id)); 
+            }else{
+            return "q-99"
+            }
+          })
+          arcs.selectAll("path").style("fill", function(d) { 
+           tempVal = rateById.get(d.id)
+          if(tempVal != 0){
+            return quantizeChangeTest(rateById.get(d.id)); 
+            }else{
+            return "q-99"
+            }
+          
+          })
 
       
           /*for(i = 0; i<testThresh.length; i++){
@@ -374,7 +469,7 @@ $(document).ready(function(){
             .attr("d", function(d) { return path(arc(d)); })
             .style("stroke", function(d) {return selectColor(d)})
             .style("stroke-width", function(d) {return (Math.abs(d.value)/(maxConnection/30))+1});
-          
+            
             drawLegend(testThresh)
             
             
@@ -388,7 +483,7 @@ $(document).ready(function(){
             
             $("#slider").slider("option", "min", yearMin)
             $("#slider").slider("option", "max", yearMax)
-            console.log(output['absolute_min'])
+            //console.log(output['absolute_min'])
             //$("#slider_value_filter").slider("option", "min", output['absolute_min'])
             //$("#slider_value_filter").slider("option", "max",  output['absolute_max'])
             //$("#slider_value_filter").slider("option", "step", (output['absolute_max']-output['absolute_min'])/20)
@@ -397,12 +492,17 @@ $(document).ready(function(){
               $("#slider").slider("value",$("#amountVal").val())
             }
             
-            $("#amount").html("Selected: " + $("#amountVal").val());
+            $("#amount").html($("#amountVal").val());
 
 
             
-            $("#loadWarning").fadeOut()
+            $("#loadWarning").css("display","none")
+            $("#loadingInitial").css("display","none")
+            $("#fullPage").css("visibility","visible")
             allowNavigate = true
+            numCommodities = $("#rightValues").find("option").length
+            if(numCommodities == 0) numCommodities = $("#leftValues").find("option").length
+            $("#numberSpecies").text("# Commodities selected: "+numCommodities)
 
         }
       });
@@ -486,11 +586,12 @@ $(document).ready(function(){
   
   
   function click(d) {
-  
-  
+   if(d['playThrough'] == null){
+    if($(this)[0]['attributes'][0]['value']=="q-99") return
+   }
    if(event.altKey){
-    console.log(d)
-    alert("hey")
+   // console.log(d)
+    //alert("hey")
     //mover(d)
     var $container = $('#chloropleth').select("svg").html()
     // Canvg requires trimmed content
@@ -522,7 +623,7 @@ $(document).ready(function(){
    if(speciesSel == "") speciesSel = "All"
    per_capita =  $("input[type='radio'][name='metric']:checked").val()
    $("#nationDetailsChooseYear").css("visibility","")
-   $("#groupingTypeHolder").val("region")
+   //$("#groupingTypeHolder").val("region")
    
    $.ajax({
         type: 'POST',
@@ -544,6 +645,9 @@ $(document).ready(function(){
               if(category == "Trade"){
                 click_trade(infoSelect,$("#graphTypeHolder").val())
               }else if(category == "Production"){
+                      $("#groupingTypeHolder").val("species")
+
+
                 click_production(infoSelect,$("#graphTypeHolder").val())
               }else if(category == "Fishmeal"){
                 click_fishmeal(infoSelect,$("#graphTypeHolder").val())
@@ -586,10 +690,10 @@ $(document).ready(function(){
    function moutgo(d) {
       //$(this).css("stroke-width","1");
       //$(this).css("stroke","#000"); 
-      
+      mout(d)
       $(this).parent().find(".arc").css("display","none")
       $("#chloroInformation").html("");
-      $("#instructions").html("If you see a color, click on it")
+      $("#instructions").html("If you see a color, click on it. Find data sources at bottom of page.")
   }
   
   
@@ -600,7 +704,15 @@ $(document).ready(function(){
     $(this).parent().parent().append($(this).parent())
 
     $(this).parent().find(".arc").css("display","block")
+    tempFullDat = outputStep.filter(function(k) { return k['region_id']==d.id})
+    ranks = tempFullDat.map(function(z){ return z['rank']})
     
+    fullValue = 0
+    tempFullDat.forEach(function(e){
+      fullValue+=e['value']
+    })
+    
+    if(fullValue > 1) fullValue = Math.round(fullValue)
     theTest = outputStep.filter(function(nation) { return nation.region_id == d.id})
     category = $("#categoryHolder").val() 
     if(mouseoverInfo[d.id] && theTest.length>0){
@@ -615,8 +727,8 @@ $(document).ready(function(){
         return b.value - a.value;
       });
       
-      totals = 0
-      mouseoverInfo[d.id].forEach(function(d) {totals += d.value});
+      //totals = 0
+      //mouseoverInfo[d.id].forEach(function(d) {totals += d.value});
       topExports = mouseoverInfo[d.id].filter(function(a) {return  a.value > 0})
       topExports = topExports.slice(0,5)
       
@@ -629,14 +741,15 @@ $(document).ready(function(){
       $(this).parent().find(".arc").css("display","block")
       
     
-      info = "<div class='mouseoverInfoBlock'><p> Current Region: "+  theTest[0].region_name+"</p>"
-      info = info+"<p>Net "+category+": "+commaSeparateNumber(Math.round(totals*100)/100)+"</p>"
-   
+      info = "<div class='mouseoverInfoBlock'><h4>"+  theTest[0].region_name+" (click for more info)</h4>"
+      info = info+"<p>Net "+category+": "+commaSeparateNumber(fullValue)+"</p>"
+      ranks.forEach(function(z){info = info+"<p>"+z+"</p>"})
+    //  info = info+"<p>"+rank+"</p>"
       if(topExports.length>0){
         if(category == "Production"){
           info = info+"<p> Primary Ocean Fisheries</p><table>"
         }else{
-        info = info+"<p> Top Export Markets/Destination</p><table>"
+        info = info+"<p> Top Export Markets/Destinations</p><table>"
       }
       
       topExports.forEach(function(d){
@@ -653,8 +766,10 @@ $(document).ready(function(){
        info = info+"</table>"
       }
       info = info+"</div>"
+      
+      mouseoverMapFunc(d,info)
      
-      $("#chloroInformation").html(info)
+      //$("#chloroInformation").html(info)
       $("#instructions").html("Click to See More "+category+" Information for "+theTest[0].region_name)
       //$(this).css("stroke-width","5");
       //$(this).css("stroke","white");

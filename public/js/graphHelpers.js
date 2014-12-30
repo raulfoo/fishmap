@@ -1,3 +1,6 @@
+
+
+
 function categorySelect(data,sortType){
 
   if(sortType == "region") {
@@ -131,7 +134,7 @@ function mouseoverFunc(d,i,data,switchSort){
        select3 = "type_percent"
     }
   
- 
+
   if(data[0].category=="Trade"){
     workDat = data.filter(function(e) { return e[select1] == d.name && e[select2] == d.column && e.subset == d.tradeType && e['year'] == d.date});
   }else{
@@ -144,9 +147,13 @@ function mouseoverFunc(d,i,data,switchSort){
   var popLeft = (d3.event.pageX+50);
   var popTop = (d3.event.pageY-125);
 
-  
-   popUpText = "<div class='popUpText'><p>Selection: "+workDat[select1] +" --> "+workDat[select2]+"</p><p>Value: "+commaSeparateNumber(workDat.value)+"</p>"+
-  "<table class='popUpTable'>"
+  if(workDat["subset"]=="Import"){
+    popUpText = "<div class='popUpText'><p>Selection: "+workDat[select2] +" --> "+workDat[select1]+"</p><p>Value: "+commaSeparateNumber(workDat.value)+"</p>"
+  }else{
+      popUpText = "<div class='popUpText'><p>Selection: "+workDat[select1] +" --> "+workDat[select2]+"</p><p>Value: "+commaSeparateNumber(workDat.value)+"</p>"
+
+  }
+   popUpText =  popUpText+"<table class='popUpTable'>"
   if(workDat.category == "Production"){
     popUpText = popUpText+"<tr><td>% share of total "+workDat.region_name+" "+workDat.subset+" "+workDat.category+"</td><td>"+workDat.region_percent+"</td></tr>"
   }else{
@@ -166,6 +173,26 @@ function mouseoverFunc(d,i,data,switchSort){
 
 }
 
+function mouseoverMapFunc(d,data){
+  var popLeft = (d3.event.pageX+50);
+  var popTop = (d3.event.pageY-125);
+  popLeft = Math.min(popLeft,650)
+  
+  popLeft = 100
+  popTop = 525
+  
+   popUpText = data
+    
+  $("#pop-up").fadeOut(0,function () {
+ 
+    $("#pop-desc").html(popUpText);
+
+    $("#pop-up").css({"left":popLeft,"top":popTop});
+    $("#pop-up").fadeIn(0);
+  });
+
+}
+
 function mout(d) {
   $("#instructions").html("If you see a color, click on it.")
   $("#pop-up").fadeOut(0);
@@ -173,9 +200,9 @@ function mout(d) {
 
 function chooseTradeType(d){
   if(d.tradeType=="Import"){
-    return 1    
+    return "red"    
   }else{
-    return 0
+    return "blue"
     }
 }
 

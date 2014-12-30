@@ -2,9 +2,7 @@
 <html>
   <head>
     <meta property="og:title" content="FishMap"/>
-    <meta property="og:url" content="http://budgetus.org"/>
-    <meta property="og:description" content="CNN's King, John Got Nothin' On Me. 
-                                               - Samuel L. Jackson, Training Day"/>
+
     
     <title>Fish Map</title>  
     
@@ -32,10 +30,10 @@
     <div id="header">
       <div class="titleDiv"><a href="/"><h2>FishMap</h2></a>
         <div id="headerTableDisplay">
-          <p id="instructions">If you see a color, click on it.</p>
+          <p id="instructions">If you see a color, click on it. Find data sources at bottom of page.</p>
 
           <a id="hide_show" title="show"></a>
-          <a href="/about">Data Sources</a>
+          <a href="/about" id="about"></a>
 
         </div>
 
@@ -46,41 +44,19 @@
       </div>-->
      
     </div>
+    <div id="loadingInitial">Loading Initial Data...</div>
+
     <div id="fullPage">
-    <!--  <div id="sidebar">
-        <%# if defined? federal_tax %>
-        <div class="changeBudget">
-          <form class="standard" id="incomeForm" action="/navigate" method="post">
-            Change income:
-              
-            <input type="text" name="income" value="$<%=flash[:value] %>"/>
-            <input type="submit" name="Start" value="Update"/>
-          
-          </form>
-        </div>
-        <div id="navigationHeader">
-          <h3> Navigation History </h3>
-        </div>
-        <div id="navTable">
-        <div id="navSorting">
-          <div id="arrow">&uarr;</div>
-          <div id="new"><p>Most Recent</p></div>
-        </div>
-        <div id="navigationWrapper"></div>
-        </div>
-        <%#end%>
-      </div>-->
+   
       <div id="content">
         <%= yield %>
       </div>
     </div>
     <div id="footer">
       <div class="container">
-        <span class="copyright">&copy; <%= Time.now.strftime("%Y") %> FishMap!</span>
-        <!--<a href="#">Terms of Use</a> |
-        <a href="#">Privacy Policy</a> |-->
-        <!--<a href="/about">About</a> |    
-        <a href="mailto:budgetus.contact@gmail.com" target="_blank">budgetus.contact@gmail.com</a>-->
+        <span class="copyright">&copy; <%= Time.now.strftime("%Y") %> FishMap</span>
+        <a href="/about" id="about">Data Sources</a>
+      
       </div>
     </div>
   </body>

@@ -42,8 +42,8 @@ function click_fishmeal(dat,graphType,buildNewSelection){
     uniqueFish = returnOutput["uniqueFish"]
     bigOut = []
     
-     console.log("fishmeal")
-     console.log(dat)
+     //console.log("fishmeal")
+     //console.log(dat)
      
     datProduction = dat.filter(function(e) { return e.partner == "Production" })
     datExport = dat.filter(function(e) { return e.partner == "Export" })

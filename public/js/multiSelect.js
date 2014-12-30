@@ -20,7 +20,6 @@ $(document).ready(function(){
       //  alert("right")
       //console.log(x)
       if (x.length > 0){
-
         newContent = sortListAlphabetical(x,"rightValues")
         $("#rightValues").html(newContent)
       }
@@ -236,17 +235,33 @@ function buildRegionSelect(dat,current,category){
 }
 
 function getRegionRanks(subsetType){
+if($("#include_excludeBottom").val()=="include"){
+        speciesSel = $.map($("#rightValuesBottom option"),function(e){return $(e).val().split("||")[0]});
+      }else{
+        speciesSel = $.map($("#leftValuesBottom option"),function(e){return $(e).val().split("||")[0]});
 
+      }
  if($("#changeGraphType").attr("title")=="Year"){
   yearValue = "All"
  }else{
   yearValue =  $("#amountVal").val()
  }
- 
+ //subsetType = speciesSel
+ groupingType = $("#groupingTypeHolder").val()
+ if(groupingType == "species"){
+  groupType = "description"
+ }else{
+  groupType = "partner"
+ }
+/* alert("groupingTypeHolder"+groupingType)
+ alert("species"+speciesSel)
+  alert("subsetType"+subsetType)
+  alert("groupType" + groupType)
+*/
  $.ajax({
     type: 'POST',
     url: '/create_rank_list',
-    data: {category: $("#categoryHolder").val(),species: speciesSel, year: yearValue, subset: subsetType, per_capita: $("#radios :checked").val()},
+    data: {category: $("#categoryHolder").val(),species: speciesSel, year: yearValue, subset: subsetType, grouping: groupType, per_capita: $("#radios :checked").val()},
     success: function(output) {
       output = JSON.parse(output)
       

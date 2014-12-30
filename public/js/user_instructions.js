@@ -8,7 +8,7 @@ $(document).ready(function(){
   
    $(".selectContainers").mouseout(function(){
   
-    $("#instructions").html("If you see a color, click on it.")
+    $("#instructions").html("If you see a color, click on it. Find data sources at bottom of page.")
   
   })
   
@@ -19,13 +19,13 @@ $(document).ready(function(){
   })
   
    $(document).on("mouseout", "#totalsSummary a", function(){
-      $("#instructions").html("If you see a color, click on it.")
+      $("#instructions").html("If you see a color, click on it. Find data sources at bottom of page.")
   
   })
   
   
   $(".countries").dblclick(function(){
-    alert("hello")
+   // alert("hello")
   
   })
   

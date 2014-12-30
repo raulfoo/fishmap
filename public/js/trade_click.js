@@ -1,6 +1,7 @@
-
+var checkDat
 function click_trade(dat,graphType,buildNewSelection){
   
+  checkDat = dat
   graphType = graphType || "Bar Chart"
   buildNewSelection = buildNewSelection || true
 
@@ -320,12 +321,13 @@ var svg = d3.select("#chloroDetails").append("svg")
       .style("text-anchor", "end")
       .text(textType);
 
+  //alert(x.rangeBand())
   var state = svg.selectAll(".state")
       .data(data)
     .enter().append("g")
       .attr("class", "series")
   
-      .attr("transform", function (d, i) { return "translate(" + x(i)/3 + ")" });
+      .attr("transform", function (d, i) { return "translate(" + ((i)*(1.2*(x.rangeBand()/3)) + x.rangeBand()/7) + ")" }); //x(i)/3
   
   var interStep =  state.selectAll("rect")
     .data(Object)
@@ -339,8 +341,8 @@ var svg = d3.select("#chloroDetails").append("svg")
        .attr("y", function(d) {  return y(d.y1);  })
       .attr("height", function(d) { return y(d.y0) - y(d.y1);})
        .style("fill", function(d) { return color(d.name); })
-       .style("stroke", function(d) {return "black"})
-       .style("stroke-width", function(d) { return chooseTradeType(d); })
+       .style("stroke", function(d) {return chooseTradeType(d);})
+       .style("stroke-width", function(d) { 1 })
        .on("click", function(d) {prepareData(dat,switchSort,true)})
        .on("mouseover", function(d,i) {mouseoverFunc(d,i,rawData,switchSort)})
        .on("mouseout", mout)

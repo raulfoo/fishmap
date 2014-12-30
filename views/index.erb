@@ -17,6 +17,7 @@
 
    <script>
     [
+      'js/underscore.js',
       'js/slider.js',
       'js/fishmeal_click.js',
       'js/trade_click.js',
@@ -29,6 +30,7 @@
       'js/multiSelect.js',
       'js/speciesSearchText.js',
       'js/mapping.js',
+      
     ].forEach(function(src) {
       var script = document.createElement('script');
       script.src = src;
@@ -74,7 +76,7 @@
         </div>-->
         <div class="mapLegConClass2">
           <div id="mapLegend"></div>
-          <div id="sliderContainer">
+          <!--<div id="sliderContainer">
             <div id="radios">
               <input type = "radio" name="metric" value = "F" checked="checked"/> Gross (Tonnes)
               <input type = "radio" name="metric" value = "T"/> Per Capita (Kg/person)
@@ -84,7 +86,7 @@
             <div id="amount"></div>        
             <input type="hidden" id="amountVal" value="2009"/>
             <input type="hidden" id="filterThreshold" value="0"/>
-          </div>
+          </div>-->
         </div>
       </div>
     </div>
@@ -117,16 +119,43 @@
   </div>
   
   <div id="topWindow">
-      <div class="mapLegConClass1">
+     <!-- <div class="mapLegConClass1">
         <p> Filter by Net Exports </p>
         <div id="slider_value_filter"></div>
-      </div>
+      </div>-->
       <div id="chloropleth"></div>
-    </div>
+     
+     
+    <!--</div>-->
     
     <div id = topRightSide>
-    
-    <div id="chloroInformation"></div>
+  
+       
+       <div id="sliderContainer">
+          <div class="optionsWrapper">
+            <h4><b> Current Year: <span id="amount"></span></b></h4>  
+            <p> Change Year (<span id="minTopSlide" class="slideLabel"></span>-<span id="maxTopSlide" class="slideLabel"></span>) </p>
+            <div id="slider"></div>
+            
+            <p id="numberSpecies"></p> 
+            <input type="hidden" id="amountVal" value="2009"/>
+            <input type="hidden" id="filterThreshold" value="0"/>
+          </div>
+          <div class="optionsWrapper">
+            <p> Displayed Units: </p>
+            <div id="radios">
+               <div class="radioSet"> <input type = "radio" name="metric" value = "F" checked="checked"/> Gross (Tonnes)</div>
+               <div class="radioSet"> <input type = "radio" name="metric" value = "T"/> Per Capita (Kg/person)</div>
+            </div>
+          </div>
+          
+        </div>
+        <div class="mapLegConClass1">
+          <p> Filter Results by Quantity: </p>
+          <div id="slider_value_filter"></div>
+          <p id="slideFilterValue"></p>
+        </div>
+      <div id="chloroInformation"></div>
     </div>
   </div>
   </div>
@@ -146,8 +175,8 @@
       <a class="button" id="changeGraphType" title="Timeseries">View Full Time Series</a>
       <div id="totalsSummary"></div>
       <div id="import_Export">
-        <p> Imports = Left Grouped Column</p>
-        <p> Exports = Right Column</p>
+        <p> Imports From = Left Grouped Column</p>
+        <p> Exports To = Right Grouped Column</p>
       </div>
     </div>
     <div id="graphLoadWarning"></div>
