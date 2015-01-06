@@ -40,7 +40,8 @@ d3.selection.prototype.moveToFront = function() {
 
 
 $(document).ready(function(){
-  
+  $("#loadingInitial").css("display","block")
+
   
   $("#hide_show").click(function(){
   
@@ -106,7 +107,7 @@ $(document).ready(function(){
     if(allowNavigate){
       $("#filterThreshold").val(0)
       $("#slider_value_filter").slider('value',0)
-      $("#slideFilterValue").text("Show All")
+      $("#slideFilterValue").text("Show All Countries")
      
       $("#textSearch").val("")
       $("#regionSubset").val("All")
@@ -502,7 +503,7 @@ $(document).ready(function(){
             allowNavigate = true
             numCommodities = $("#rightValues").find("option").length
             if(numCommodities == 0) numCommodities = $("#leftValues").find("option").length
-            $("#numberSpecies").text("# Commodities selected: "+numCommodities)
+            $("#numberSpecies").text("# Commodities Displayed: "+numCommodities)
 
         }
       });

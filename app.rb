@@ -11,6 +11,7 @@ require "json"
 require "lib/db"
 require "lib/currency"
 require "lib/mapping"
+require "benchmark"
 
 
 

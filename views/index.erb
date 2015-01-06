@@ -14,6 +14,7 @@
    <%#= @pinion.js_url("/assets/js/html2canvas.js") %>
    <%#= @pinion.js_url("/assets/js/multiSelect.js") %>
    <%#= @pinion.js_url("/assets/js/speciesSearchText.js") %>
+   <%= @pinion.css_url("/assets/css/mapping.css") %>
 
    <script>
     [
@@ -41,7 +42,6 @@
  
 
 
-    <%= @pinion.css_url("/assets/css/mapping.css") %>
    
     <script src="http://d3js.org/queue.v1.min.js"></script>
     <script src="http://d3js.org/topojson.v1.min.js"></script>
@@ -137,7 +137,6 @@
             <p> Change Year (<span id="minTopSlide" class="slideLabel"></span>-<span id="maxTopSlide" class="slideLabel"></span>) </p>
             <div id="slider"></div>
             
-            <p id="numberSpecies"></p> 
             <input type="hidden" id="amountVal" value="2009"/>
             <input type="hidden" id="filterThreshold" value="0"/>
           </div>
@@ -155,6 +154,8 @@
           <div id="slider_value_filter"></div>
           <p id="slideFilterValue"></p>
         </div>
+        <p id="numberSpecies"></p> 
+
       <div id="chloroInformation"></div>
     </div>
   </div>

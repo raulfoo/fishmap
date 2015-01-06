@@ -9,15 +9,6 @@
   font-size: 1.1em;
 }
 
-#loadingInitial{
-  font-size: 3em;
-  position: absolute;
-  color: $red;
-  top: 350px;
-  left: 500px;
-
-}
-
 .line {
   fill: none;
   stroke: steelblue;
@@ -412,6 +403,7 @@
   }
   
   #topRightSide{
+    font-weight: bold;
     display: table-cell;
     vertical-align: top;
     font-size: .7em;

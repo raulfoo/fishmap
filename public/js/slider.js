@@ -35,7 +35,7 @@ $(function() {
         //$("#amount").html("Selected: " + ui.value );
         //console.log(ui.value)
         $("#filterThreshold").val(ui.value);
-        if(ui.value==0) displayText = "Show All"
+        if(ui.value==0) displayText = "Show All Countries"
         if(ui.value<0) displayText = "Show Net Imports"
         if(ui.value>0) displayText = "Show Net Exporters"
         $("#slideFilterValue").text(displayText)

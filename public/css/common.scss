@@ -7,6 +7,18 @@
 
 html, body { height: 100%; }
 
+#loadingInitial{
+  font-size: 3em;
+  position: absolute;
+  color: $red;
+  top: 350px;
+  left: 500px;
+  z-index: 200;
+  display: none;
+
+}
+
+
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: .7em;
@@ -89,7 +101,7 @@ $paddingTop: $headerHeight / 3;
       float: left;
       position: relative;
       
-      top: -50px;
+      top: 30px;
 
       
       height: 100px;
@@ -97,7 +109,18 @@ $paddingTop: $headerHeight / 3;
       max-width: 100%;
       h2{
         margin-left: 70px;
+        z-index: 200;
       }
+      .returnNav{
+        font-size: 2.1em;
+        font-weight: bold;
+        margin-left: 30px;
+        position: relative;
+        top: -45px;
+        display: block;
+        padding: 5px;
+      }
+      
       a{
         font-size: 1em;
         padding: 0px;
@@ -106,9 +129,7 @@ $paddingTop: $headerHeight / 3;
         
       }
       
-      p {
-       
-        }
+     
       
      #headerTableDisplay{ 
        display: table;
@@ -128,7 +149,7 @@ $paddingTop: $headerHeight / 3;
         
          top: -15px;
          height: 50px;
-         padding-left: 325px;
+         padding-left: 375px;
     
        }
        #hide_show{

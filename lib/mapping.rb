@@ -4,7 +4,7 @@ class FishMap < Sinatra::Base
 
   post "/change_map" do
     
-    
+    veryStart = Time.now
     per_capita = params[:metric]
     category = params[:id]
     species_select = params[:species]
@@ -12,7 +12,8 @@ class FishMap < Sinatra::Base
     filter_val = params[:filterThreshold].to_i
     #p filter_val
         
-        
+    beginning_time = Time.now
+
     #yeah add a greater than, or less than parameter here if the slider value is not 0    
     if species_select != "All"
       map_select = Splash.filter(:category =>  category, :year => year, :description => species_select).select_group{[region_id, region_name, subset]}.select_append{sum(value).as(value)}.order(:value).all.uniq
@@ -21,9 +22,14 @@ class FishMap < Sinatra::Base
       map_select = Splash.filter(:category =>  category,  :year => year).select_group{[region_id, region_name, subset]}.select_append{sum(value).as(value)}.order(:value).all.uniq
 
     end
+    end_time = Time.now
+    p "initial splash"+((end_time-beginning_time) * 1000).to_s
+   
     
-    map_select.map! {|e| e.values}
+    map_select.map! {|e| e.values}  
     just_values = map_select.map{|e| e[:value]}
+  
+
     
    # p just_values
     min_value = just_values.min
@@ -46,7 +52,11 @@ class FishMap < Sinatra::Base
     end
     
     #map_select.select! {|e| e[:value] >10000}
+    beginning_time = Time.now
+    #could prb make a smaller table of just unique species for each year...
     detail_species = Splash.filter(:category =>  category, :year => year).select(:description).order(:description).all.uniq
+    end_time = Time.now
+    p "species detail"+((end_time-beginning_time) * 1000).to_s
     detail_species = detail_species.map!{|e| e.description}
     
 =begin    
@@ -60,8 +70,14 @@ class FishMap < Sinatra::Base
     
     details.map! {|e| e.values}    
 =end    
-    unique_region = Connection.filter(:category => category,  :year => year).select(:region_id).order(:region_id).all.uniq
-    unique_region.map!{|e| e.region_id}
+    #unique_region = Connection.filter(:category => category,  :year => year).select(:region_id).order(:region_id).all.uniq
+      beginning_time = Time.now
+
+  #  unique_region = Connection.select(:region_id).where(:category => category,  :year => year).order(:region_id).all.uniq
+   unique_region = map_select.map{|e| e[:region_id]}
+  end_time = Time.now
+    p (end_time-beginning_time) * 1000
+    #unique_region.map!{|e| e.region_id}
   
     if per_capita == "T"
       populations = Population.filter(:year => year).all
@@ -86,24 +102,47 @@ class FishMap < Sinatra::Base
     thresholdDat = map_select.map{|e| e[:value]}
     p "thresholdDat"
     p thresholdDat
+    beginning_time = Time.now
+
     thresholds = createThresholds(thresholdDat)
+    end_time = Time.now
+    p "threshold"+((end_time-beginning_time) * 1000).to_s
     
     #p "wutwutwut"
     #p thresholds
     #p species_select
+    beginning_time = Time.now
+
     associationArray = createAssociations(category,species_select,per_capita,year)
+    end_time = Time.now
+    p "association"+((end_time-beginning_time) * 1000).to_s
     
-    years = Splash.where(:category => category).select(:year).sort_by(&:year)
-    year_min = years[0].year
-    year_max=  years[(years.size-1)].year
+
+    #years = Splash.where(:category => category).select(:year).sort_by(&:year)
+    #lets just make this an if statment...
+    if category == "Fishmeal"
+      years = *(1981..2009)
+    elsif category == "Trade"
+      years = *(1988..2010)
+    elsif category == "Production"
+      years = *(1981..2010)
+    end
     
+    year_min = years[0]
+    year_max = years[years.size-1]
+    #year_min = years[0].year
+    #year_max=  years[(years.size-1)].year
+  
     #add importer exporters
     
     #year_min = 1990
     #year_max = 2010
     #output = {:map_values => map_select, :thresholds => thresholds, :details=> details, :nationIds => unique_region, :speciesOptions => detail_species, :assocArray => associationArray}
     output = {:map_values => map_select, :thresholds => thresholds, :nationIds => unique_region, :speciesOptions => detail_species, :assocArray => associationArray, :yearMin => year_min, :yearMax => year_max, :absolute_min => min_value, :absolute_max => max_value}
-    
+        veryEnd = Time.now
+        
+        p "total"+((veryEnd-veryStart) * 1000).to_s
+
     return output.to_json
   
   end
@@ -327,36 +366,79 @@ class FishMap < Sinatra::Base
   
   
   def createAssociations(cate,species,metric,year)
+     beginning_time = Time.now
     if species == "All"
-      connections = Connection.filter(:category => cate,  :year => year).select_group{[category, region_id, partner_id, region_name, partner_name,]}.select_append{sum(value).as(value)}.order(:value).reverse.all.uniq
+      connections = Connection.filter(:category => cate,  :year => year).select_group{[category, region_id, partner_id, region_name, partner_name]}.select_append{sum(value).as(value)}.order(:value).reverse.all.uniq
     else
-      connections = Connection.filter(:category => cate,  :year => year, :description => species).select_group{[category, region_id, partner_id, region_name, partner_name,]}.select_append{sum(value).as(value)}.order(:value).reverse.all.uniq
+      connections = Connection.filter(:category => cate,  :year => year, :description => species).select_group{[category, region_id, partner_id, region_name, partner_name]}.select_append{sum(value).as(value)}.order(:value).reverse.all.uniq
     end
-    
+    end_time = Time.now
+    p "createAssoc connecton DB"+((end_time-beginning_time)*1000).to_s
     if metric == "T"
       populations = Population.filter(:year => year).all
       populations.map!{|e| e.values}
     end
     
     #p "check connection"
-    
+     beginning_time = Time.now
     connections.map! {|e| e.values}
     #p connections
     
     centroids = Centroid.all
     centroids.map! {|e| e.values}
     
-    fishmeal = connections.select{|e| e[:category] == cate}
-    unique_regions = fishmeal.map{|e| e[:region_id]}.uniq
+    #p connections.size
+    #fishmeal = connections.select{|e| e[:category] == cate}
+    #p fishmeal.size
+    unique_regionsAll = connections.map{|e| e[:region_id]}#.uniq
+    unique_regions = unique_regionsAll.uniq
+    #p unique_regionsAll
     #select all instances
+    #p unique_regionsAll
+    beginning_time = Time.now
+     
+    indicesArray = {}
+    unique_regions.each do |e|
+      indicesArray[e] = []
+    end
+     
+    index = 0
+    unique_regionsAll.each do |x|
+       indicesArray[x].push(index)
+       index+=1
+    end
+   
+    end_time = Time.now
+    p "indicesArray"+((end_time-beginning_time)*1000).to_s
     maxFishmeal = 0
     fishmealArray = Hash.new()
+    p unique_regions.size
     unique_regions.each do |e|
+      #selects = connections.filter(:region_id => e).all.map{|e| e.values}
+      #p selects
       tempArray = Array.new()
-      selects = fishmeal.select{|d| d[:region_id] == e} #&& d[:partner_name] != "Aquaculture"
+      #this select takes a lot of time
+      #p connections
+      #index = 0
+      #selects = []
+      #connections.each do |d|
+      #  index +=1
+      #  if d[:region_id] == e
+      #    connections.delete_at(index)          
+      #    selects.push(d)
+      #  end
+      #end
+      #selects = []
+      #indicesArray[e].each do |z|
+      #  selects.push(connections[z])
+      #end
+      selects = connections.values_at(*indicesArray[e])
+      #connections.delete_at(*indicesArray[e])
+      #selects = connections.select{|d| d[:region_id] == e} #&& d[:partner_name] != "Aquaculture"
+      #p selects
       selects = selects.slice(0,4).push(selects.slice(selects.length-5,selects.length-1)).uniq.flatten #limited to just the top 5 and bottom 5
       selects.delete_if {|x| x == nil}
-   
+     
       selects.each do |z|
         source = centroids.find{|a| a[:id] == z[:region_id]}
         target = centroids.find{|a| a[:id] == z[:partner_id]}
@@ -393,6 +475,8 @@ class FishMap < Sinatra::Base
       end
       fishmealArray[e.to_sym] = tempArray
     end
+     end_time = Time.now
+    p "other create assoc"+((end_time-beginning_time)*1000).to_s
     
     #p "arraycheck"
     #p fishmealArray
@@ -433,7 +517,7 @@ class FishMap < Sinatra::Base
     #p subset_hash
     #p species
     #p grouping
-    
+    start_time = Time.now
     if subset != "All"
       ranks = Detail.where(:category=> category, :year => year, subset_hash => subset,  grouping => species).select(:region_name, subset_hash, :region_id).group_by(subset_hash, :region_name, :region_id).select_append{sum(value).as(value)}.all
       #ranks = ranks.select{|e| e.subset == subset}
@@ -446,7 +530,8 @@ class FishMap < Sinatra::Base
         ranks = Detail.where(:category=> category, :year => year,  grouping  => species).select(:region_name, :region_id).group_by(:region_name, :region_id).select_append{sum(value).as(value)}.all
       end
     end
-    
+     end_time = Time.now
+     p "get details"+((end_time-start_time)*1000).to_s
     ranks.map!{|e| e.values}
     
     

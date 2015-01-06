@@ -29,6 +29,15 @@ $(document).ready(function(){
   
   })
   
+  $(".categorySelect a").mouseover(function(){
+    $("#instructions").html("Change the displayed dataset")
+  })
+  $(".categorySelect a").mouseout(function(){
+    $("#instructions").html("If you see a color, click on it. Find data sources at bottom of page.")
+
+  })
+  
+
   
 
   
