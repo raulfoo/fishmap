@@ -35,8 +35,8 @@ $(document).ready(function(){
      x = selectedItem
 
      if (x.length > 0){
-      
        newContent = sortListAmount(x,"leftValuesBottom")
+       
        $("#leftValuesBottom").html(newContent)
      }
   });
@@ -61,14 +61,15 @@ $(document).ready(function(){
     x = $("#rightValues option")
     
     if (x.length > 0){
-      newContent = sortListAmount(x,"leftValuesBottom")
-      $("#leftValuesBottom").html(newContent)
+      newContent = sortListAlphabetical(x,"leftValues")
+      //alert(newContent)
+      $("#leftValues").html(newContent)
     }
     $("#changeFishSelect").trigger("click") 
   })
   
     $("#resetFishBottom").click(function(){
-    x = $("#rightValues option")
+    x = $("#rightValuesBottom option")
     
     if (x.length > 0){
       newContent = sortListAmount(x,"leftValuesBottom")
@@ -122,9 +123,10 @@ function sortListAmount(x,container){
   x.appendTo("#"+container)
   
   $("#"+container).children().each(function(){
-    dat.push({id:$(this).val().split("||")[0], value:$(this).val().split("||")[1]})
+    dat.push({id:$(this).val().split("||")[0], value:parseInt($(this).val().split("||")[1])})
   });
   
+ 
   content=""
   
   dat.sort(compare).forEach(function(e) {
