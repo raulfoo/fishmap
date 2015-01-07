@@ -94,7 +94,7 @@
       
       <div id="selectContainer" class="selectContainers">
         <div id="leftSelectContainer">
-          <p> All Possible Selections: </p>
+          <p> Displayed Commodities: </p>
           <select multiple="multiple" id="leftValues">
           
           </select>
@@ -110,6 +110,7 @@
            
           <a class="button" id="btnRight">&lt;&lt;</a>
           <a class="button" id="changeFishSelect">Change Selection</a>
+          <a class="button" id="resetFishTop">Reset Selection</a>
         </div>
       </div> 
     
@@ -203,6 +204,7 @@
           <select multiple="multiple" id="rightValuesBottom">
           </select>
           <a class="button" id="changeFishBottom">Change Selection</a>
+          <a class="button" id="resetFishBottom">Reset Selection</a>
       
            
          
@@ -242,6 +244,7 @@
 <input type="hidden" id="graphTypeHolder" value="Bar Chart"/>
 <input type="hidden" id="regionHolder" value=""/>
 <input type="hidden" id="regionSubset" value="All"/>
+<input type="hidden" id="showLastNation" value=false/>
 
 
 <img id="svg-img" />

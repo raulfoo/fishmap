@@ -129,7 +129,7 @@ $(document).ready(function(){
      
      if(allowNavigate){
       typeToView = $("#categoryHolder").val();
-      getData(arcs,typeToView,"false")
+      getData(arcs,typeToView,"false") //false
       }
   
   });
@@ -504,7 +504,8 @@ $(document).ready(function(){
             numCommodities = $("#rightValues").find("option").length
             if(numCommodities == 0) numCommodities = $("#leftValues").find("option").length
             $("#numberSpecies").text("# Commodities Displayed: "+numCommodities)
-
+            if( $("#showLastNation").val()=="true") click({id:  $("#regionHolder").val(), playThrough: true})
+             $("#showLastNation").val(false)
         }
       });
   
@@ -586,37 +587,16 @@ $(document).ready(function(){
   }
   
   
-  function click(d) {
+  function click(d,event) {
    if(d['playThrough'] == null){
     if($(this)[0]['attributes'][0]['value']=="q-99") return
    }
-   if(event.altKey){
-   // console.log(d)
-    //alert("hey")
-    //mover(d)
-    var $container = $('#chloropleth').select("svg").html()
-    // Canvg requires trimmed content
-    //content = $container.html()//.trim(),
-    content = $('#chloropleth').select("svg").html()
-    
+   if(d['playThrough']=="notnull") event = undefined
+  // console.log(event==undefined)
+   if(event == undefined || event.altKey == false){
    
-    canvas = document.getElementById('svg-canvas');
-
-    // Draw svg on canvas
-    canvg(canvas, content);
-
-    // Change img be SVG representation
-    //var theImage = canvas.toDataURL('image/png');
-    //$('#svg-img').attr('src', theImage);
-    
-    
-
-
-
-   }else{
- 
-  
-   $("#graphLoadWarning").html("Loading").fadeIn()
+  // $("#graphLoadWarning").html("Loading").fadeIn()
+  $("#loadWarning").fadeIn()
    
    region_id = d.id
    $("#regionHolder").val(region_id)
@@ -656,7 +636,106 @@ $(document).ready(function(){
               //buildNationalMultiSelect(infoSelect)
               //$(".graphSpeciesChange").fadeIn();    
              $(".graphSpeciesChange").css("visibility","visible")
-              $("#graphLoadWarning").html("").fadeOut('fast')
+              //$("#graphLoadWarning").html("").fadeOut('fast')
+              $("#loadWarning").html("").fadeOut('fast')
+
+              $("#changeCountryDetails").fadeIn()
+              //if($("#changeGraphType").html() == "View Full Time Series"){
+                 
+                  
+                  //buildRegionSelect(outputStep,d.id,category)
+                  getRegionRanks($("#regionSubset").val())
+               // }else{
+                //  buildRegionSelect(outputStep.filter(function(e) { return e.year == $("#amountVal").val()}),d.id,category)
+               // }
+            }else{
+              disclaim = "No data, currently details for '"+details[0].category+"' are limited to the top 10 species.\n"+
+              "None of the fish species fell within that range for " + d.id;
+              $("#chloroDetails").html(disclaim)
+              $("#graphLegend").html("")
+            }
+          }
+          
+          $("#navigationWrapper").css("display","none")
+          $("#hide_show").html("Show Map")
+          $("#hide_show").attr("title","show")
+          $("#hide_show").fadeIn();
+         }
+         
+     
+
+      })
+   
+   
+   }else if(event.altKey){
+   // console.log(d)
+    //alert("hey")
+    //mover(d)
+    var $container = $('#chloropleth').select("svg").html()
+    // Canvg requires trimmed content
+    //content = $container.html()//.trim(),
+    content = $('#chloropleth').select("svg").html()
+    
+   
+    canvas = document.getElementById('svg-canvas');
+
+    // Draw svg on canvas
+    canvg(canvas, content);
+
+    // Change img be SVG representation
+    //var theImage = canvas.toDataURL('image/png');
+    //$('#svg-img').attr('src', theImage);
+    
+    
+
+
+
+   }else{
+ 
+  
+  // $("#graphLoadWarning").html("Loading").fadeIn()
+  $("#loadWarning").fadeIn()
+   
+   region_id = d.id
+   $("#regionHolder").val(region_id)
+   speciesSel = $.map($("#rightValues option"),function(e){return $(e).val()});
+   if(speciesSel == "") speciesSel = "All"
+   per_capita =  $("input[type='radio'][name='metric']:checked").val()
+   $("#nationDetailsChooseYear").css("visibility","")
+   //$("#groupingTypeHolder").val("region")
+   
+   $.ajax({
+        type: 'POST',
+        url: '/getDetails',
+        data: {type: $("#categoryHolder").val(), region: region_id, species: speciesSel, metric: per_capita, year: $("#amountVal").val()},
+        success: function(output) {
+          output = JSON.parse(output)
+          output = output["details"]
+          //details = output.filter(function(e) { return e.year == 2009})
+          details = output
+      
+          theTest = outputStep.filter(function(nation) { return nation.region_id == d.id});
+          if(theTest.length > 0){
+            infoSelect = details.filter(function(nation) { return nation.region_id == d.id});
+            
+            
+            if(infoSelect.length>0){ 
+              category = $("#categoryHolder").val() 
+              if(category == "Trade"){
+                click_trade(infoSelect,$("#graphTypeHolder").val())
+              }else if(category == "Production"){
+                      $("#groupingTypeHolder").val("species")
+
+
+                click_production(infoSelect,$("#graphTypeHolder").val())
+              }else if(category == "Fishmeal"){
+                click_fishmeal(infoSelect,$("#graphTypeHolder").val())
+              }       
+              //buildNationalMultiSelect(infoSelect)
+              //$(".graphSpeciesChange").fadeIn();    
+             $(".graphSpeciesChange").css("visibility","visible")
+              //$("#graphLoadWarning").html("").fadeOut('fast')
+              $("#loadWarning").html("").fadeOut('fast')
 
               $("#changeCountryDetails").fadeIn()
               //if($("#changeGraphType").html() == "View Full Time Series"){

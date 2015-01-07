@@ -57,6 +57,30 @@ $(document).ready(function(){
       //$("#txtRight").val(selectedItem.text());
   });
   
+  $("#resetFishTop").click(function(){
+    x = $("#rightValues option")
+    
+    if (x.length > 0){
+      newContent = sortListAmount(x,"leftValuesBottom")
+      $("#leftValuesBottom").html(newContent)
+    }
+    $("#changeFishSelect").trigger("click") 
+  })
+  
+    $("#resetFishBottom").click(function(){
+    x = $("#rightValues option")
+    
+    if (x.length > 0){
+      newContent = sortListAmount(x,"leftValuesBottom")
+      $("#leftValuesBottom").html(newContent)
+    }
+    $("#showLastNation").val("true")
+    $("#changeFishSelect").trigger("click")
+    
+    
+  })
+  
+  
  
 
 });

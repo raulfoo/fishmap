@@ -302,6 +302,8 @@
       max-width: 400px;
       display: table-cell;
       
+     
+      
       #selectContainer{   
       
         display: table;
@@ -309,6 +311,16 @@
         min-width: 400px;
         height: 150px;
         margin: 15px;
+        
+        select{
+          height: 60px;
+          }
+          
+        p{
+          max-height: 20px;
+          min-height: 20px;
+          height: 20px;
+        }
         
         
         #leftSelectContainer{
@@ -622,7 +634,13 @@
       height: 150px;
       margin: 15px;
       
+      p{
+        height: 20px;
+        min-height: 20px;
+        max-height: 20px;
       
+      }
+    
       #leftSelectContainerBottom{
         display: table-cell;
         max-width: 250px;
