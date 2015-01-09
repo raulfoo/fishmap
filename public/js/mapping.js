@@ -501,7 +501,11 @@ $(document).ready(function(){
             $("#loadingInitial").css("display","none")
             $("#fullPage").css("visibility","visible")
             allowNavigate = true
-            numCommodities = $("#rightValues").find("option").length
+            if($("#include_exclude").val()=="include"){
+              numCommodities = $("#rightValues").find("option").length
+            }else{
+              numCommodities = $("#leftValues").find("option").length
+            }
             if(numCommodities == 0) numCommodities = $("#leftValues").find("option").length
             $("#numberSpecies").text("# Commodities Displayed: "+numCommodities)
             if( $("#showLastNation").val()=="true") click({id:  $("#regionHolder").val(), playThrough: true})
@@ -829,7 +833,7 @@ $(document).ready(function(){
         if(category == "Production"){
           info = info+"<p> Primary Ocean Fisheries</p><table>"
         }else{
-        info = info+"<p> Top Export Markets/Destinations</p><table>"
+        info = info+"<p> Top Export Markets/Destinations </p><table>"
       }
       
       topExports.forEach(function(d){
@@ -839,7 +843,7 @@ $(document).ready(function(){
       info = info+"</table>"
       }
       if(topImports.length > 0){
-        info = info+"<p> Top Import Markets/Sources</p><table>"
+        info = info+"<p> Top Import Markets/Sources </p><table>"
         topImports.forEach(function(d){
           info = info + "<tr><td>"+d.partner+"</td><td>"+commaSeparateNumber(d.value)+"</td></tr>"
         })

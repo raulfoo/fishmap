@@ -178,8 +178,8 @@ function mouseoverMapFunc(d,data){
   var popTop = (d3.event.pageY-125);
   popLeft = Math.min(popLeft,650)
   
-  popLeft = 100
-  popTop = 525
+  popLeft = $("#chloropleth").position().left+594
+  popTop = $("#chloropleth").position().top-279
   
    popUpText = data
     

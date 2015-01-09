@@ -506,7 +506,7 @@
 
 .popUpText{
   
-  
+  /*
   p{
     font-weight: bold;
     font-size: 1.2em;
@@ -517,17 +517,19 @@
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.8);
     float: right;
-  
-    td{
-      
-      text-align: right;
-    }
+   
     td:first-child{
       max-width: 150px;
       width: 150px;
-      text-align: left;
+      text-align: right;
+      background-color: $red;
     }
   }
+  table{
+    color: $red;
+  
+  }
+  */
 }
 
 #currentDetailSelection{
@@ -727,17 +729,27 @@
 .mouseoverInfoBlock{
   
   table{
-    padding-left:20px;
+   
+    padding-left: 20px;
+    margin-left: 20px;
+    width: 90%;
     background-color: $lightestGray;
-    padding-right: 20px;
+    padding-right: 0px;
     color: black;
     border-radius: 8px 8px;
     padding: 5px;
    /* background-color: rgba(0, 0, 0, 0.6);*/
+   td{
+     text-align: right;
+   }
+   td:first-child{
+    text-align: left;
+   }
   }
   p{
     font-size: 1.1em
   }
+  
 }
 
 #slideFilterValue{

@@ -5,7 +5,7 @@ $(function() {
       value: 2009,
       range: "min",
       min: 1981,
-      max: 2010,
+      max: 2009,
       step: 1,
       slide: function( event, ui ) {
        if(allowNavigate){
