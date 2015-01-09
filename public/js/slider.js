@@ -39,7 +39,7 @@ $(function() {
         if(ui.value<0) displayText = "Show Net Imports"
         if(ui.value>0) displayText = "Show Net Exporters"
         $("#slideFilterValue").text(displayText)
-        console.log($("#filterThreshold").val())
+        //console.log($("#filterThreshold").val())
         }
       },
       change: function( event, ui ) {
